@@ -58,18 +58,6 @@ def _fanout_helper(
 
 
 
-## Creates one or more fanout records (as necessary) to fan processing out to
-# a list of records.  If no more than 6 records are given then this creates a
-# single fanout record called \c name.  Otherwise, further records are created
-# and daisy-chained together: subsequent records are numbered in sequence.
-#
-# \param name
-#   Name of first fanout record.  Subsequent records have a sequence number
-#   appended to this name.
-# \param *record_list
-#   List of records to be processed.
-# \param **args
-#   Extra field definitions to be passed to the generated fanout records.
 def create_fanout(name, *record_list, **args):
     # We can only support fanout to "All" style fanout records: to generate
     # masked or selected fanouts we'd need to create a cluster of supporting
@@ -90,19 +78,6 @@ def create_fanout(name, *record_list, **args):
     return record_list[0]
 
 
-## Creates one or more data fanout records (as necessary) to fan a data output
-# out to a list of records.  If no more than 8 records are given then this
-# creates a single dfanout record called \c name.  Otherwise, further records
-# are created and daisy-chained together: subsequent records are numbered in
-# sequence.
-#
-# \param name
-#   Name of first fanout record.  Subsequent records have a sequence number
-#   appended to this name.
-# \param *record_list
-#   List of records to be processed.
-# \param **args
-#   Extra field definitions to be passed to the generated fanout records.
 def create_dfanout(name, *record_list, **args):
     # All records after the first argument must operate passively and in
     # supervisory mode as they are simply mirroring the first record.

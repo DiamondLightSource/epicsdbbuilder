@@ -3,8 +3,8 @@ import recordset
 __all__ = ['Parameter']
 
 
-## A Parameter is used to wrap a template parameter before being assigned to
-# a record field.
+# A Parameter is used to wrap a template parameter before being assigned to a
+# record field.
 class Parameter:
     __ParameterNames = set()
 

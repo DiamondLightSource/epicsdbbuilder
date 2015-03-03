@@ -6,12 +6,13 @@ from epicsdbbuilder import *
 
 InitialiseDbd(os.environ['EPICS_BASE'])
 
-SetRecordNames(TemplateRecordNames())
-names = DiamondRecordNames()
-names.SetDeviceName('XX-YY-ZZ-01')
-SetRecordNames(names)
+tmpl_names = SetTemplateRecordNames()
+dls_names = BasicRecordNames('XX-YY-ZZ-01')
+
+SetRecordNames(dls_names)
 
 P = Parameter('P', 'A parameter')
+Q = Parameter('Q', 'A number')
 
 r = ImportRecord('SR-DI-DCCT-01:SIGNAL')
 
@@ -21,12 +22,13 @@ records.bi('TRIG',
         records.ai('B', INP = r)),
     SCAN = '1 second')
 
-s = ImportName('TRIG')
+s = ImportRecord(RecordName('TRIG'))
 
-PopRecordNames()
+
+SetRecordNames(tmpl_names)
 
 t = records.ai('TEST',
-    INP = '@%s' % P, SCAN = '1 second')
+    INP = '@%s' % P, VAL = Q, SCAN = '1 second')
 records.bi('BOO', INP = s)
 
-WriteRecords('/dev/stdout', '')
+WriteRecords('/dev/stdout')

@@ -6,7 +6,7 @@ import recordnames
 from recordset import recordset
 
 
-__all__ = ['PP', 'CP', 'MS', 'NP', 'ImportRecord', 'ImportName']
+__all__ = ['PP', 'CP', 'MS', 'NP', 'ImportRecord']
 
 
 
@@ -22,11 +22,10 @@ def _unbind(function):
 #
 #   Record class
 
-## Base class for all record types.
+# Base class for all record types.
 #
 # All record types known to the IOC builder (loaded from DBD files in EPICS
-# support modules) are subclasses of this class and are published as
-# attributes of the \ref iocbuilder.dbd.records "records" class.
+# support modules) are subclasses of this class.
 class Record(object):
 
     # Creates a subclass of the record with the given record type and
@@ -45,13 +44,6 @@ class Record(object):
         # Perform any class extension required for this particular record type.
         import bits
         return bits.ExtendClass(BuildRecord)
-
-
-    ## Converts a short form record name into the full record name as it will
-    # appear in the generated database.
-    @classmethod
-    def RecordName(cls, name):
-        return recordnames.RecordName(name)
 
 
     __MetadataHooks = []
@@ -84,17 +76,17 @@ class Record(object):
     # initialisations for any other fields.  Builds standard record name using
     # the currently configured RecordName hook.
 
-    ## Record constructor.
+    # Record constructor.
     #
     # This is used to construct a record of a particular record type.  The
     # record is added to database of the generated IOC, or can simply be
     # written out to a separate .db file, depending on the chosen IOC writer.
     #
-    # \param record
+    # record
     #   The name of the record being generated.  The detailed name of the
     #   record is determined by the configured record name convention, and
     #   normally the device part of the record name is not specified here.
-    # \param **fields
+    # **fields
     #   All of the fields supported by the record type appear as attributes
     #   of the class.  Values can be specified in the constructor, or can be
     #   assigned subsequently to the generated instance.
@@ -102,19 +94,17 @@ class Record(object):
     # For example, the following code generates a record which counts how
     # many times it has been processed:
     #
-    # \code
     #   cntr = records.calc('CNTR', CALC = 'A+1', VAL = 0)
     #   cntr.A = cntr
-    # \endcode
+    #
     # This will generate a database somewhat like this:
-    # \verbatim
+    #
     # record(calc, "$(DEVICE):CNTR")
     # {
     #     field(A,    "$(DEVICE):CNTR")
     #     field(CALC, "A+1")
     #     field(VAL,  "0")
     # }
-    # \endverbatim
     #
     # Record links can be wrapped with PP(), CP(), MS() and NP() calls.
     def __init__(self, record, **fields):
@@ -127,7 +117,7 @@ class Record(object):
         # bypass the tricksy use of __setattr__.
         self.__setattr('__fields', {})
         self.__setattr('__aliases', set())
-        self.__setattr('name', self.RecordName(record))
+        self.__setattr('name', recordnames.RecordName(record))
 
         # Support the special 'address' field as an alias for either INP or
         # OUT, depending on which of those exists.  We only set up this field
@@ -136,9 +126,7 @@ class Record(object):
             for field in ['INP', 'OUT']
             if self.ValidFieldName(field)]
         if len(address) == 1:
-            self.__setattr('address', address[0])
-        else:
-            self.__setattr('address', 'address')
+            self.__setattr('__address', address[0])
 
         # Make sure all the fields are properly processed and validated.
         for name, value in fields.items():
@@ -174,7 +162,7 @@ class Record(object):
         print >>output, '}'
 
 
-    ## The string for a record is just its name.
+    # The string for a record is just its name.
     def __str__(self):
         return self.name
 
@@ -188,7 +176,7 @@ class Record(object):
         return _Link(self, None, *specifiers)
 
 
-    ## Assigning to a record attribute updates a field.
+    # Assigning to a record attribute updates a field.
     def __setattr__(self, fieldname, value):
         if fieldname == 'address':
             fieldname = self.__address
@@ -225,17 +213,17 @@ class Record(object):
         del self.__fields[fieldname]
 
 
-    ## Reading a record attribute returns a link to the field.
+    # Reading a record attribute returns a link to the field.
     def __getattr__(self, fieldname):
         if fieldname == 'address':
             fieldname = self.__address
         self._validate.ValidFieldName(fieldname)
         return _Link(self, fieldname)
 
-    def FieldValue(self, fieldname):
+    def _FieldValue(self, fieldname):
         return self.__fields[fieldname]
 
-    ## Can be called to validate the given field name, returns True iff this
+    # Can be called to validate the given field name, returns True iff this
     # record type supports the given field name.
     @classmethod
     def ValidFieldName(cls, fieldname):
@@ -261,42 +249,28 @@ class Record(object):
 
 
 
-## Records can be imported by name.  An imported record has no specification
+# Records can be imported by name.  An imported record has no specification
 # of its type, and so no validation can be done: all that can be done to an
 # imported record is to link to it.
 class ImportRecord:
-    def __init__(self, name, type=None):
+    def __init__(self, name):
         self.name = name
-        self.__type = type
-        if type:
-            # Need to find the dbd and ask it for a validator
-            self.__validate = None
-        else:
-            self.__validate = None
 
     def __str__(self):
         return self.name
 
     def __repr__(self):
-        return '<external record %s "%s">' % (self.__type, self.name)
+        return '<external record "%s">' % self.name
 
     def __call__(self, *specifiers):
         return _Link(self, None, *specifiers)
 
     def __getattr__(self, fieldname):
-        if self.__validate:
-            self.__validate.ValidFieldName(fieldname)
-        else:
-            # Brain-dead minimal validation: just check for all uppercase!
-            ValidChars = set(string.ascii_uppercase + string.digits)
-            if not set(fieldname) <= ValidChars:
-                raise AttributeError, 'Invalid field name %s' % fieldname
+        # Brain-dead minimal validation: just check for all uppercase!
+        ValidChars = set(string.ascii_uppercase + string.digits)
+        if not set(fieldname) <= ValidChars:
+            raise AttributeError, 'Invalid field name %s' % fieldname
         return _Link(self, fieldname)
-
-
-def ImportName(name):
-    '''Creates import of record with currently configured device name.'''
-    return ImportRecord(recordnames.RecordName(name))
 
 
 # A link is a class to encapsulate a process variable link.  It remembers
@@ -312,7 +286,7 @@ class _Link:
         result = self.record.name
         if self.field:
             result += '.' + self.field
-        for specifier in  self.specifiers:
+        for specifier in self.specifiers:
             result += ' ' + specifier
         return result
 
@@ -321,28 +295,27 @@ class _Link:
 
     # Returns the value currently assigned to this field.
     def Value(self):
-        print 'value'
-        return self.record.FieldValue(self.field)
+        return self.record._FieldValue(self.field)
 
 
 # Some helper routines for building links
 
-## "Process Passive": any record update through a PP output link will be
+# "Process Passive": any record update through a PP output link will be
 # processed if its scan is Passive.
 def PP(record):
     return record('PP')
 
-## "Channel Process": a CP input link will cause the linking record to process
+# "Channel Process": a CP input link will cause the linking record to process
 # any time the linked record is updated.
 def CP(record):
     return record('CP')
 
-## "Maximise Severity": any alarm state on the linked record is propogated to
+# "Maximise Severity": any alarm state on the linked record is propogated to
 # the linking record.
 def MS(record):
     return record('MS')
 
-## "No Process": the linked record is not processed.
+# "No Process": the linked record is not processed.
 def NP(record):
     return record('NPP')
 

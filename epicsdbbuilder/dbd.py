@@ -23,9 +23,7 @@ class RecordTypes(object):
         return sorted(self.__RecordTypes)
 
     def _PublishRecordType(self, on_use, recordType, validate):
-        # Publish this record type and remember it
-        # \todo If we remember which dbd the record came from we can be
-        # intelligent about loading it again
+        # Publish this record type as a method
         self.__RecordTypes.add(recordType)
         setattr(self, recordType,
             Record.CreateSubclass(on_use, recordType, validate))
@@ -35,28 +33,14 @@ class RecordTypes(object):
         return recordType in self.__RecordTypes
 
 
-## Every record type loaded from a DBD is present as an attribute of this
-## class with the name of the record type.
+# Every record type loaded from a DBD is present as an attribute of this
+# class with the name of the record type.
 #
 # For example, to create an ai record, simply write
-# \code
-#   records.ai('NAME', DESC = 'A test ai record', EGU = 'V')
-# \endcode
 #
-# Each record is of type \ref iocbuilder.recordbase.Record "Record", see for
-# more details.
+#   records.ai('NAME', DESC = 'A test ai record', EGU = 'V')
+#
 records = RecordTypes()
-
-# Possible field types as returned by dbGetFieldType
-DCT_STRING = 0
-DCT_INTEGER = 1
-DCT_REAL = 2
-DCT_MENU = 3
-DCT_MENUFORM = 4
-DCT_INLINK = 5
-DCT_OUTLINK = 6
-DCT_FWDLINK = 7
-DCT_NOACCESS = 8
 
 
 # This class uses a the static database to validate whether the associated
@@ -143,7 +127,7 @@ def LoadDbdFile(dbdfile, on_use = None):
 
     # We add <epics_base>/dbd to the path so that dbd includes can be resolved.
     status = mydbstatic.dbReadDatabase(
-        ctypes.byref(_db), filename, '.:%s/dbd' % epics_base, None)
+        ctypes.byref(_db), filename, '.:%s/dbd' % _epics_base, None)
     assert status == 0, 'Error reading database %s (status %d)' % \
         (dbdfile, status)
 
@@ -163,9 +147,9 @@ def LoadDbdFile(dbdfile, on_use = None):
     mydbstatic.dbFreeEntry(entry)
 
 
-def InitialiseDbd(_epics_base = None):
-    global epics_base
-    epics_base = _epics_base
+def InitialiseDbd(epics_base, host_arch = None):
+    global _epics_base
+    _epics_base = epics_base
 
-    mydbstatic.ImportFunctions(epics_base)
+    mydbstatic.ImportFunctions(_epics_base, host_arch)
     LoadDbdFile('base.dbd')
