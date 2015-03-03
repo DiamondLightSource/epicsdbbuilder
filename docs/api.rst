@@ -39,10 +39,13 @@ Record Output
 
     Note that the leading ``#`` comments are added to any header that is passed
 
-..  function:: Disclaimer(source=None)
+..  function:: Disclaimer(source=None, normalise_path=True)
 
     This function generates the disclaimer above.  If a source file name is
-    passed then it is included in the disclaimer.
+    passed then it is included in the disclaimer.  Unless `normalise_path` is
+    set to ``False`` the `source` argument will normalised by calling
+    ``os.path.abspath(source)``; this allows the caller to simply pass
+    ``__file__`` as the source argument with the desired result.
 
 ..  function:: CountRecords()
 

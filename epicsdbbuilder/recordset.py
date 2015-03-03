@@ -1,5 +1,6 @@
 '''Collections of records.'''
 
+import os
 import time
 
 __all__ = [
@@ -48,10 +49,12 @@ ResetRecords = recordset.ResetRecords
 
 
 
-def Disclaimer(source = None):
+def Disclaimer(source = None, normalise_source = True):
     if source is None:
         from_source = '.'
     else:
+        if normalise_source:
+            source = os.path.abspath(source)
         from_source = ' from\nsource: %s' % source
 
     now = time.strftime('%a %d %b %Y %H:%M:%S %Z')
