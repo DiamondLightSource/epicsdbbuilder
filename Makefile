@@ -18,7 +18,7 @@ clean:
 	$(PYTHON) setup.py clean
 	-rm -rf build dist *egg-info installed.files
 	-find -name '*.pyc' -exec rm {} \;
-	$(MAKE) -C documentation clean
+	$(MAKE) -C docs clean
 
 # Install the built egg
 install: dist
