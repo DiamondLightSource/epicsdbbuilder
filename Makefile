@@ -28,4 +28,4 @@ install: dist
             --script-dir=$(SCRIPT_DIR) dist/*.egg
 
 make_docs:
-	$(MAKE) -C documentation
+	$(MAKE) -C docs

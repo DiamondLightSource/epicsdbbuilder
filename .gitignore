@@ -1,2 +1,7 @@
 *.pyc
 /docs/html/
+
+# Dist build output
+/build
+/dist
+/epicsdbbuilder.egg-info/
