@@ -57,52 +57,6 @@ Record Output
     multiple databases.
 
 
-Record Naming
--------------
-
-Record naming works as follows.  Every time a record is created with a call the
-appropriate method of :data:`records` the name argument passed to that method is
-passed through the currently configured :func:`RecordName` method.
-
-..  function:: SetRecordNames(names)
-
-    This sets up a record naming convention.  The argument passed should support
-    one method, :func:`RecordName` which will be called each time a new record
-    is created.  This function takes a name as argument and returns the full
-    name.
-
-    By default an instance of ``BasicRecordNames()`` is installed, this passes
-    its argument through unchanged.
-
-    When this method is called the previously establishing record naming
-    convention is returned.
-
-..  class:: BasicRecordNames(prefix='', separator='', check=True)
-
-    This implements a minimal naming convention.  If no `prefix` is specified
-    record names are generated unchanged, otherwise the given `prefix` and
-    `separator` are contatenated to the front of the passed argument.  If
-    `check` is set the the resulting name is checked for length.
-
-    ..  method:: RecordName(name)
-
-        Returns `prefix` + `separator` + `name`.
-
-..  function:: GetRecordNames()
-
-    Returns the current record naming convention.
-
-..  function:: SetTemplateRecordNames(prefix=None, separator=':')
-
-    This is a wrapper around :class:`Parameter`, :class:`BasicRecordNames`, and
-    :func:`SetRecordNames`.  Sets up a record naming convention with a template
-    parameter as the prefix by default.
-
-..  function:: RecordName(name)
-
-    Applies the current record name conversion to compute a full record name.
-
-
 Building Databases
 ------------------
 
@@ -141,6 +95,89 @@ Building Databases
 ..  function:: LookupRecord(full_name)
 
     Returns a reference to a record which has already been created.
+
+
+Record Naming
+-------------
+
+Record naming works as follows.  Every time a record is created with a call the
+appropriate method of :data:`records` the name argument passed to that method is
+passed through the currently configured :func:`RecordName` method.
+
+If none of the functions named here are called then the default naming
+convention is applied: in this case record names are used unmodified.
+
+There is a simple "high level" API layered over a slightly more general
+interface.
+
+High Level API
+~~~~~~~~~~~~~~
+
+Use one of the following functions for normal configuration:
+
+..  function:: SetSimpleRecordNames(prefix='', separator='')
+
+    In this case the given `prefix` and `separator` are added in front of any
+    record name.  If no arguments are given then the effect is the same as the
+    default naming convention which is to use names unchanged.
+
+    `prefix` can be set to ``None``, in which case name creation will fail until
+    :func:`SetPrefix` is used to change it.
+
+..  function:: SetTemplateRecordNames(prefix=None, separator=':')
+
+    This is useful for generating template databases.  If `prefix` is not
+    specified then a :class:`Parameter` instance with name ``DEVICE`` is created
+    and prefixed together with the `separator` to each record name.
+
+..  function:: RecordName(name)
+
+    Applies the current record name conversion to compute a full record name.
+
+..  function:: SetPrefix(prefix)
+
+    The currently configured prefix can be changed.  This function will only
+    work if a :class:`SimpleRecordNames` or similar naming mechanism is
+    installed.
+
+
+General Interface
+~~~~~~~~~~~~~~~~~
+
+More generally any callable object can be used for record name generation.
+
+..  function:: SetRecordNames(names)
+
+    This sets up a record naming convention.  The argument passed will be called
+    each time a new record is created.  This function should take a name as
+    argument and return the full name to be written to the generated database.
+
+    The default naming mechanism uses the record name unmodified.
+
+    When this method is called the previously establishing record naming
+    convention is returned.
+
+..  class:: SimpleRecordNames(prefix='', separator='', check=True)
+
+    This implements a minimal naming convention.  If no `prefix` is specified
+    record names are generated unchanged, otherwise the given `prefix` and
+    `separator` are contatenated to the front of the passed argument.  If
+    `check` is set the the resulting name is checked for length.  Supports the
+    following methods.
+
+    ..  method:: __call__(name)
+
+        Returns `prefix` + `separator` + `name`.  If `prefix` is currently
+        ``None`` then an error will be generated.
+
+    ..  method:: SetPrefix(prefix)
+
+        Allows the prefix to be modified.  This can be called via the global
+        :func:`SetPrefix` method.
+
+..  function:: GetRecordNames()
+
+    Returns the current record naming convention.
 
 
 Helper Functions

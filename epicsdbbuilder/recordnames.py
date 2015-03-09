@@ -4,13 +4,14 @@ import parameter
 
 
 __all__ = [
-    'BasicRecordNames', 'SetTemplateRecordNames',
-    'RecordName', 'SetRecordNames', 'GetRecordNames']
+    'SimpleRecordNames',
+    'SetSimpleRecordNames', 'SetTemplateRecordNames',
+    'RecordName', 'SetRecordNames', 'GetRecordNames', 'SetPrefix']
 
 
 # Default record name support: each record is created with precisely the name
 # it is given.
-class BasicRecordNames(object):
+class SimpleRecordNames(object):
     # Maximum record name length for EPICS 3.14
     maxLength = 61
 
@@ -19,25 +20,27 @@ class BasicRecordNames(object):
         self.separator = separator
         self.check = check
 
-    def RecordName(self, name):
+    def __call__(self, name):
+        assert self.prefix is not None, 'Record name prefix is undefined'
         name = '%s%s%s' % (self.prefix, self.separator, name)
         assert not self.check or 0 < len(name) <= self.maxLength, \
             'Record name "%s" too long' % name
         return name
 
+    def SetPrefix(self, prefix):
+        self.prefix = prefix
+
+def SetSimpleRecordNames(prefix = '', separator = ''):
+    SetRecordNames(SimpleRecordNames(prefix, separator))
 
 def SetTemplateRecordNames(prefix = None, separator = ':'):
     if prefix is None:
         prefix = parameter.Parameter('DEVICE', 'Device name')
-
-    names = BasicRecordNames(prefix, separator, False)
-    SetRecordNames(names)
-    return names
+    SetRecordNames(SimpleRecordNames(prefix, separator, False))
 
 
-# One record name mechanism is configured, by default a BasicRecordNames
-# instance with no prefix.
-_RecordNames = BasicRecordNames()
+# By default record names are unmodified.
+_RecordNames = lambda name: name
 
 def SetRecordNames(names):
     global _RecordNames
@@ -49,4 +52,7 @@ def GetRecordNames():
     return _RecordNames
 
 def RecordName(name):
-    return _RecordNames.RecordName(name)
+    return _RecordNames(name)
+
+def SetPrefix(prefix):
+    _RecordNames.SetPrefix(prefix)
