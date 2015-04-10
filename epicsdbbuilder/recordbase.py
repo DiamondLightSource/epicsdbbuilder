@@ -10,14 +10,6 @@ __all__ = ['PP', 'CP', 'MS', 'NP', 'ImportRecord']
 
 
 
-# Converts a bound function to an unbound function which can then be rebound:
-# the extra binding is passed as the first argument.
-def _unbind(function):
-    def wrapper(*args, **kargs):
-        return function(*args, **kargs)
-    return wrapper
-
-
 #---------------------------------------------------------------------------
 #
 #   Record class
@@ -44,21 +36,6 @@ class Record(object):
         # Perform any class extension required for this particular record type.
         import bits
         return bits.ExtendClass(BuildRecord)
-
-
-    __MetadataHooks = []
-
-    # Called to add hooks for meta-data.  The hook class should provide
-    # a function
-    #     hook_cls.PrintMetadata(record)
-    # which will be called as the record is generated.  All the given
-    # hook_functions will be exported as methods of the class which will be
-    # called with the class instance as its first argument.
-    @classmethod
-    def AddMetadataHook(cls, hook_cls, **hook_functions):
-        cls.__MetadataHooks.append(hook_cls)
-        for name, function in hook_functions.items():
-            setattr(cls, name, _unbind(function))
 
 
     def __setattr(self, name, value):
@@ -117,6 +94,7 @@ class Record(object):
         # bypass the tricksy use of __setattr__.
         self.__setattr('__fields', {})
         self.__setattr('__aliases', set())
+        self.__setattr('__metadata', [])
         self.__setattr('name', recordnames.RecordName(record))
 
         # Support the special 'address' field as an alias for either INP or
@@ -138,13 +116,16 @@ class Record(object):
     def add_alias(self, alias):
         self.__aliases.add(alias)
 
+    def add_metadata(self, metadata):
+        self.__metadata.append(metadata)
+
 
     # Call to generate database description of this record.  Outputs record
     # definition in .db file format.  Hooks for meta-data can go here.
     def Print(self, output):
         print >>output
-        for hook in self.__MetadataHooks:
-            hook(self, output)
+        for metadata in self.__metadata:
+            print >>output, '#%', metadata
         print >>output, 'record(%s, "%s")' % (self._type, self.name)
         print >>output, '{'
         # Print the fields in alphabetical order.  This is more convenient
