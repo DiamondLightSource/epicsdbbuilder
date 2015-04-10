@@ -72,6 +72,9 @@ Building Databases
         record naming rules currently in force and any field can be given a
         value by assigning it in `kargs`.
 
+        See :class:`epicsdbbuilder.recordbase.Record` for more details of these
+        methods.
+
     Note that fields can be assigned either in the constructor or subsequently,
     and fields can be used as links::
 
@@ -203,3 +206,35 @@ Helper Functions
     Creates one or more dfanout records as necessary to fan a data output to a
     the list of records in `records`.
 
+
+
+Record Class
+------------
+
+..  py:currentmodule:: epicsdbbuilder.recordbase
+..  class:: Record
+
+    A subclass of this class is created for each record type and used to
+    populate :data:`epicsdbbuilder.records`: for example, ``records.ai`` is a
+    subclass of :class:`Record` used to generate ``ai`` records.
+
+    ..  method:: __init__(name, **kargs)
+
+        .. x** (vim fix)
+
+        The argument `name` is used to construct the record name.  Any field
+        appropriate for this record type can be named in `kargs`, for example::
+
+            records.ai('NAME', VAL = 42, PINI = 'YES')
+
+    ..  method:: add_alias(alias)
+
+        This method causes an EPICS ``alias`` statement to be added to the
+        database giving `alias` as an alternative name for this record.  The
+        `alias` argument is used unchanged.
+
+    ..  method:: add_metadata(metadata)
+
+        This adds metadata entries to the created record.  Metadata entries are
+        lines beginning with ``#%`` placed in the db file immediately above the
+        record definition, and can be used by processing tools.
