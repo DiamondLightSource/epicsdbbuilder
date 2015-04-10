@@ -12,6 +12,7 @@ class RecordSet(object):
     def ResetRecords(self):
         self.__RecordSet = {}
         self.__HeaderLines = []
+        self.__BodyLines = []
 
     def __init__(self):
         self.ResetRecords()
@@ -29,6 +30,10 @@ class RecordSet(object):
     def Print(self, output):
         for line in self.__HeaderLines:
             print >>output, line
+        if self.__BodyLines:
+            print >>output
+            for line in self.__BodyLines:
+                print >>output, line
         # Print the records in alphabetical order: gives the reader a fighting
         # chance to find their way around the generated database!
         for record in sorted(self.__RecordSet.keys()):
@@ -40,6 +45,10 @@ class RecordSet(object):
 
     def AddHeaderLine(self, line):
         self.__HeaderLines.append(line)
+
+    def AddBodyLine(self, line):
+        self.__BodyLines.append(line)
+
 
 recordset = RecordSet()
 

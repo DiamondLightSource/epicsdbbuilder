@@ -253,6 +253,9 @@ class ImportRecord:
             raise AttributeError, 'Invalid field name %s' % fieldname
         return _Link(self, fieldname)
 
+    def add_alias(self, name):
+        recordset.AddBodyLine('alias("%s", "%s")' % (self.name, name))
+
 
 # A link is a class to encapsulate a process variable link.  It remembers
 # the record, the linked field, and a list of specifiers (such as PP, CP,
