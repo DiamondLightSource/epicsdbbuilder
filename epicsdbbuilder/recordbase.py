@@ -269,9 +269,9 @@ class _Link:
     def __str__(self):
         result = self.record.name
         if self.field:
-            result += '.' + self.field
+            result = '%s.%s' % (result, self.field)
         for specifier in self.specifiers:
-            result += ' ' + specifier
+            result = '%s %s' % (result, specifier)
         return result
 
     def __call__(self, *specifiers):
