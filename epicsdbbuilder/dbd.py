@@ -3,9 +3,9 @@
 import os, os.path
 import ctypes
 
-import mydbstatic   # Pick up interface to EPICS dbd files
+from . import mydbstatic   # Pick up interface to EPICS dbd files
 
-from recordbase import Record
+from .recordbase import Record
 
 
 __all__ = ['InitialiseDbd', 'LoadDbdFile', 'records']
@@ -89,7 +89,7 @@ class ValidateDbField:
     # cursor to the appropriate database descriptor.
     def ValidFieldName(self, name):
         if name not in self.FieldInfo():
-            raise AttributeError, 'Invalid field name %s' % name
+            raise AttributeError('Invalid field name %s' % name)
 
     # This method raises an exeption if the given field name does not exist
     # or if the value cannot be validly written.

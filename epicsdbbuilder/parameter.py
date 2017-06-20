@@ -1,4 +1,4 @@
-import recordset
+from . import recordset
 
 __all__ = ['Parameter']
 

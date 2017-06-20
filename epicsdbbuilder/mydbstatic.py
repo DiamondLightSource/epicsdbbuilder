@@ -1,28 +1,48 @@
 import os
+import sys
 from ctypes import *
 
 import platform
 
+if sys.version_info < (3,):
+    auto_encode = c_char_p
+    def auto_decode(result, func, args):
+        return result
+else:
+    class auto_encode(c_char_p):
+        @classmethod
+        def from_param(cls, value):
+            if value is None:
+                return value
+            else:
+                return value.encode()
+    def auto_decode(result, func, args):
+        if result is None:
+            return result
+        else:
+            return result.decode()
+
 
 _FunctionList = (
 #     ('dbFreeBase',          None, (c_void_p,)),
-    ('dbReadDatabase',      c_int, (c_void_p, c_char_p, c_char_p, c_char_p)),
-    ('dbAllocEntry',        c_void_p, (c_void_p,)),
-    ('dbFirstRecordType',   c_int, (c_void_p,)),
-    ('dbGetRecordTypeName', c_char_p, (c_void_p,)),
-    ('dbNextRecordType',    c_int, (c_void_p,)),
-    ('dbFreeEntry',         None, (c_void_p,)),
-    ('dbCopyEntry',         c_void_p, (c_void_p,)),
-    ('dbFirstField',        c_int, (c_void_p,)),
-    ('dbGetFieldName',      c_char_p, (c_void_p,)),
-    ('dbGetPrompt',         c_char_p, (c_void_p,)),
-    ('dbGetPromptGroup',    c_int, (c_void_p,)),
-    ('dbGetFieldType',      c_int, (c_void_p,)),
-    ('dbGetNMenuChoices',   c_int, (c_void_p,)),
-    ('dbGetMenuChoices',    c_void_p, (c_void_p,)),
-    ('dbNextField',         c_int, (c_void_p,)),
-#     ('dbGetString',         c_char_p, (c_void_p,)),
-    ('dbVerify',            c_char_p, (c_void_p, c_char_p)),
+    ('dbReadDatabase',      c_int, None,
+        (c_void_p, auto_encode, auto_encode, auto_encode)),
+    ('dbAllocEntry',        c_void_p, None, (c_void_p,)),
+    ('dbFirstRecordType',   c_int, None, (c_void_p,)),
+    ('dbGetRecordTypeName', c_char_p, auto_decode, (c_void_p,)),
+    ('dbNextRecordType',    c_int, None, (c_void_p,)),
+    ('dbFreeEntry',         None, None, (c_void_p,)),
+    ('dbCopyEntry',         c_void_p, None, (c_void_p,)),
+    ('dbFirstField',        c_int, None, (c_void_p,)),
+    ('dbGetFieldName',      c_char_p, auto_decode, (c_void_p,)),
+    ('dbGetPrompt',         c_char_p, auto_decode, (c_void_p,)),
+    ('dbGetPromptGroup',    c_int, None, (c_void_p,)),
+    ('dbGetFieldType',      c_int, None, (c_void_p,)),
+    ('dbGetNMenuChoices',   c_int, None, (c_void_p,)),
+    ('dbGetMenuChoices',    c_void_p, None, (c_void_p,)),
+    ('dbNextField',         c_int, None, (c_void_p,)),
+#     ('dbGetString',         c_char_p, auto_decode, (c_void_p,)),
+    ('dbVerify',            c_char_p, auto_decode, (c_void_p, auto_encode)),
 )
 
 # This function is called late to complete the process of importing all the
@@ -47,8 +67,10 @@ def ImportFunctions(epics_base, host_arch):
     libdb = CDLL(os.path.join(
         epics_base, 'lib', host_arch, 'libdbStaticHost.so'))
 
-    for name, restype, argtypes in _FunctionList:
+    for name, restype, errcheck, argtypes in _FunctionList:
         function = getattr(libdb, name)
         function.restype = restype
         function.argtypes = argtypes
+        if errcheck:
+            function.errcheck = errcheck
         globals()[name] = function

@@ -1,6 +1,6 @@
 '''Support for default record name configurations.'''
 
-import parameter
+from . import parameter
 
 
 __all__ = [

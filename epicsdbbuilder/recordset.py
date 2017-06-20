@@ -1,5 +1,7 @@
 '''Collections of records.'''
 
+from __future__ import print_function
+
 import os
 import time
 
@@ -29,11 +31,11 @@ class RecordSet(object):
     # Output complete set of records to the given file.
     def Print(self, output):
         for line in self.__HeaderLines:
-            print >>output, line
+            print(line, file = output)
         if self.__BodyLines:
-            print >>output
+            print(file = output)
             for line in self.__BodyLines:
-                print >>output, line
+                print(line, file = output)
         # Print the records in alphabetical order: gives the reader a fighting
         # chance to find their way around the generated database!
         for record in sorted(self.__RecordSet.keys()):
@@ -74,7 +76,6 @@ This file was automatically generated on %(now)s%(from_source)s
 
 ''' % locals()
     return message
-    print s + ('\n' + m).join(message.split('\n')) + e
 
 
 def WriteRecords(filename, header = None):
@@ -82,7 +83,7 @@ def WriteRecords(filename, header = None):
         header = Disclaimer()
     header = header.split('\n')
     assert header[-1] == '', 'Terminate header with empty line'
-    with file(filename, 'w') as output:
+    with open(filename, 'w') as output:
         for line in header[:-1]:
-            print >>output, '#', line
+            print('#', line, file = output)
         recordset.Print(output)

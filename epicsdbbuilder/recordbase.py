@@ -1,9 +1,11 @@
 '''Support for generating epics records.'''
 
+from __future__ import print_function
+
 import string
 
-import recordnames
-from recordset import recordset
+from . import recordnames
+from .recordset import recordset
 
 
 __all__ = ['PP', 'CP', 'MS', 'NP', 'ImportRecord']
@@ -34,7 +36,7 @@ class Record(object):
         BuildRecord.__name__ = recordType
 
         # Perform any class extension required for this particular record type.
-        import bits
+        from . import bits
         return bits.ExtendClass(BuildRecord)
 
 
@@ -123,11 +125,11 @@ class Record(object):
     # Call to generate database description of this record.  Outputs record
     # definition in .db file format.  Hooks for meta-data can go here.
     def Print(self, output):
-        print >>output
+        print(file = output)
         for metadata in self.__metadata:
-            print >>output, '#%', metadata
-        print >>output, 'record(%s, "%s")' % (self._type, self.name)
-        print >>output, '{'
+            print('#%', metadata, file = output)
+        print('record(%s, "%s")' % (self._type, self.name), file = output)
+        print('{', file = output)
         # Print the fields in alphabetical order.  This is more convenient
         # to the eye and has the useful side effect of bypassing a bug
         # where DTYPE needs to be specified before INP or OUT fields.
@@ -137,10 +139,10 @@ class Record(object):
                 self.__ValidateField(k, value)
             value = str(value)
             padding = ''.ljust(4-len(k))  # To align field values
-            print >>output, '    field(%s, %s"%s")' % (k, padding, value)
+            print('    field(%s, %s"%s")' % (k, padding, value), file = output)
         for alias in sorted(list(self.__aliases)):
-            print >>output, '    alias("%s")' % alias
-        print >>output, '}'
+            print('    alias("%s")' % alias, file = output)
+        print('}', file = output)
 
 
     # The string for a record is just its name.
@@ -250,7 +252,7 @@ class ImportRecord:
         # Brain-dead minimal validation: just check for all uppercase!
         ValidChars = set(string.ascii_uppercase + string.digits)
         if not set(fieldname) <= ValidChars:
-            raise AttributeError, 'Invalid field name %s' % fieldname
+            raise AttributeError('Invalid field name %s' % fieldname)
         return _Link(self, fieldname)
 
     def add_alias(self, name):

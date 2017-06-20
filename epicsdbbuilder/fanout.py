@@ -1,7 +1,7 @@
 '''Support for creating fanout records.'''
 
-from dbd import records
-from recordbase import PP
+from .dbd import records
+from .recordbase import PP
 
 
 __all__ = ['create_fanout', 'create_dfanout']
