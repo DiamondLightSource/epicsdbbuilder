@@ -64,8 +64,14 @@ def ImportFunctions(epics_base, host_arch):
         bits = platform.architecture()[0]
         host_arch = system_map[(platform.system(), bits)]
 
-    libdb = CDLL(os.path.join(
-        epics_base, 'lib', host_arch, 'libdbStaticHost.so'))
+    # So we can work with both EPICS 3.14 and 3.15, look for libdbCore.so first
+    # before falling back to the older libdbStaticHost.so
+    try:
+        libdb = CDLL(os.path.join(
+            epics_base, 'lib', host_arch, 'libdbCore.so'))
+    except OSError:
+        libdb = CDLL(os.path.join(
+            epics_base, 'lib', host_arch, 'libdbStaticHost.so'))
 
     for name, restype, errcheck, argtypes in _FunctionList:
         function = getattr(libdb, name)
