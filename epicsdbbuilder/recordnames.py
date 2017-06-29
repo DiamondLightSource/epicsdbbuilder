@@ -4,9 +4,10 @@ from . import parameter
 
 
 __all__ = [
-    'SimpleRecordNames',
+    'SimpleRecordNames', 'TemplateRecordNames',
     'SetSimpleRecordNames', 'SetTemplateRecordNames',
-    'RecordName', 'SetRecordNames', 'GetRecordNames', 'SetPrefix']
+    'RecordName', 'SetRecordNames', 'GetRecordNames',
+    'PushPrefix', 'PopPrefix', 'SetPrefix']
 
 
 # Default record name support: each record is created with precisely the name
@@ -15,28 +16,43 @@ class SimpleRecordNames(object):
     # Maximum record name length for EPICS 3.14
     maxLength = 61
 
-    def __init__(self, prefix = '', separator = '', check = True):
-        self.prefix = prefix
+    def __init__(self, prefix = '', separator = ':', check = True):
+        self.prefix = [prefix] if prefix else []
         self.separator = separator
         self.check = check
 
     def __call__(self, name):
-        assert self.prefix is not None, 'Record name prefix is undefined'
-        name = '%s%s%s' % (self.prefix, self.separator, name)
+        name = self.separator.join(map(str, self.prefix + [name]))
         assert not self.check or 0 < len(name) <= self.maxLength, \
             'Record name "%s" too long' % name
         return name
 
+    def PushPrefix(self, prefix):
+        self.prefix.append(prefix)
+
+    def PopPrefix(self):
+        return self.prefix.pop()
+
     def SetPrefix(self, prefix):
-        self.prefix = prefix
+        if prefix:
+            if self.prefix:
+                self.PopPrefix()
+            self.PushPrefix(prefix)
+        else:
+            self.PopPrefix()
+
+class TemplateRecordNames(SimpleRecordNames):
+    def __init__(self, prefix = None, separator = ':'):
+        if prefix is None:
+            prefix = parameter.Parameter('DEVICE', 'Device name')
+        SimpleRecordNames.__init__(self, prefix, separator, False)
+
 
 def SetSimpleRecordNames(prefix = '', separator = ''):
     SetRecordNames(SimpleRecordNames(prefix, separator))
 
 def SetTemplateRecordNames(prefix = None, separator = ':'):
-    if prefix is None:
-        prefix = parameter.Parameter('DEVICE', 'Device name')
-    SetRecordNames(SimpleRecordNames(prefix, separator, False))
+    SetRecordNames(TemplateRecordNames(prefix, separator))
 
 
 # By default record names are unmodified.
@@ -53,6 +69,12 @@ def GetRecordNames():
 
 def RecordName(name):
     return _RecordNames(name)
+
+def PushPrefix(prefix):
+    _RecordNames.PushPrefix(prefix)
+
+def PopPrefix():
+    _RecordNames.PopPrefix()
 
 def SetPrefix(prefix):
     _RecordNames.SetPrefix(prefix)

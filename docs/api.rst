@@ -118,14 +118,11 @@ High Level API
 
 Use one of the following functions for normal configuration:
 
-..  function:: SetSimpleRecordNames(prefix='', separator='')
+..  function:: SetSimpleRecordNames(prefix='', separator=':')
 
     In this case the given `prefix` and `separator` are added in front of any
     record name.  If no arguments are given then the effect is the same as the
     default naming convention which is to use names unchanged.
-
-    `prefix` can be set to ``None``, in which case name creation will fail until
-    :func:`SetPrefix` is used to change it.
 
 ..  function:: SetTemplateRecordNames(prefix=None, separator=':')
 
@@ -142,6 +139,13 @@ Use one of the following functions for normal configuration:
     The currently configured prefix can be changed.  This function will only
     work if a :class:`SimpleRecordNames` or similar naming mechanism is
     installed.
+
+..  function::
+    PushPrefix(prefix)
+    PopPrefix()
+
+    These two functions manage a stack of record name prefixes, which will be
+    separated by `separator` before being appended to the record name.
 
 
 General Interface
@@ -160,7 +164,7 @@ More generally any callable object can be used for record name generation.
     When this method is called the previously establishing record naming
     convention is returned.
 
-..  class:: SimpleRecordNames(prefix='', separator='', check=True)
+..  class:: SimpleRecordNames(prefix='', separator=':', check=True)
 
     This implements a minimal naming convention.  If no `prefix` is specified
     record names are generated unchanged, otherwise the given `prefix` and
@@ -177,6 +181,20 @@ More generally any callable object can be used for record name generation.
 
         Allows the prefix to be modified.  This can be called via the global
         :func:`SetPrefix` method.
+
+    ..  method::
+        PushPrefix(prefix)
+        PopPrefix()
+
+        These two functions manage a stack of record name prefixes, which will
+        be separated by `separator` before being appended to the record name.
+        Can be called via the corresponding global functions.
+
+
+..  class:: TemplateRecordNames(prefix=None, separator=':')
+
+    Subclasses :class:`SimpleRecordNames` to automatically add a ``$(DEVICE)``
+    template to the prefix stack.
 
 ..  function:: GetRecordNames()
 

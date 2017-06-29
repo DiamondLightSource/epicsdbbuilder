@@ -6,8 +6,8 @@ from epicsdbbuilder import *
 
 InitialiseDbd(os.environ['EPICS_BASE'])
 
-tmpl_names = SetTemplateRecordNames()
-dls_names = BasicRecordNames('XX-YY-ZZ-01')
+tmpl_names = TemplateRecordNames()
+dls_names = SimpleRecordNames('XX-YY-ZZ-01', ':')
 
 SetRecordNames(dls_names)
 
@@ -23,6 +23,10 @@ records.bi('TRIG',
     SCAN = '1 second')
 
 s = ImportRecord(RecordName('TRIG'))
+
+PushPrefix('ABC')
+
+records.ai('TEST')
 
 
 SetRecordNames(tmpl_names)
