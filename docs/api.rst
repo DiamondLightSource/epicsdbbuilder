@@ -147,6 +147,10 @@ Use one of the following functions for normal configuration:
     These two functions manage a stack of record name prefixes, which will be
     separated by `separator` before being appended to the record name.
 
+..  function:: SetSeparator(separator)
+
+    This function can be used to change the prefix separator.
+
 
 General Interface
 ~~~~~~~~~~~~~~~~~

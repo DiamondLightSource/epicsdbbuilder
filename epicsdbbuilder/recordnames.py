@@ -7,7 +7,7 @@ __all__ = [
     'SimpleRecordNames', 'TemplateRecordNames',
     'SetSimpleRecordNames', 'SetTemplateRecordNames',
     'RecordName', 'SetRecordNames', 'GetRecordNames',
-    'PushPrefix', 'PopPrefix', 'SetPrefix']
+    'PushPrefix', 'PopPrefix', 'SetPrefix', 'SetSeparator']
 
 
 # Default record name support: each record is created with precisely the name
@@ -40,6 +40,10 @@ class SimpleRecordNames(object):
             self.PushPrefix(prefix)
         else:
             self.PopPrefix()
+
+    def SetSeparator(self, separator):
+        self.separator = separator
+
 
 class TemplateRecordNames(SimpleRecordNames):
     def __init__(self, prefix = None, separator = ':'):
@@ -78,3 +82,6 @@ def PopPrefix():
 
 def SetPrefix(prefix):
     _RecordNames.SetPrefix(prefix)
+
+def SetSeparator(separator):
+    _RecordNames.SetSeparator(separator)
