@@ -45,6 +45,14 @@ _FunctionList = (
     ('dbVerify',            c_char_p, auto_decode, (c_void_p, auto_encode)),
 )
 
+
+# Fallback implementation for dbVerify.  Turns out not to be present in EPICS
+# 3.16, which is rather annoying.  In this case we just allow all writes to
+# succeed.
+def dbVerify(entry, value):
+    return None
+
+
 # This function is called late to complete the process of importing all the
 # exports from this module.  This is done late so that paths.EPICS_BASE can be
 # configured late.
@@ -74,9 +82,15 @@ def ImportFunctions(epics_base, host_arch):
             epics_base, 'lib', host_arch, 'libdbStaticHost.so'))
 
     for name, restype, errcheck, argtypes in _FunctionList:
-        function = getattr(libdb, name)
-        function.restype = restype
-        function.argtypes = argtypes
-        if errcheck:
-            function.errcheck = errcheck
-        globals()[name] = function
+        try:
+            function = getattr(libdb, name)
+        except AttributeError:
+            # Check for global fallback function
+            if name not in globals():
+                raise
+        else:
+            function.restype = restype
+            function.argtypes = argtypes
+            if errcheck:
+                function.errcheck = errcheck
+            globals()[name] = function
