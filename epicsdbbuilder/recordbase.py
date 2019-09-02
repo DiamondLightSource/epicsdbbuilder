@@ -220,10 +220,6 @@ class Record(object):
         else:
             return True
 
-    @classmethod
-    def FieldInfo(cls):
-        return cls._validate.FieldInfo()
-
     # When a record is pickled for export it will reappear as an ImportRecord
     # instance.  This makes more sense (as the record has been fully generated
     # already), and avoids a lot of trouble.

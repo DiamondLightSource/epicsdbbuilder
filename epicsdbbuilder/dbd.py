@@ -50,45 +50,27 @@ class ValidateDbField:
         self.dbEntry = mydbstatic.dbCopyEntry(dbEntry)
         self.__FieldInfo = None
 
-    def __ProcessFieldInfo(self, name):
-        desc = mydbstatic.dbGetPrompt(self.dbEntry)
-        typ = mydbstatic.dbGetFieldType(self.dbEntry)
-        group = mydbstatic.dbGetPromptGroup(self.dbEntry)
-
-        n_choices = mydbstatic.dbGetNMenuChoices(self.dbEntry)
-        if n_choices > 0:
-            menu_void = mydbstatic.dbGetMenuChoices(self.dbEntry)
-            menu_p = ctypes.cast(menu_void,
-                ctypes.POINTER(ctypes.c_char_p * n_choices))
-        else:
-            menu_p = []
-        return (desc, typ, group, menu_p)
-
     # Computes list of valid names and creates associated arginfo
     # definitions.  This is postponed quite late to try and ensure the menus
     # are fully populated, in other words we don't want to fire this until
     # all the dbd files have been loaded.
     def __ProcessDbd(self):
         # ordered dict of field_name -> arginfo
-        self.__FieldInfo = {}
+        self.__FieldInfo = set()
         status = mydbstatic.dbFirstField(self.dbEntry, 0)
         while status == 0:
             name = mydbstatic.dbGetFieldName(self.dbEntry)
             if name != 'NAME':
-                self.__FieldInfo[name] = self.__ProcessFieldInfo(name)
+                self.__FieldInfo.add(name)
             status = mydbstatic.dbNextField(self.dbEntry, 0)
-
-    def FieldInfo(self):
-        if self.__FieldInfo is None:
-            self.__ProcessDbd()
-        return self.__FieldInfo
 
 
     # This method raises an attribute error if the given field name is
-    # invalid.  As an important side effect it also sets the database
-    # cursor to the appropriate database descriptor.
+    # invalid.
     def ValidFieldName(self, name):
-        if name not in self.FieldInfo():
+        if self.__FieldInfo is None:
+            self.__ProcessDbd()
+        if name not in self.__FieldInfo:
             raise AttributeError('Invalid field name %s' % name)
 
     # This method raises an exeption if the given field name does not exist

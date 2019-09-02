@@ -24,7 +24,6 @@ else:
 
 
 _FunctionList = (
-#     ('dbFreeBase',          None, (c_void_p,)),
     ('dbReadDatabase',      c_int, None,
         (c_void_p, auto_encode, auto_encode, auto_encode)),
     ('dbAllocEntry',        c_void_p, None, (c_void_p,)),
@@ -35,13 +34,7 @@ _FunctionList = (
     ('dbCopyEntry',         c_void_p, None, (c_void_p,)),
     ('dbFirstField',        c_int, None, (c_void_p,)),
     ('dbGetFieldName',      c_char_p, auto_decode, (c_void_p,)),
-    ('dbGetPrompt',         c_char_p, auto_decode, (c_void_p,)),
-    ('dbGetPromptGroup',    c_int, None, (c_void_p,)),
-    ('dbGetFieldType',      c_int, None, (c_void_p,)),
-    ('dbGetNMenuChoices',   c_int, None, (c_void_p,)),
-    ('dbGetMenuChoices',    c_void_p, None, (c_void_p,)),
     ('dbNextField',         c_int, None, (c_void_p,)),
-#     ('dbGetString',         c_char_p, auto_decode, (c_void_p,)),
     ('dbVerify',            c_char_p, auto_decode, (c_void_p, auto_encode)),
 )
 
