@@ -68,7 +68,7 @@ def create_fanout(name, *record_list, **args):
     firstargs = args
     nextargs = args.copy()
     nextargs['SCAN'] = 'Passive'
-    if nextargs.has_key('PINI'):  del nextargs['PINI']
+    if 'PINI' in nextargs:  del nextargs['PINI']
 
     def fieldname(i):   return 'LNK%d' % (i + 1)
     def identity(x):    return x
@@ -84,8 +84,8 @@ def create_dfanout(name, *record_list, **args):
     firstargs = args
     nextargs = args.copy()
     nextargs.update(dict(SCAN = 'Passive', OMSL = 'supervisory'))
-    if nextargs.has_key('DOL'):   del nextargs['DOL']
-    if nextargs.has_key('PINI'):  del nextargs['PINI']
+    if 'DOL' in nextargs:   del nextargs['DOL']
+    if 'PINI' in nextargs:  del nextargs['PINI']
 
     def fieldname(i):   return 'OUT%c' % (ord('A') + i)
     record_list = _fanout_helper(
