@@ -67,12 +67,19 @@ def ImportFunctions(epics_base, host_arch):
 
     # So we can work with both EPICS 3.14 and 3.15, look for libdbCore.so first
     # before falling back to the older libdbStaticHost.so
+    # On Windows, use dbCore.dll or dbStaticHost.dll instead
+    library_name_format = 'lib{}.so'
+    library_location = 'lib'
+    if platform.system() == 'Windows':
+        library_name_format = '{}.dll'
+        library_location = 'bin'
+
     try:
         libdb = PyDLL(os.path.join(
-            epics_base, 'lib', host_arch, 'libdbCore.so'))
+            epics_base, library_location, host_arch, library_name_format.format('dbCore')), 512)
     except OSError:
         libdb = PyDLL(os.path.join(
-            epics_base, 'lib', host_arch, 'libdbStaticHost.so'))
+            epics_base, library_location, host_arch, library_name_format.format('dbStaticHost')))
 
     for name, restype, errcheck, argtypes in _FunctionList:
         try:
