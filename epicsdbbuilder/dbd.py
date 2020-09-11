@@ -2,6 +2,7 @@
 
 import os, os.path
 import ctypes
+import platform
 
 from . import mydbstatic   # Pick up interface to EPICS dbd files
 
@@ -108,12 +109,16 @@ def LoadDbdFile(dbdfile, on_use = None):
         os.chdir(dirname)
 
     # We add <epics_base>/dbd to the path so that dbd includes can be resolved.
+    separator = ':'
+    if platform.system() == 'Windows':
+        separator = ';'
+
     status = mydbstatic.dbReadDatabase(
-        ctypes.byref(_db), filename, '.:%s/dbd' % _epics_base, None)
+        ctypes.byref(_db), filename,
+        separator.join(['.', os.path.join(_epics_base, 'dbd')]), None)
+    os.chdir(curdir)
     assert status == 0, 'Error reading database %s (status %d)' % \
         (dbdfile, status)
-
-    os.chdir(curdir)
 
 
     # Enumerate all the record types and build a record generator class
