@@ -76,10 +76,12 @@ def ImportFunctions(epics_base, host_arch):
 
     try:
         libdb = PyDLL(os.path.join(
-            epics_base, library_location, host_arch, library_name_format.format('dbCore')))
+            epics_base, library_location, host_arch,
+            library_name_format.format('dbCore')))
     except OSError:
         libdb = PyDLL(os.path.join(
-            epics_base, library_location, host_arch, library_name_format.format('dbStaticHost')))
+            epics_base, library_location, host_arch,
+            library_name_format.format('dbStaticHost')))
 
     for name, restype, errcheck, argtypes in _FunctionList:
         try:

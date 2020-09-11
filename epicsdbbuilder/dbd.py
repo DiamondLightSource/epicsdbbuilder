@@ -114,7 +114,8 @@ def LoadDbdFile(dbdfile, on_use = None):
         separator = ';'
 
     status = mydbstatic.dbReadDatabase(
-        ctypes.byref(_db), filename, separator.join(['.', os.path.join(_epics_base, 'dbd')]), None)
+        ctypes.byref(_db), filename,
+        separator.join(['.', os.path.join(_epics_base, 'dbd')]), None)
     os.chdir(curdir)
     assert status == 0, 'Error reading database %s (status %d)' % \
         (dbdfile, status)
