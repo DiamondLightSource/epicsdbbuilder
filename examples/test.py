@@ -36,6 +36,15 @@ t = records.ai('TEST',
     INP = '@%s' % P, VAL = Q, SCAN = '1 second')
 records.bi('BOO', INP = s)
 
+# Test link options
+records.ai('OPTIONS:CA', INP = CA(t))
+records.ai('OPTIONS:CP', INP = CP(t))
+records.ai('OPTIONS:CPP', INP = CPP(t))
+
+# Test multiple link options
+records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
+
+
 if platform.system() == 'Windows':
     WriteRecords(os.path.join(os.path.dirname(__file__), 'test_output.db'))
 else:

@@ -8,7 +8,7 @@ from . import recordnames
 from .recordset import recordset
 
 
-__all__ = ['PP', 'CP', 'MS', 'NP', 'ImportRecord']
+__all__ = ['PP', 'CA', 'CP', 'CPP', 'MS', 'NP', 'ImportRecord']
 
 
 
@@ -287,10 +287,21 @@ class _Link:
 def PP(record):
     return record('PP')
 
+# "Channel Access": a CA (input or output) link will be treated as a channel access link
+# regardless whether it is a DB link or not.
+def CA(record):
+    return record('CA')
+
 # "Channel Process": a CP input link will cause the linking record to process
 # any time the linked record is updated.
 def CP(record):
     return record('CP')
+
+# "Channel Process if Passive": a CP input link will be treated as a channel access link
+# and if the linking record is passive, the linking passive record will be processed
+# any time the linked record is updated.
+def CPP(record):
+    return record('CPP')
 
 # "Maximise Severity": any alarm state on the linked record is propogated to
 # the linking record.
