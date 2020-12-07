@@ -44,6 +44,19 @@ records.ai('OPTIONS:CPP', INP = CPP(t))
 # Test multiple link options
 records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
 
+# Test custom field formatting
+class CustomField:
+    def __init__(self, value):
+        self.value = value
+
+    def Validate(self, record, fieldname):
+        return True
+
+    def Print(self, record, fieldname):
+        return f'["{self.value}"]'
+
+records.ai('FIELD:CUSTOM', INP = CustomField('constant'))
+
 
 if platform.system() == 'Windows':
     WriteRecords(os.path.join(os.path.dirname(__file__), 'test_output.db'))
