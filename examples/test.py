@@ -45,7 +45,7 @@ records.ai('OPTIONS:CPP', INP = CPP(t))
 records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
 
 # Test custom field formatting
-class CustomField:
+class CustomFieldWithPrint:
     def __init__(self, value):
         self.value = value
 
@@ -55,7 +55,23 @@ class CustomField:
     def Print(self, record, fieldname):
         return f'["{self.value}"]'
 
-records.ai('FIELD:CUSTOM', INP = CustomField('constant'))
+    def __str__(self):
+        return "you should not see me!"
+
+records.ai('FIELD:CUSTOM_WITH_PRINT', INP = CustomFieldWithPrint('constant_link'))
+
+
+class CustomFieldWithoutPrint:
+    def __init__(self, value):
+        self.value = value
+
+    def Validate(self, record, fieldname):
+        return True
+
+    def __str__(self):
+        return self.value
+
+records.ai('FIELD:CUSTOM_WITHOUT_PRINT', INP = CustomFieldWithoutPrint('link'))
 
 
 if platform.system() == 'Windows':
