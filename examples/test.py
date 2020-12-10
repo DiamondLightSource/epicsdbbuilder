@@ -1,3 +1,5 @@
+# vim: set fileencoding=UTF-8:
+
 import os
 import sys
 import platform
@@ -43,6 +45,9 @@ records.ai('OPTIONS:CPP', INP = CPP(t))
 
 # Test multiple link options
 records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
+
+# A string constant with some evil character values
+records.stringin('STRING', VAL = '"\n\\\x01€')
 
 
 if platform.system() == 'Windows':

@@ -12,6 +12,20 @@ __all__ = ['PP', 'CA', 'CP', 'CPP', 'MS', 'NP', 'ImportRecord']
 
 
 
+# Quotes a single character if necessary
+def quote_char(ch):
+    if ord(ch) < ord(' '):
+        return '\\x%02x' % ord(ch)
+    elif ch in '"\\':
+        return '\\' + ch
+    else:
+        return ch
+
+# Converts a string into a safely quoted string with quotation marks
+def quote_string(value):
+    return '"' + ''.join(map(quote_char, value)) + '"'
+
+
 #---------------------------------------------------------------------------
 #
 #   Record class
@@ -137,9 +151,9 @@ class Record(object):
             value = self.__fields[k]
             if getattr(value, 'ValidateLater', False):
                 self.__ValidateField(k, value)
-            value = str(value)
+            value = quote_string(str(value))
             padding = ''.ljust(4-len(k))  # To align field values
-            print('    field(%s, %s"%s")' % (k, padding, value), file = output)
+            print('    field(%s, %s%s)' % (k, padding, value), file = output)
         for alias in sorted(list(self.__aliases)):
             print('    alias("%s")' % alias, file = output)
         print('}', file = output)
