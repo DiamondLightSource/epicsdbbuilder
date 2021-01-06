@@ -1,3 +1,5 @@
+# vim: set fileencoding=UTF-8:
+
 import os
 import sys
 import platform
@@ -72,6 +74,9 @@ class CustomFieldWithoutPrint:
         return self.value
 
 records.ai('FIELD:CUSTOM_WITHOUT_PRINT', INP = CustomFieldWithoutPrint('link'))
+
+# A string constant with some evil character values
+records.stringin('STRING', VAL = '"\n\\\x01€')
 
 
 if platform.system() == 'Windows':

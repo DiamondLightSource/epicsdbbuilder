@@ -12,6 +12,20 @@ __all__ = ['PP', 'CA', 'CP', 'CPP', 'MS', 'NP', 'ImportRecord']
 
 
 
+# Quotes a single character if necessary
+def quote_char(ch):
+    if ord(ch) < ord(' '):
+        return '\\x%02x' % ord(ch)
+    elif ch in '"\\':
+        return '\\' + ch
+    else:
+        return ch
+
+# Converts a string into a safely quoted string with quotation marks
+def quote_string(value):
+    return '"' + ''.join(map(quote_char, value)) + '"'
+
+
 #---------------------------------------------------------------------------
 #
 #   Record class
@@ -138,15 +152,11 @@ class Record(object):
             if getattr(value, 'ValidateLater', False):
                 self.__ValidateField(k, value)
             if hasattr(value, 'Print'):
-                field_value = value.Print(self, k)
+                value = value.Print(self, k)
             else:
-                # Following code assumes the value has been escaped properly.
-                # While this strategy to handling data is fragile,
-                # correcting it might break existing code which might have tried
-                # to work around the lack of proper output encoding.
-                field_value = '"%s"' % (str(value))
+                value = quote_string(str(value))
             padding = ''.ljust(4-len(k))  # To align field values
-            print('    field(%s, %s%s)' % (k, padding, field_value), file = output)
+            print('    field(%s, %s%s)' % (k, padding, value), file = output)
         for alias in sorted(list(self.__aliases)):
             print('    alias("%s")' % alias, file = output)
         print('}', file = output)
