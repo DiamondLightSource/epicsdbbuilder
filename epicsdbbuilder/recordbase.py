@@ -151,10 +151,7 @@ class Record(object):
             value = self.__fields[k]
             if getattr(value, 'ValidateLater', False):
                 self.__ValidateField(k, value)
-            if hasattr(value, 'Print'):
-                value = value.Print(self, k)
-            else:
-                value = quote_string(str(value))
+            value = self.__FormatFieldForDb(k, value)
             padding = ''.ljust(4-len(k))  # To align field values
             print('    field(%s, %s%s)' % (k, padding, value), file = output)
         for alias in sorted(list(self.__aliases)):
@@ -205,6 +202,14 @@ class Record(object):
             value.Validate(self, fieldname)
         else:
             self._validate.ValidFieldValue(fieldname, str(value))
+
+    # Field formatting
+    def __FormatFieldForDb(self, fieldname, value):
+        if hasattr(value, 'FormatDb'):
+            return value.FormatDb(self, fieldname)
+        else:
+            return quote_string(str(value))
+
 
     # Allow individual fields to be deleted from the record.
     def __delattr__(self, fieldname):

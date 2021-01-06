@@ -46,7 +46,7 @@ records.ai('OPTIONS:CPP', INP = CPP(t))
 # Test multiple link options
 records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
 
-# Test custom field formatting
+# Test const array
 class CustomFieldWithPrint:
     def __init__(self, value):
         self.value = value
@@ -60,20 +60,8 @@ class CustomFieldWithPrint:
     def __str__(self):
         return "you should not see me!"
 
-records.ai('FIELD:CUSTOM_WITH_PRINT', INP = CustomFieldWithPrint('constant_link'))
+records.ai('FIELD:WITH_CONST_ARRAY', INP = ConstArray(["A", "B", "C"]))
 
-
-class CustomFieldWithoutPrint:
-    def __init__(self, value):
-        self.value = value
-
-    def Validate(self, record, fieldname):
-        return True
-
-    def __str__(self):
-        return self.value
-
-records.ai('FIELD:CUSTOM_WITHOUT_PRINT', INP = CustomFieldWithoutPrint('link'))
 
 # A string constant with some evil character values
 records.stringin('STRING', VAL = '"\n\\\x01€')
