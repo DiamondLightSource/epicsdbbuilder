@@ -47,19 +47,6 @@ records.ai('OPTIONS:CPP', INP = CPP(t))
 records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
 
 # Test const array
-class CustomFieldWithPrint:
-    def __init__(self, value):
-        self.value = value
-
-    def Validate(self, record, fieldname):
-        return True
-
-    def Print(self, record, fieldname):
-        return f'["{self.value}"]'
-
-    def __str__(self):
-        return "you should not see me!"
-
 records.ai('FIELD:WITH_CONST_ARRAY', INP = ConstArray(["A", "B", "C"]))
 
 
