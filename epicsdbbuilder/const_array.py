@@ -8,9 +8,13 @@ __all__ = ['ConstArray']
 class ConstArray:
     """Constant Link Values. EPICS Base 7.0.4.1 and above.
 
-    Use
-    ---
+    Example: PY Source
+    ------------------
     `r = records.lsi('r', INP=ConstArray(['Plain String not DBLINK']))`
+
+    Example: Generated DB
+    ---------------------
+    `field(INP, ["Plain String not DBLINK"])`
     """
 
     def __init__(self, value):

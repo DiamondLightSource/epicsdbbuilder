@@ -205,8 +205,8 @@ More generally any callable object can be used for record name generation.
     Returns the current record naming convention.
 
 
-Helper Functions
-----------------
+Helper Functions and Classes
+----------------------------
 
 ..  function::
     CP(record)
@@ -216,6 +216,11 @@ Helper Functions
 
     Used for record links to add the appropriate processing annotation to the
     link.
+
+..  class::
+    ConstArray(array)
+
+    Used for constant link values available in EPICS 7.0.4.1.
 
 ..  function:: create_fanout(name, *records, **args)
 
