@@ -17,4 +17,5 @@ def ExportModules(globs, base_module, modulenames):
 
 __all__ = ExportModules(globals(),
     'epicsdbbuilder',
-    ['dbd', 'recordbase', 'fanout', 'recordset', 'recordnames', 'parameter', 'const_array'])
+    ['dbd', 'recordbase', 'fanout', 'recordset', 'recordnames', 'parameter',
+        'const_array'])
