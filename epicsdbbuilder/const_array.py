@@ -6,7 +6,7 @@ __all__ = ['ConstArray']
 
 
 class ConstArray:
-    """Constant Link Values. EPICS Base 7.0.4.1 and above.
+    """Constant Link Values. EPICS Base 3.16.1 and above.
 
     Example: PY Source
     ------------------
@@ -34,24 +34,18 @@ class ConstArray:
             if record is None or fieldname is None \
             else f'ConstArray@{record}.{fieldname} :'
 
-        assert isinstance(value, list) \
-            or isinstance(value, tuple), \
+        assert isinstance(value, (list, tuple)), \
             f'{id} expects a list or a tuple but [{type(value)}] was supplied.'
 
         numbers = False
         strings = False
+        valid_types = (Parameter, str, int, float, bool, Decimal)
         for index, value in enumerate(value):
-            assert value is None \
-                or isinstance(value, Parameter) \
-                or isinstance(value, str) \
-                or isinstance(value, int) \
-                or isinstance(value, float) \
-                or isinstance(value, bool) \
-                or isinstance(value, Decimal), \
+            assert value is not None or isinstance(value, valid_types), \
                 f'{id} expects a string or parameter as element' \
                 f' but an element at the index {index} is {type(value)}.'
 
-            if isinstance(value, Parameter) or isinstance(value, str):
+            if isinstance(value, (Parameter, str)):
                 assert not numbers, \
                     f'{id} cannot mix strings' \
                     f' with an element at index {index} which is {type(value)}.'
@@ -72,20 +66,16 @@ class ConstArray:
         return str(value)
 
     def Validate(self, record, fieldname):
-        try:
-            self._assert_valid(self._value)
-            return True
-        except AssertionError:
-            return False
+        self._assert_valid(self._value, record, fieldname)
 
     def FormatDb(self, record, fieldname):
-        if self._value is None or len(self._value) == 0:
-            return ''
+        if len(self._value) == 0:
+            return '[""]'
         formatted = [
             self._format_constant(v)
             for v in self._value if v is not None]
         if len(formatted) == 0:
-            return ''
+            return '[""]'
         return '[{}]'.format(','.join(formatted))
 
     def __repr__(self):

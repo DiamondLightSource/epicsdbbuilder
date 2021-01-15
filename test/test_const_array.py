@@ -17,8 +17,7 @@ class TestConstArray(unittest.TestCase):
         ConstArray([Decimal('3.5')])
         ConstArray(['str'])
         ConstArray([self.par])
-        ConstArray([None])
-        self.assertRaises(AssertionError, lambda: ConstArray('plain'))
+        self.assertRaises(AssertionError, lambda: ConstArray([None]))
 
     def test_list_cannot_mix_string_numbers(self):
         self.assertRaises(AssertionError, lambda: ConstArray([1, 'A']))
@@ -57,24 +56,16 @@ class TestConstArray(unittest.TestCase):
             ConstArray([False, True]).FormatDb(None, None))
 
     def test_FormatDb_empty(self):
-        self.assertEqual('', \
+        self.assertEqual('[""]', \
             ConstArray([]).FormatDb(None, None))
-        self.assertEqual('', \
+        self.assertEqual('[""]', \
             ConstArray(()).FormatDb(None, None))
 
-    def test_FormatDb_none_is_ignored(self):
-        self.assertEqual('["A","C"]', \
-            ConstArray(['A', None, 'C']).FormatDb(None, None))
-        self.assertEqual('[1,3]', \
-            ConstArray([1, None, 3]).FormatDb(None, None))
-        self.assertEqual('', \
-            ConstArray([None, None]).FormatDb(None, None))
-
     def test_Validate_strings_and_parameter_only(self):
-        self.assertTrue(ConstArray(["A", self.par, "C"]).Validate(None, None))
+        ConstArray(["A", self.par, "C"]).Validate(None, None)
 
     def test_Validate_numbers_only(self):
-        self.assertTrue(ConstArray([False, 1, 2.5, Decimal('3.5')]).Validate(None, None))
+        ConstArray([False, 1, 2.5, Decimal('3.5')]).Validate(None, None)
 
     def test_repr(self):
         self.assertEqual('<ConstArray [\'ABC\']>', \

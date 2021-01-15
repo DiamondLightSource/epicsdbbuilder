@@ -220,7 +220,7 @@ Helper Functions and Classes
 ..  class::
     ConstArray(array)
 
-    Used for constant link values available in EPICS 7.0.4.1.
+    Used for constant link values available in EPICS 3.16.1.
 
 ..  function:: create_fanout(name, *records, **args)
 
