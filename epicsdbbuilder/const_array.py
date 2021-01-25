@@ -26,33 +26,30 @@ class ConstArray:
 
     @value.setter
     def value(self, value):
-        self._assert_valid(value)
+        self._assert_valid(value, 'ConstArray')
         self._value = value
 
-    def _assert_valid(self, value, record=None, fieldname=None):
-        id = 'ConstArray' \
-            if record is None or fieldname is None \
-            else f'ConstArray@{record}.{fieldname} :'
-
+    def _assert_valid(self, value, context_name):
         assert isinstance(value, (list, tuple)), \
-            f'{id} expects a list or a tuple but [{type(value)}] was supplied.'
+            f'{context_name} expects a list' \
+            f' or a tuple but [{type(value)}] was supplied.'
 
         numbers = False
         strings = False
         valid_types = (Parameter, str, int, float, bool, Decimal)
         for index, value in enumerate(value):
-            assert value is not None or isinstance(value, valid_types), \
-                f'{id} expects a string or parameter as element' \
+            assert isinstance(value, valid_types), \
+                f'{context_name} expects a string or parameter as element' \
                 f' but an element at the index {index} is {type(value)}.'
 
             if isinstance(value, (Parameter, str)):
                 assert not numbers, \
-                    f'{id} cannot mix strings' \
+                    f'{context_name} cannot mix strings' \
                     f' with an element at index {index} which is {type(value)}.'
                 strings = True
-            elif value is not None:
+            else:
                 assert not strings, \
-                    f'{id} cannot mix numbers' \
+                    f'{context_name} cannot mix numbers' \
                     f' with an element at index {index} which is {type(value)}.'
                 numbers = True
 
@@ -66,14 +63,12 @@ class ConstArray:
         return str(value)
 
     def Validate(self, record, fieldname):
-        self._assert_valid(self._value, record, fieldname)
+        self._assert_valid(self._value, f'ConstArray@{record}.{fieldname}')
 
     def FormatDb(self, record, fieldname):
         if len(self._value) == 0:
             return '[""]'
-        formatted = [
-            self._format_constant(v)
-            for v in self._value if v is not None]
+        formatted = [self._format_constant(v) for v in self._value]
         if len(formatted) == 0:
             return '[""]'
         return '[{}]'.format(','.join(formatted))
