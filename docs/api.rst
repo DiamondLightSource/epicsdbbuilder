@@ -218,7 +218,7 @@ Helper Functions and Classes
     link.
 
 ..  class::
-    ConstArray(array)
+    ConstArray(iterator)
 
     Used for constant link values available in EPICS 3.16.1.
 
