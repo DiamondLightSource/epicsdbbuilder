@@ -220,7 +220,43 @@ Helper Functions and Classes
 ..  class::
     ConstArray(iterator)
 
-    Used for constant link values available in EPICS 3.16.1.
+    Used for **Constant Link Values** available since EPICS 3.16.1.
+    Constant Link Values is an EPICS feature which allows passing
+    an list of strings or a list of numbers as a constant into
+    a field which contains a DB link (e.g. INP).
+    See EPICS Release Notes (Section "Constant Link Values")
+    for more details and supported use.
+
+    ConstArray will accept any iterable (e.g. a list) which can generate
+    a non-empty list of values of the same type. Allowed types are:
+
+    * strings and parameters (i.e. :py:class:`epicsdbbuilder.Parameter`)
+
+    * numbers (integers, floating-point, :py:class:`Decimal.Decimal`, and booleans.
+      Booleans will convert to 0 (false) or 1 (true) automatically.
+
+
+    Known limitations:
+
+    * No field type or record type check.
+      ConstArray can be assigned to any field despite the field
+      or the record type does not support Constant Link Values.
+      Use it with link fiels (e.g. INP) of record types stringin,
+      stringout, lso, lsi, printf, waveform, subArray, and aai.
+      Any other use is undefined and a warning may or may not appear
+      while loading the DB
+      (e.g. assigning ["1.23"] to INP of the record type ai will print a warning
+      while assining [1.23] to INP of the record type ai will treat it as a CA link
+      without any warning on EPICS 7.0.3.1).
+      Always refer to EPICS Release Notes (section "Constant Link Values").
+
+
+    Example: PY Source::
+        r = records.lsi('r', INP=ConstArray(['Plain String not DBLINK']))
+
+    Example: Generated DB::
+        field(INP, ["Plain String not DBLINK"])
+
 
 ..  function:: create_fanout(name, *records, **args)
 
