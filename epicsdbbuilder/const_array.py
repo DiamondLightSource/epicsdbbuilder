@@ -60,11 +60,12 @@ class ConstArray:
     def _format_constant(self, value):
         if isinstance(value, Parameter):
             return f'"{str(value)}"'
-        if isinstance(value, str):
+        elif isinstance(value, str):
             return quote_string(value)
-        if isinstance(value, bool):
+        elif isinstance(value, bool):
             return '1' if value else '0'
-        return str(value)
+        else:
+            return str(value)
 
     def Validate(self, record, fieldname):
         """epicsdbbuilder callback
