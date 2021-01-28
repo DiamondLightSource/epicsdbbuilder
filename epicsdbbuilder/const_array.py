@@ -22,48 +22,39 @@ class ConstArray:
 
         Parameters
         ----------
-        value : iterator
-            Homogeneous non-empty list of values.
+        value : iterable
+            Iterable which can provide a homogeneous non-empty list of values.
         """
-        self.value = value
+        self.__value = self._sanitize(value)
 
-    @property
-    def value(self):
-        """A list of values.
-        """
-        return self._value
+    def _sanitize(self, raw_value):
+        # ConstArray allows iterable only.
+        value_list = list(raw_value)
 
-    @value.setter
-    def value(self, value):
-        self._value = self._sanitize(value, 'ConstArray')
+        # EPICS 7.0.3.1 does not consider "[]" as constant.
+        assert len(value_list) > 0, \
+            f'ConstArray: Empty iterable is not allowed.'
 
-    def _sanitize(self, raw_value, context_name):
-        try:
-            value_list = list(raw_value)
-        except TypeError:
-            value_list = None
-        assert value_list is not None, \
-            f'{context_name} excepts iterable' \
-            f' but {type(raw_value)} was provided.'
-
+        # EPICS does not allow mixing of strings and numbers.
         numbers = False
         strings = False
         valid_types = (Parameter, str, int, float, bool, Decimal)
         for index, value in enumerate(value_list):
             assert isinstance(value, valid_types), \
-                f'{context_name} expects a string or parameter as element' \
+                f'ConstArray: expects a string or parameter as element' \
                 f' but an element at the index {index} is {type(value)}.'
 
             if isinstance(value, (Parameter, str)):
                 assert not numbers, \
-                    f'{context_name} cannot mix strings' \
+                    f'ConstArray: cannot mix strings' \
                     f' with an element at index {index} which is {type(value)}.'
                 strings = True
             else:
                 assert not strings, \
-                    f'{context_name} cannot mix numbers' \
+                    f'ConstArray: cannot mix numbers' \
                     f' with an element at index {index} which is {type(value)}.'
                 numbers = True
+
         return value_list
 
     def _format_constant(self, value):
@@ -76,17 +67,20 @@ class ConstArray:
         return str(value)
 
     def Validate(self, record, fieldname):
-        context = f'ConstArray@{record}.{fieldname}'
-
-        value = self._sanitize(self._value, context)
-
-        # EPICS 7.0.3.1 does not consider "[]" as constant.
-        assert len(value) > 0, \
-            f'{context}: Empty iterable is not allowed.'
+        """epicsdbbuilder callback
+        """
+        # Validation has been done on inside constructor already.
+        # ConstArray is meant to be used with fields
+        # which can contain a DB link (e.g. INLINK).
+        # Unfortunately, dbVerify() does not verify
+        # format of DB links. Therefore, it is not used here.
+        pass
 
     def FormatDb(self, record, fieldname):
-        formatted = [self._format_constant(v) for v in self._value]
+        """epicsdbbuilder callback
+        """
+        formatted = [self._format_constant(v) for v in self.__value]
         return '[{}]'.format(','.join(formatted))
 
     def __repr__(self):
-        return f'<ConstArray {repr(self._value)}>'
+        return f'<ConstArray {repr(self.__value)}>'

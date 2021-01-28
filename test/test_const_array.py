@@ -15,9 +15,9 @@ class TestConstArray(unittest.TestCase):
         arr.Validate(None, None)
         self.assertEqual(expected, arr.FormatDb(None, None))
 
-    def assertInvalid(self, value):
-        self.assertRaises(AssertionError, \
-            lambda: ConstArray(value).Validate(None, None))
+    def assertInvalid(self, value, expected_exception=AssertionError):
+        with self.assertRaises(expected_exception):
+            ConstArray(value).Validate(None, None)
 
     def test_allow_iterators(self):
         class Iterable:
@@ -51,16 +51,16 @@ class TestConstArray(unittest.TestCase):
         self.assertInvalid(Iterable())
 
     def test_block_instances_which_are_not_iterators(self):
-        self.assertInvalid(None)
+        self.assertInvalid(None, TypeError)
 
-        self.assertInvalid(True)
-        self.assertInvalid(1)
-        self.assertInvalid(2.5)
-        self.assertInvalid(Decimal('3'))
+        self.assertInvalid(True, TypeError)
+        self.assertInvalid(1, TypeError)
+        self.assertInvalid(2.5, TypeError)
+        self.assertInvalid(Decimal('3'), TypeError)
 
         class MyClass:
             pass
-        self.assertInvalid(MyClass())
+        self.assertInvalid(MyClass(), TypeError)
 
     def test_allow_boolean_as_elements(self):
         self.assertValidFormatDb('[1]', [True])
