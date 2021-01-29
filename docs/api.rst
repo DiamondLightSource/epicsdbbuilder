@@ -232,8 +232,9 @@ Helper Functions and Classes
 
     * strings and parameters (i.e. :py:class:`epicsdbbuilder.Parameter`)
 
-    * numbers (integers, floating-point, :py:class:`Decimal.Decimal`, and booleans.
-      Booleans will convert to 0 (false) or 1 (true) automatically.
+    * numbers (integers, floating-point, :py:class:`Decimal.Decimal`,
+      and booleans.
+      Booleans will convert to `0` (`False`) or `1` (`True`) automatically.
 
 
     Known limitations:
@@ -241,20 +242,22 @@ Helper Functions and Classes
     * No field type or record type check.
       ConstArray can be assigned to any field despite the field
       or the record type does not support Constant Link Values.
-      Use it with link fiels (e.g. INP) of record types stringin,
-      stringout, lso, lsi, printf, waveform, subArray, and aai.
+      Use it with link fields (e.g. INP) of record types `stringin`,
+      `stringout`, `lso`, `lsi`, `printf`, `waveform`, `subArray`, and `aai`.
       Any other use is undefined and a warning may or may not appear
       while loading the DB
-      (e.g. assigning ["1.23"] to INP of the record type ai will print a warning
-      while assining [1.23] to INP of the record type ai will treat it as a CA link
-      without any warning on EPICS 7.0.3.1).
+      (e.g. assigning `["1.23"]` to INP of the record type `ai` will print
+      a warning while assigning `[1.23]` to INP of the record type `ai` will treat
+      it as a CA link without any warning on EPICS 7.0.3.1).
       Always refer to EPICS Release Notes (section "Constant Link Values").
 
 
-    Example: PY Source::
+    Example (Python source)::
+
         r = records.lsi('r', INP=ConstArray(['Plain String not DBLINK']))
 
-    Example: Generated DB::
+    Example (generated DB)::
+
         field(INP, ["Plain String not DBLINK"])
 
 
