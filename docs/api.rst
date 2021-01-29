@@ -223,7 +223,7 @@ Helper Functions and Classes
     Used for **Constant Link Values** available since EPICS 3.16.1.
     Constant Link Values is an EPICS feature which allows passing
     an list of strings or a list of numbers as a constant into
-    a field which contains a DB link (e.g. INP).
+    a field which contains a DB link (e.g. `INP`).
     See EPICS Release Notes (Section "Constant Link Values")
     for more details and supported use.
 
@@ -242,7 +242,7 @@ Helper Functions and Classes
     * No field type or record type check.
       ConstArray can be assigned to any field despite the field
       or the record type does not support Constant Link Values.
-      Use it with link fields (e.g. INP) of record types `stringin`,
+      Use it with link fields (e.g. `INP`) of record types `stringin`,
       `stringout`, `lso`, `lsi`, `printf`, `waveform`, `subArray`, and `aai`.
       Any other use is undefined and a warning may or may not appear
       while loading the DB
