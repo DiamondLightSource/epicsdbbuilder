@@ -31,4 +31,4 @@ class Parameter:
             return '$(%s=%s)' % (self.__name, self.__default)
 
     def Validate(self, record, field):
-        return True
+        pass

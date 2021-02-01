@@ -46,6 +46,10 @@ records.ai('OPTIONS:CPP', INP = CPP(t))
 # Test multiple link options
 records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
 
+# Test const array
+records.ai('FIELD:WITH_CONST_ARRAY', INP = ConstArray(["A", "B", "C"]))
+
+
 # A string constant with some evil character values
 records.stringin('STRING', VAL = '"\n\\\x01€')
 
