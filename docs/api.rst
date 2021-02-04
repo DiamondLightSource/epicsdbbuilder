@@ -209,13 +209,27 @@ Helper Functions and Classes
 ----------------------------
 
 ..  function::
+    CA(record)
     CP(record)
-    MS(record)
+    CPP(record)
     NP(record)
     PP(record)
+    MS(record)
+    MSS(record)
+    MSI(record)
+    NMS(record)
 
     Used for record links to add the appropriate processing annotation to the
     link.
+
+    Example (Python source)::
+
+        other_record = records.ai('other')
+        my_record.INP = PP(MS(other_record))
+
+    Example (Generated DB)::
+
+        field(INP, "other PP MS")
 
 ..  class::
     ConstArray(iterator)
