@@ -304,34 +304,95 @@ class _Link:
 
 # Some helper routines for building links
 
-# "Process Passive": any record update through a PP output link will be
-# processed if its scan is Passive.
 def PP(record):
+    """ "Process Passive": any record update through a PP output link will be
+    processed if its scan is Passive.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = PP(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other PP")`
+    """
     return record('PP')
 
-# "Channel Access": a CA (input or output) link will be treated as a channel access link
-# regardless whether it is a DB link or not.
+
 def CA(record):
+    """ "Channel Access": a CA (input or output) link will be treated as
+    a channel access link regardless whether it is a DB link or not.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = CA(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other CA")`
+    """
     return record('CA')
 
-# "Channel Process": a CP input link will cause the linking record to process
-# any time the linked record is updated.
+
 def CP(record):
+    """ "Channel Process": a CP input link will cause the linking record
+    to process any time the linked record is updated.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = CP(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other CP")`
+    """
     return record('CP')
 
-# "Channel Process if Passive": a CP input link will be treated as a channel access link
-# and if the linking record is passive, the linking passive record will be processed
-# any time the linked record is updated.
+
 def CPP(record):
+    """ "Channel Process if Passive": a CP input link will be treated as
+    a channel access link and if the linking record is passive,
+    the linking passive record will be processed any time the linked record
+    is updated.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = CPP(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other CPP")`
+    """
     return record('CPP')
 
-# "Maximise Severity": any alarm state on the linked record is propogated to
-# the linking record.
+
 def MS(record):
+    """ "Maximise Severity": any alarm state on the linked record is propogated
+    to the linking record.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = MS(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other MS")`
+    """
     return record('MS')
 
-# "No Process": the linked record is not processed.
+
 def NP(record):
+    """ "No Process": the linked record is not processed.
+    This is the default behavior of EPICS links.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = NP(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other NPP")`
+    """
     return record('NPP')
 
 # ... put the rest in some time

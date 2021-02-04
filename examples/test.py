@@ -42,6 +42,7 @@ records.bi('BOO', INP = s)
 records.ai('OPTIONS:CA', INP = CA(t))
 records.ai('OPTIONS:CP', INP = CP(t))
 records.ai('OPTIONS:CPP', INP = CPP(t))
+records.ai('OPTIONS:NP', INP = NP(t))
 
 # Test multiple link options
 records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
