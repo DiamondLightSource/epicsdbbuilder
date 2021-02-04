@@ -212,9 +212,12 @@ Helper Functions and Classes
     CA(record)
     CP(record)
     CPP(record)
-    MS(record)
     NP(record)
     PP(record)
+    MS(record)
+    MSS(record)
+    MSI(record)
+    NMS(record)
 
     Used for record links to add the appropriate processing annotation to the
     link.

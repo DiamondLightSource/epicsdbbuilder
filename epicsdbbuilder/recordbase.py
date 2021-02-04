@@ -8,7 +8,10 @@ from . import recordnames
 from .recordset import recordset
 
 
-__all__ = ['PP', 'CA', 'CP', 'CPP', 'MS', 'NP', 'ImportRecord']
+__all__ = [
+    'PP', 'CA', 'CP', 'CPP', 'NP',
+    'MS', 'MSS', 'MSI', 'NMS',
+    'ImportRecord']
 
 
 
@@ -367,8 +370,9 @@ def CPP(record):
 
 
 def MS(record):
-    """ "Maximise Severity": any alarm state on the linked record is propogated
-    to the linking record.
+    """ "Maximise Severity": any alarm state on the linked record is propagated
+    to the linking record. When propagated, the alarm status will become
+    `LINK_ALARM`.
 
     Example (Python source)
     -----------------------
@@ -379,6 +383,52 @@ def MS(record):
     `field(INP, "other MS")`
     """
     return record('MS')
+
+
+def MSS(record):
+    """ "Maximise Status and Severity": both alarm status and alarm severity
+    on the linked record are propagated to the linking record.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = MSS(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other MSS")`
+    """
+    return record('MSS')
+
+
+def MSI(record):
+    """ "Maximise Severity if Invalid": propagate an alarm state on the linked
+    record only if the alarm severity is `INVALID_ALARM`.
+    When propagated, the alarm status will become `LINK_ALARM`.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = MSI(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other MSI")`
+    """
+    return record('MSI')
+
+
+def NMS(record):
+    """ "Non-Maximise Severity": no alarm is propagated.
+    This is the default behavior of EPICS links.
+
+    Example (Python source)
+    -----------------------
+    `my_record.INP = NMS(other_record)`
+
+    Example (Generated DB)
+    ----------------------
+    `field(INP, "other NMS")`
+    """
+    return record('NMS')
 
 
 def NP(record):
@@ -394,5 +444,3 @@ def NP(record):
     `field(INP, "other NPP")`
     """
     return record('NPP')
-
-# ... put the rest in some time
