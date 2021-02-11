@@ -75,14 +75,19 @@ def ImportFunctions(epics_base, host_arch):
         library_location = 'bin'
 
     try:
-        libdb = PyDLL(os.path.join(
+        ImportFunctionsFrom(os.path.join(
             epics_base, library_location, host_arch,
             library_name_format.format('dbCore')))
     except OSError:
-        libdb = PyDLL(os.path.join(
+        ImportFunctionsFrom(os.path.join(
             epics_base, library_location, host_arch,
             library_name_format.format('dbStaticHost')))
 
+
+def ImportFunctionsFrom(path):
+    # Actually populate the functions in globals, split from ImportFunctions to
+    # support legacy API
+    libdb = PyDLL(path)
     for name, restype, errcheck, argtypes in _FunctionList:
         try:
             function = getattr(libdb, name)

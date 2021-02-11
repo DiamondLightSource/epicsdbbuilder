@@ -134,9 +134,15 @@ def LoadDbdFile(dbdfile, on_use = None):
     mydbstatic.dbFreeEntry(entry)
 
 
-def InitialiseDbd(epics_base, host_arch = None):
+def InitialiseDbd(epics_base = None, host_arch = None):
     global _epics_base
-    _epics_base = epics_base
-
-    mydbstatic.ImportFunctions(_epics_base, host_arch)
+    if epics_base:
+        # Import from given location
+        mydbstatic.ImportFunctions(epics_base, host_arch)
+        _epics_base = epics_base
+    else:
+        # Import from epicscorelibs installed libs
+        from epicscorelibs import path
+        mydbstatic.ImportFunctionsFrom(path.get_lib('dbCore'))
+        _epics_base = path.base_path
     LoadDbdFile('base.dbd')
