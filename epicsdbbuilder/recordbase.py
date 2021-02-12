@@ -29,7 +29,7 @@ def quote_string(value):
     return '"' + ''.join(map(quote_char, value)) + '"'
 
 
-#---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 #
 #   Record class
 
@@ -119,9 +119,8 @@ class Record(object):
         # Support the special 'address' field as an alias for either INP or
         # OUT, depending on which of those exists.  We only set up this field
         # if exactly one of INP or OUT is present as a valid field.
-        address = [field
-            for field in ['INP', 'OUT']
-            if self.ValidFieldName(field)]
+        address = [
+            field for field in ['INP', 'OUT'] if self.ValidFieldName(field)]
         if len(address) == 1:
             self.__setattr('__address', address[0])
 
@@ -321,7 +320,6 @@ def PP(record):
     """
     return record('PP')
 
-
 def CA(record):
     """ "Channel Access": a CA (input or output) link will be treated as
     a channel access link regardless whether it is a DB link or not.
@@ -350,7 +348,6 @@ def CP(record):
     `field(INP, "other CP")`
     """
     return record('CP')
-
 
 def CPP(record):
     """ "Channel Process if Passive": a CP input link will be treated as

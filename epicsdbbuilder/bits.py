@@ -45,7 +45,7 @@ def ExtendClass(recordClass):
 
 
 
-#---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 #
 #   Record support
 
@@ -62,7 +62,7 @@ BIT_OUTPUT = 1
 # the creation of real records!
 class _Bits:
     def __init__(self, parent, direction, factory, offset, length):
-        assert 0 <= offset  and  offset + length <= 16, \
+        assert 0 <= offset and offset + length <= 16, \
             'Bit field out of range'
         self.parent = parent
         self.direction = direction
@@ -70,19 +70,20 @@ class _Bits:
         self.length = length
         self._record = factory
         if direction == BIT_INPUT:
-             self.bi = self._makeBit
-             self._field = 'INP'
-             self._linkage = 'CP'
+            self.bi = self._makeBit
+            self._field = 'INP'
+            self._linkage = 'CP'
         if direction == BIT_OUTPUT:
-             self.bo = self._makeBit
-             self._field = 'OUT'
-             self._linkage = 'PP'
+            self.bo = self._makeBit
+            self._field = 'OUT'
+            self._linkage = 'PP'
 
     # This function implements either bi or bo depending on direction.
     def _makeBit(self, record, bit=0, **fields):
-        assert 0 <= bit  and  bit < self.length, 'Bit out of range'
+        assert 0 <= bit and bit < self.length, 'Bit out of range'
         r = self._record(record, **fields)
-        setattr(r, self._field,
+        setattr(
+            r, self._field,
             getattr(self.parent, 'B%X' % (self.offset + bit))(self._linkage))
         return r
 

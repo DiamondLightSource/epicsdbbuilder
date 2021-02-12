@@ -60,7 +60,8 @@ def SetTemplateRecordNames(prefix = None, separator = ':'):
 
 
 # By default record names are unmodified.
-_RecordNames = lambda name: name
+def _RecordNames(name):
+    return name
 
 def SetRecordNames(names):
     global _RecordNames

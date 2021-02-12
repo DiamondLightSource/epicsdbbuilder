@@ -1,6 +1,7 @@
 '''Implements the set of records provided by a dbd'''
 
-import os, os.path
+import os
+import os.path
 import ctypes
 import platform
 
@@ -26,7 +27,8 @@ class RecordTypes(object):
     def _PublishRecordType(self, on_use, recordType, validate):
         # Publish this record type as a method
         self.__RecordTypes.add(recordType)
-        setattr(self, recordType,
+        setattr(
+            self, recordType,
             Record.CreateSubclass(on_use, recordType, validate))
 
     # Checks whether the given recordType names a known valid record type.
@@ -90,7 +92,7 @@ class ValidateDbField:
 
         # Now see if we can write the value to it
         message = mydbstatic.dbVerify(self.dbEntry, value)
-        assert message == None, \
+        assert message is None, \
             'Can\'t write "%s" to field %s: %s' % (value, name, message)
 
 
