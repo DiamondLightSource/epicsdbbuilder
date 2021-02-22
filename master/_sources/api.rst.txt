@@ -246,7 +246,7 @@ Helper Functions and Classes
 
     * strings and parameters (i.e. :py:class:`epicsdbbuilder.Parameter`)
 
-    * numbers (integers, floating-point, :py:class:`Decimal.Decimal`,
+    * numbers (integers, floating-point, :py:class:`decimal.Decimal`,
       and booleans.
       Booleans will convert to `0` (`False`) or `1` (`True`) automatically.
 
