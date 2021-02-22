@@ -85,9 +85,19 @@ def ImportFunctions(epics_base, host_arch):
 
 
 def ImportFunctionsFrom(path):
+    # Load the dbd static library using ctypes PyDLL convention instead of CDLL
+    #
+    # The difference is that this way we hold onto the Python GIL.  Mostly this
+    # makes no difference, as these are very quick function calls, but it turns
+    # out that if there is another Python thread running then contention for the
+    # GIL can wreck performance here.
+    #
+    # The ctypes documentation is not particularly helpful, saying in particular
+    # "this is only useful to call Python C api functions directly", which
+    # doesn't seem to be correct.
+    libdb = PyDLL(path)
     # Actually populate the functions in globals, split from ImportFunctions to
     # support legacy API
-    libdb = PyDLL(path)
     for name, restype, errcheck, argtypes in _FunctionList:
         try:
             function = getattr(libdb, name)
