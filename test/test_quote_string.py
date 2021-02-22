@@ -1,9 +1,6 @@
-import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))
-
 import unittest
 from epicsdbbuilder.recordbase import quote_string
+
 
 class TestQuoteString(unittest.TestCase):
     def test_empty(self):
@@ -14,7 +11,3 @@ class TestQuoteString(unittest.TestCase):
 
     def test_string_with_escaping(self):
         self.assertEqual('"A\\"C"', quote_string('A"C'))
-
-
-if __name__ == '__main__':
-    unittest.main()

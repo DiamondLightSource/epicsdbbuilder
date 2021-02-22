@@ -1,10 +1,6 @@
-import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))
-
 import unittest
 from decimal import Decimal
-from epicsdbbuilder import ConstArray, Parameter, ResetRecords
+from epicsdbbuilder import ConstArray, Parameter
 
 
 class TestConstArray(unittest.TestCase):
@@ -32,7 +28,8 @@ class TestConstArray(unittest.TestCase):
 
         self.assertValidFormatDb('[1,2,3]', [1, 2, 3])
         self.assertValidFormatDb('[1,2,3]', (1, 2, 3))
-        self.assertValidFormatDb('["1","2","3"]', {'1': 'A', '2': 'B', '3': 'C'})
+        self.assertValidFormatDb(
+            '["1","2","3"]', {'1': 'A', '2': 'B', '3': 'C'})
         self.assertValidFormatDb('["1","2","3"]', '123')
         self.assertValidFormatDb('[1,2,3]', Iterable())
 
@@ -74,14 +71,13 @@ class TestConstArray(unittest.TestCase):
     def test_allow_strings_as_elements(self):
         self.assertValidFormatDb('["str"]', ['str'])
         self.assertValidFormatDb('["s1","s2"]', ['s1', 's2'])
-        self.assertValidFormatDb('["escaped\\"quotes"]', \
-            ['escaped"quotes'])
+        self.assertValidFormatDb(
+            '["escaped\\"quotes"]', ['escaped"quotes'])
         self.assertValidFormatDb('[""]', [''])
 
     def test_allow_parameters_as_elements(self):
         self.assertValidFormatDb('["$(PAR)"]', [self.par])
-        self.assertValidFormatDb('["$(PAR)","$(PAR)"]', \
-            [self.par, self.par])
+        self.assertValidFormatDb('["$(PAR)","$(PAR)"]', [self.par, self.par])
 
     def test_block_none_as_an_element(self):
         self.assertInvalid([None])
@@ -90,16 +86,13 @@ class TestConstArray(unittest.TestCase):
         self.assertInvalid(['A', None, 'A'])
 
     def test_allow_mixing_numbers(self):
-        self.assertValidFormatDb('[1,1.5,2]', \
-            [1, 1.5, Decimal('2')])
+        self.assertValidFormatDb('[1,1.5,2]', [1, 1.5, Decimal('2')])
 
     def test_allow_mixing_numbers_and_booleans(self):
-        self.assertValidFormatDb('[1,2]', \
-            [True, 2])
+        self.assertValidFormatDb('[1,2]', [True, 2])
 
     def test_allow_mixing_strings_and_parameters(self):
-        self.assertValidFormatDb('["str","$(PAR)"]', \
-            ['str', self.par])
+        self.assertValidFormatDb('["str","$(PAR)"]', ['str', self.par])
 
     def test_block_mixing_numbers_and_strings_or_parameters(self):
         self.assertInvalid([1, 'A'])
@@ -107,9 +100,4 @@ class TestConstArray(unittest.TestCase):
         self.assertInvalid([1, self.par])
 
     def test_repr(self):
-        self.assertEqual('<ConstArray [\'ABC\']>', \
-            repr(ConstArray(['ABC'])))
-
-
-if __name__ == '__main__':
-    unittest.main()
+        self.assertEqual('<ConstArray [\'ABC\']>', repr(ConstArray(['ABC'])))

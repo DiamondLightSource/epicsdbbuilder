@@ -1,0 +1,114 @@
+name: Code CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.os }}/${{ matrix.python }}/${{ matrix.epics }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # DLS RHEL7 legacy
+          - os: ubuntu-latest
+            python: "2.7"
+            epics: "R3.14.12.7"
+            pipenv: "--skip-lock"
+
+          # DLS RHEL7 python3 current
+          - os: ubuntu-latest
+            python: "3.7"
+            epics: "R3.14.12.7"
+
+          # DLS RHEL7 python3 as used by pythonIoc
+          - os: ubuntu-latest
+            python: "3.7"
+            # Deploy wheel from here
+            publish: true
+            pipenv: "--deploy"
+
+          # Other random possibilities
+          - os: ubuntu-latest
+            python: "3.8"
+            epics: "R3.15.8"
+
+          - os: ubuntu-latest
+            python: "3.9"
+
+          - os: windows-latest
+            python: "3.7"
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install EPICS Base
+        if: matrix.epics
+        run: |
+          wget -nv https://github.com/epics-base/epics-base/archive/${{ matrix.epics }}.tar.gz
+          tar -zxf ${{ matrix.epics }}.tar.gz
+          make -sj -C epics-base-${{ matrix.epics }}
+          echo "EPICS_BASE=`pwd`/epics-base-${{ matrix.epics }}" >> $GITHUB_ENV
+
+      - name: Install Python Dependencies
+        run: |
+          env
+          pip install pipenv coveralls
+          pipenv install --dev ${{ matrix.pipenv }} && pipenv graph
+
+      - name: Install epicscorelibs
+        if: ${{ ! matrix.epics }}
+        run: pipenv run pip install epicscorelibs
+
+      - name: Create Sdist and Wheel
+        # for reproducible builds set SOURCE_DATE_EPOCH to the date of the last commit
+        # See here for more info : https://reproducible-builds.org/
+        # Also use the same version of wheel as inside DLS
+        run: |
+          export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
+          pip install "wheel==0.33.1"
+          python setup.py sdist bdist_wheel
+
+      - name: Run Tests
+        run: pipenv run tests
+
+      - name: Publish Sdist and Wheel to PyPI
+        # Only once when on a tag
+        if: matrix.publish && startsWith(github.ref, 'refs/tags')
+        # We pin to the SHA, not the tag, for security reasons.
+        # https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/security-hardening-for-github-actions#using-third-party-actions
+        uses: pypa/gh-action-pypi-publish@54b39fb9371c0b3a6f9f14bb8a67394defc7a806  # v1.4.1
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_token }}
+
+      - name: Upload coverage data to coveralls.io
+        if: matrix.python != '2.7'
+        run: coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.os }}/${{ matrix.python }}/${{ matrix.epics }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_SERVICE_NAME: github
+
+  coveralls:
+    name: Indicate completion to coveralls.io
+    needs: build
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+    - name: Done
+      run: |
+        pip3 install --upgrade coveralls
+        coveralls --finish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -18,7 +18,6 @@ clean:
 	$(PYTHON) setup.py clean
 	-rm -rf build dist *egg-info installed.files
 	-find -name '*.pyc' -exec rm {} \;
-	$(MAKE) -C docs clean
 
 # Install the built egg
 install: dist
@@ -27,5 +26,6 @@ install: dist
             --install-dir=$(INSTALL_DIR) \
             --script-dir=$(SCRIPT_DIR) dist/*.egg
 
-make_docs:
-	$(MAKE) -C docs
+# Build the docs with sphinx
+docs:
+	sphinx-build -EWT --keep-going docs build/html

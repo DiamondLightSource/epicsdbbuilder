@@ -20,8 +20,8 @@ def choplist(list, size):
 # Support routine to do the work of fanout generation common to fanout and
 # dfanout.
 def _fanout_helper(
-    fanout_name, link_list, fanout_size,
-    record_factory, field_name, fixup_link, firstargs, nextargs):
+        fanout_name, link_list, fanout_size, record_factory,
+        field_name, fixup_link, firstargs, nextargs):
 
     # First break the list of links into chunks small enough for each fanout
     # record.  First chop it into segments small enough to fit into each
@@ -68,10 +68,15 @@ def create_fanout(name, *record_list, **args):
     firstargs = args
     nextargs = args.copy()
     nextargs['SCAN'] = 'Passive'
-    if 'PINI' in nextargs:  del nextargs['PINI']
+    if 'PINI' in nextargs:
+        del nextargs['PINI']
 
-    def fieldname(i):   return 'LNK%d' % (i + 1)
-    def identity(x):    return x
+    def fieldname(i):
+        return 'LNK%d' % (i + 1)
+
+    def identity(x):
+        return x
+
     record_list = _fanout_helper(
         name, record_list, 6, records.fanout, fieldname,
         identity, firstargs, nextargs)
@@ -84,10 +89,14 @@ def create_dfanout(name, *record_list, **args):
     firstargs = args
     nextargs = args.copy()
     nextargs.update(dict(SCAN = 'Passive', OMSL = 'supervisory'))
-    if 'DOL' in nextargs:   del nextargs['DOL']
-    if 'PINI' in nextargs:  del nextargs['PINI']
+    if 'DOL' in nextargs:
+        del nextargs['DOL']
+    if 'PINI' in nextargs:
+        del nextargs['PINI']
 
-    def fieldname(i):   return 'OUT%c' % (ord('A') + i)
+    def fieldname(i):
+        return 'OUT%c' % (ord('A') + i)
+
     record_list = _fanout_helper(
         name, record_list, 8, records.dfanout, fieldname,
         PP, firstargs, nextargs)

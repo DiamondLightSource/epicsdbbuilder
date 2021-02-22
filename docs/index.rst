@@ -1,5 +1,7 @@
-Documentation for EPICS Device Support Module
-=============================================
+.. include:: ../README.rst
+    :end-before: when included in index.rst
+
+.. rst-class:: no-margin-after-ul
 
 ..  toctree::
     :numbered:
@@ -7,9 +9,7 @@ Documentation for EPICS Device Support Module
 
     overview
     api
-
-Index and Search
-================
+    contributing
 
 * :ref:`genindex`
-* :ref:`search`
+

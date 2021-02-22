@@ -33,7 +33,7 @@ class ConstArray:
 
         # EPICS 7.0.3.1 does not consider "[]" as constant.
         assert len(value_list) > 0, \
-            f'ConstArray: Empty iterable is not allowed.'
+            'ConstArray: Empty iterable is not allowed.'
 
         # EPICS does not allow mixing of strings and numbers.
         numbers = False
@@ -41,25 +41,25 @@ class ConstArray:
         valid_types = (Parameter, str, int, float, bool, Decimal)
         for index, value in enumerate(value_list):
             assert isinstance(value, valid_types), \
-                f'ConstArray: expects a string or parameter as element' \
-                f' but an element at the index {index} is {type(value)}.'
+                'ConstArray: expects a string or parameter as element' \
+                ' but an element at the index %s is %s.' % (index, type(value))
 
             if isinstance(value, (Parameter, str)):
                 assert not numbers, \
-                    f'ConstArray: cannot mix strings' \
-                    f' with an element at index {index} which is {type(value)}.'
+                    'ConstArray: cannot mix strings with an' \
+                    ' element at index %s which is %s.' % (index, type(value))
                 strings = True
             else:
                 assert not strings, \
-                    f'ConstArray: cannot mix numbers' \
-                    f' with an element at index {index} which is {type(value)}.'
+                    'ConstArray: cannot mix numbers with an' \
+                    ' element at index %s which is %s.' % (index, type(value))
                 numbers = True
 
         return value_list
 
     def _format_constant(self, value):
         if isinstance(value, Parameter):
-            return f'"{str(value)}"'
+            return '"%s"' % value
         elif isinstance(value, str):
             return quote_string(value)
         elif isinstance(value, bool):
@@ -84,4 +84,4 @@ class ConstArray:
         return '[{}]'.format(','.join(formatted))
 
     def __repr__(self):
-        return f'<ConstArray {repr(self.__value)}>'
+        return '<ConstArray %r>' % self.__value
