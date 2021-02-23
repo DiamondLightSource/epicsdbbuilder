@@ -35,8 +35,8 @@ A simple example of the use of this library is the following:
     :target: https://github.com/dls-controls/epicsdbbuilder/actions?query=workflow%3A%22Docs+CI%22
     :alt: Docs CI
 
-.. |coverage| image:: https://coveralls.io/repos/github/dls-controls/epicsdbbuilder/badge.svg?branch=master
-    :target: https://coveralls.io/github/dls-controls/epicsdbbuilder?branch=master
+.. |coverage| image:: https://codecov.io/gh/dls-controls/epicsdbbuilder/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/dls-controls/epicsdbbuilder
     :alt: Test Coverage
 
 .. |pypi_version| image:: https://img.shields.io/pypi/v/epicsdbbuilder.svg
