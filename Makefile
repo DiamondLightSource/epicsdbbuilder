@@ -9,7 +9,7 @@ MODULEVER=0.0
 -include Makefile.private
 
 # This is run when we type make
-dist: setup.py $(wildcard epicsdbbuilder/*) make_docs
+dist: setup.py $(wildcard epicsdbbuilder/*) docs
 	MODULEVER=$(MODULEVER) $(PYTHON) setup.py bdist_egg
 	touch dist
 
