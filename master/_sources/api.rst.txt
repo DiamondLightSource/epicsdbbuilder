@@ -6,15 +6,21 @@ Database Builder API
 Initialisation
 --------------
 
-..  function:: InitialiseDbd(epics_base, host_arch=None)
+..  function:: InitialiseDbd(epics_base=None, host_arch=None)
 
-    This must be called once before calling any other functions.  `epics_base`
-    must be an absolute path to the directory containing EPICS base, in
-    particular this directory must contain both ``dbd/base.dbd`` and ``lib/``.
-    This function will load the base EPICS dbd file.
+    This must be called once before calling any other functions.  There are two
+    possible mechanisms for locating EPICS base libraries and dbds.
 
-    The host architecture can normally be computed automatically, but if this
-    computation fails this can be specified by setting `host_arch`.
+    1. Using the epicscorelibs_ library. If ``epics_base`` is ``None`` then the
+    ``epicscorelibs`` package will be imported and used as the source of
+    libraries and dbds.
+
+    2. Locally install EPICS. If ``epics_base`` is provided, then it must be an
+    absolute path to the directory containing EPICS base, in particular this
+    directory must contain both ``dbd/base.dbd`` and ``lib/``. This function
+    will load the base EPICS dbd file. The host architecture can normally be
+    computed automatically, but if this computation fails this can be specified
+    by setting ``host_arch``.
 
 ..  function:: LoadDbdFile(dbdfile, on_use=None)
 

@@ -8,9 +8,10 @@ create EPICS databases from a Python script.  To create a script the following
 steps should be followed:
 
 1.  After importing :mod:`epicsdbbuilder` it must be initialised by calling
-    :func:`InitialiseDbd`.  This function must be passed an absolute path to
-    the EPICS base directory where the ``dbd`` directory containing ``base.dbd``
-    can be found.
+    :func:`InitialiseDbd`.  This function can either be called without any
+    arguments if the epicscorelibs_ module is installed, or passed an absolute
+    path to an EPICS base directory where the ``dbd`` directory containing
+    ``base.dbd`` can be found.
 
 2.  Next any other dbd files needed can be loaded by calls to
     :func:`LoadDbdFile`.

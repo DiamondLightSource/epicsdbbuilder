@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.g4ceac35 documentation</title>
+  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.g05f7b78 documentation</title>
   
 
   
@@ -207,13 +207,18 @@
 <h2><span class="section-number">2.1. </span>Initialisation<a class="headerlink" href="#initialisation" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="epicsdbbuilder.InitialiseDbd">
-<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">InitialiseDbd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epics_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_arch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/dbd.html#InitialiseDbd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.InitialiseDbd" title="Permalink to this definition">¶</a></dt>
-<dd><p>This must be called once before calling any other functions.  <cite>epics_base</cite>
-must be an absolute path to the directory containing EPICS base, in
-particular this directory must contain both <code class="docutils literal notranslate"><span class="pre">dbd/base.dbd</span></code> and <code class="docutils literal notranslate"><span class="pre">lib/</span></code>.
-This function will load the base EPICS dbd file.</p>
-<p>The host architecture can normally be computed automatically, but if this
-computation fails this can be specified by setting <cite>host_arch</cite>.</p>
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">InitialiseDbd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epics_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_arch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/dbd.html#InitialiseDbd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.InitialiseDbd" title="Permalink to this definition">¶</a></dt>
+<dd><p>This must be called once before calling any other functions.  There are two
+possible mechanisms for locating EPICS base libraries and dbds.</p>
+<p>1. Using the <a class="reference external" href="https://github.com/mdavidsaver/epicscorelibs">epicscorelibs</a> library. If <code class="docutils literal notranslate"><span class="pre">epics_base</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> then the
+<code class="docutils literal notranslate"><span class="pre">epicscorelibs</span></code> package will be imported and used as the source of
+libraries and dbds.</p>
+<p>2. Locally install EPICS. If <code class="docutils literal notranslate"><span class="pre">epics_base</span></code> is provided, then it must be an
+absolute path to the directory containing EPICS base, in particular this
+directory must contain both <code class="docutils literal notranslate"><span class="pre">dbd/base.dbd</span></code> and <code class="docutils literal notranslate"><span class="pre">lib/</span></code>. This function
+will load the base EPICS dbd file. The host architecture can normally be
+computed automatically, but if this computation fails this can be specified
+by setting <code class="docutils literal notranslate"><span class="pre">host_arch</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">

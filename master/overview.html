@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>1. EPICS Database Builder &mdash; EPICS Database Builder 0.0+untagged.g4ceac35 documentation</title>
+  <title>1. EPICS Database Builder &mdash; EPICS Database Builder 0.0+untagged.g05f7b78 documentation</title>
   
 
   
@@ -196,9 +196,10 @@ create EPICS databases from a Python script.  To create a script the following
 steps should be followed:</p>
 <ol class="arabic simple">
 <li><p>After importing <a class="reference internal" href="api.html#module-epicsdbbuilder" title="epicsdbbuilder"><code class="xref py py-mod docutils literal notranslate"><span class="pre">epicsdbbuilder</span></code></a> it must be initialised by calling
-<a class="reference internal" href="api.html#epicsdbbuilder.InitialiseDbd" title="epicsdbbuilder.InitialiseDbd"><code class="xref py py-func docutils literal notranslate"><span class="pre">InitialiseDbd()</span></code></a>.  This function must be passed an absolute path to
-the EPICS base directory where the <code class="docutils literal notranslate"><span class="pre">dbd</span></code> directory containing <code class="docutils literal notranslate"><span class="pre">base.dbd</span></code>
-can be found.</p></li>
+<a class="reference internal" href="api.html#epicsdbbuilder.InitialiseDbd" title="epicsdbbuilder.InitialiseDbd"><code class="xref py py-func docutils literal notranslate"><span class="pre">InitialiseDbd()</span></code></a>.  This function can either be called without any
+arguments if the <a class="reference external" href="https://github.com/mdavidsaver/epicscorelibs">epicscorelibs</a> module is installed, or passed an absolute
+path to an EPICS base directory where the <code class="docutils literal notranslate"><span class="pre">dbd</span></code> directory containing
+<code class="docutils literal notranslate"><span class="pre">base.dbd</span></code> can be found.</p></li>
 <li><p>Next any other dbd files needed can be loaded by calls to
 <a class="reference internal" href="api.html#epicsdbbuilder.LoadDbdFile" title="epicsdbbuilder.LoadDbdFile"><code class="xref py py-func docutils literal notranslate"><span class="pre">LoadDbdFile()</span></code></a>.</p></li>
 <li><p>Optionally a naming convention can be installed by calling
