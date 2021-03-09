@@ -120,3 +120,8 @@ smv_branch_whitelist = r'^master$'  # only branch to document is master
 smv_outputdir_format = '{ref.name}'
 smv_prefer_remote_refs = False
 smv_remote_whitelist = 'origin|github'
+
+# Common links that should be available on every page
+rst_epilog = """
+.. _epicscorelibs: https://github.com/mdavidsaver/epicscorelibs
+"""
