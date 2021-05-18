@@ -79,7 +79,7 @@ def PushPrefix(prefix):
     _RecordNames.PushPrefix(prefix)
 
 def PopPrefix():
-    _RecordNames.PopPrefix()
+    return _RecordNames.PopPrefix()
 
 def SetPrefix(prefix):
     _RecordNames.SetPrefix(prefix)

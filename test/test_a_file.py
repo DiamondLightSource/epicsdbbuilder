@@ -16,6 +16,7 @@ def test_output(tmp_path):
     SetRecordNames(dls_names)
 
     P = Parameter('P', 'A parameter')
+    assert repr(P) == "Parameter(P)"
     Q = Parameter('Q', 'A number')
 
     r = ImportRecord('SR-DI-DCCT-01:SIGNAL')
@@ -34,6 +35,7 @@ def test_output(tmp_path):
 
     records.ai('TEST')
 
+    assert PopPrefix() == 'ABC'
 
     SetRecordNames(tmpl_names)
 

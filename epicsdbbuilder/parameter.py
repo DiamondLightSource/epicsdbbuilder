@@ -30,5 +30,8 @@ class Parameter:
         else:
             return '$(%s=%s)' % (self.__name, self.__default)
 
+    def __repr__(self):
+        return "Parameter" + str(self)[1:]
+
     def Validate(self, record, field):
         pass
