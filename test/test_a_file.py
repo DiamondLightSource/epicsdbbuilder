@@ -1,6 +1,7 @@
 # vim: set fileencoding=UTF-8:
 
 import os
+import sys
 from epicsdbbuilder import *
 
 def test_output(tmp_path):
@@ -63,7 +64,12 @@ def test_output(tmp_path):
     # A string constant with some evil character values
     records.stringin('STRING', VAL = '"\n\\\x01€')
 
-    fname = tmp_path / 'test_output.db'
+    fname = str(tmp_path / 'test_output.db')
     expected = os.path.join(os.path.dirname(__file__), 'expected_output.db')
+    open_args = {}
+    if sys.version_info > (3, ):
+        # Specify encoding so it works on windows
+        open_args['encoding'] = 'utf8'
     WriteRecords(fname)
-    assert open(fname).readlines()[1:] == open(expected).readlines()[1:]
+    assert open(fname).readlines()[1:] == \
+           open(expected, **open_args).readlines()[1:]

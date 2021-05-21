@@ -4,18 +4,23 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+# Switch to main repo after PR https://github.com/Holzhaus/sphinx-multiversion/pull/64 is merged
+sphinx-multiversion = {editable = true,git = "https://github.com/dls-controls/sphinx-multiversion.git",ref = "only-arg"}
+
+# Make sure lockfile is usable on other platforms
+atomicwrites = "*"
+
+# Test and docs deps
 pytest-cov = "*"
 pytest-flake8 = "*"
 sphinx-rtd-theme = "*"
-# switch to main repo after PR https://github.com/Holzhaus/sphinx-multiversion/pull/60 is merged
-sphinx-multiversion = {editable = true,git = "https://github.com/dls-controls/sphinx-multiversion.git",ref = "only-arg"}
 
 [packages]
 # All other package requirements from setup.cfg
 epicsdbbuilder = {editable = true,path = "."}
 
 [scripts]
-# Put coverage here so we don't interfere with debugging in the IDE
-tests = "python -m pytest --cov=epicsdbbuilder --cov-report term"
+tests = "python -m pytest"
 docs = "sphinx-build -EWT --keep-going docs build/html"
-clean = "rm -rf build prefix */__pycache__ .coverage cov.xml *.egg-info .mypy_cache .pytest_cache"
+# Delete any files that git ignore hides from us
+gitclean = "git clean -fdX"
