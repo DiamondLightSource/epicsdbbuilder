@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>1. EPICS Database Builder &mdash; EPICS Database Builder 1.4.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/dls-favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Database Builder API" href="api.html" />
+    <link rel="prev" title="EPICS Database Builder" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: rgb(7, 43, 93)" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EPICS Database Builder
+          
+
+          
+            
+            <img src="_static/dls-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+  <style>
+    /* style mobile top nav to look like main nav */
+    .wy-nav-top {
+        background: rgb(7, 43, 93)
+    }
+  </style>
+  
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. EPICS Database Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">2. Database Builder API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">3. Contributing</a></li>
+</ul>
+
+            
+          
+  <!-- Include Index in the sidebar -->
+  <!-- https://stackoverflow.com/a/37843854 -->
+  <a href="genindex.html">Index</a>
+  <!-- Include all versions of the docs -->
+  <!-- https://holzhaus.github.io/sphinx-multiversion/master/templates.html -->
+  
+  <p class="caption"><span class="caption-text">Versions</span></p>
+  <ul>
+    <li><a href="../master/overview.html">master</a></li>
+    <li><a href="overview.html">1.4.2</a></li>
+    <li><a href="../1.4.1/overview.html">1.4.1</a></li>
+    <li><a href="../1.4/overview.html">1.4</a></li>
+    <li><a href="../1.3/overview.html">1.3</a></li>
+    <li><a href="../1.2/overview.html">1.2</a></li>
+    <li><a href="../1.1/overview.html">1.1</a></li>
+    <li><a href="../1.0/overview.html">1.0</a></li>
+  </ul>
+  
+
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EPICS Database Builder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="section-number">1. </span>EPICS Database Builder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="epics-database-builder">
+<h1><span class="section-number">1. </span>EPICS Database Builder<a class="headerlink" href="#epics-database-builder" title="Permalink to this headline">¶</a></h1>
+<p>The EPICS database builder is a support library designed to make it easy to
+create EPICS databases from a Python script.  To create a script the following
+steps should be followed:</p>
+<ol class="arabic simple">
+<li><p>After importing <a class="reference internal" href="api.html#module-epicsdbbuilder" title="epicsdbbuilder"><code class="xref py py-mod docutils literal notranslate"><span class="pre">epicsdbbuilder</span></code></a> it must be initialised by calling
+<a class="reference internal" href="api.html#epicsdbbuilder.InitialiseDbd" title="epicsdbbuilder.InitialiseDbd"><code class="xref py py-func docutils literal notranslate"><span class="pre">InitialiseDbd()</span></code></a>.  This function can either be called without any
+arguments if the <a class="reference external" href="https://github.com/mdavidsaver/epicscorelibs">epicscorelibs</a> module is installed, or passed an absolute
+path to an EPICS base directory where the <code class="docutils literal notranslate"><span class="pre">dbd</span></code> directory containing
+<code class="docutils literal notranslate"><span class="pre">base.dbd</span></code> can be found.</p></li>
+<li><p>Next any other dbd files needed can be loaded by calls to
+<a class="reference internal" href="api.html#epicsdbbuilder.LoadDbdFile" title="epicsdbbuilder.LoadDbdFile"><code class="xref py py-func docutils literal notranslate"><span class="pre">LoadDbdFile()</span></code></a>.</p></li>
+<li><p>Optionally a naming convention can be installed by calling
+<a class="reference internal" href="api.html#epicsdbbuilder.SetRecordNames" title="epicsdbbuilder.SetRecordNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">SetRecordNames()</span></code></a>, or template naming can be set up by calling
+<a class="reference internal" href="api.html#epicsdbbuilder.SetTemplateRecordNames" title="epicsdbbuilder.SetTemplateRecordNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">SetTemplateRecordNames()</span></code></a>.</p></li>
+<li><p>Records can be freely generated by calls to record generation methods of
+<a class="reference internal" href="api.html#epicsdbbuilder.records" title="epicsdbbuilder.records"><code class="xref py py-data docutils literal notranslate"><span class="pre">records</span></code></a>.  The loaded dbd files will be used to ensure that all
+values written to fields are valid.</p></li>
+<li><p>Finally the generated database should be written out by calling
+<a class="reference internal" href="api.html#epicsdbbuilder.WriteRecords" title="epicsdbbuilder.WriteRecords"><code class="xref py py-func docutils literal notranslate"><span class="pre">WriteRecords()</span></code></a>.</p></li>
+</ol>
+<p>A simple example follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">epicsdbbuilder</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">InitialiseDbd</span><span class="p">(</span><span class="s1">&#39;/dls_sw/epics/R3.14.12.3/base/&#39;</span><span class="p">)</span>
+<span class="n">SetTemplateRecordNames</span><span class="p">()</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">ao</span><span class="p">(</span><span class="s1">&#39;TEST&#39;</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">calc</span><span class="p">(</span><span class="s1">&#39;CALC&#39;</span><span class="p">,</span> <span class="n">CALC</span> <span class="o">=</span> <span class="s1">&#39;A+B&#39;</span><span class="p">,</span> <span class="n">SCAN</span> <span class="o">=</span> <span class="s1">&#39;1 second&#39;</span><span class="p">,</span> <span class="n">INPA</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">VAL</span><span class="p">)</span>
+<span class="n">c</span><span class="o">.</span><span class="n">INPB</span> <span class="o">=</span> <span class="n">c</span>
+
+<span class="n">WriteRecords</span><span class="p">(</span><span class="s1">&#39;output.db&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running this Python script will generate the following database file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file was automatically generated on Mon 02 Mar 2015 12:57:13 GMT.</span>
+<span class="c1">#</span>
+<span class="c1"># *** Please do not edit this file: edit the source file instead. ***</span>
+<span class="c1">#</span>
+<span class="c1">#% macro, DEVICE, Device name</span>
+
+<span class="n">record</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="s2">&quot;$(DEVICE):CALC&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">field</span><span class="p">(</span><span class="n">CALC</span><span class="p">,</span> <span class="s2">&quot;A+B&quot;</span><span class="p">)</span>
+    <span class="n">field</span><span class="p">(</span><span class="n">INPA</span><span class="p">,</span> <span class="s2">&quot;$(DEVICE):TEST.VAL&quot;</span><span class="p">)</span>
+    <span class="n">field</span><span class="p">(</span><span class="n">INPB</span><span class="p">,</span> <span class="s2">&quot;$(DEVICE):CALC&quot;</span><span class="p">)</span>
+    <span class="n">field</span><span class="p">(</span><span class="n">SCAN</span><span class="p">,</span> <span class="s2">&quot;1 second&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">record</span><span class="p">(</span><span class="n">ao</span><span class="p">,</span> <span class="s2">&quot;$(DEVICE):TEST&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that record fields can be given values when the record is constructed, or
+can be assigned a new value at any time.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="api.html" class="btn btn-neutral float-right" title="2. Database Builder API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="EPICS Database Builder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015, Michael Abbott.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

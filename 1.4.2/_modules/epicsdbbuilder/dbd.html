@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>epicsdbbuilder.dbd &mdash; EPICS Database Builder 1.4.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/dls-favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: rgb(7, 43, 93)" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> EPICS Database Builder
+          
+
+          
+            
+            <img src="../../_static/dls-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+  <style>
+    /* style mobile top nav to look like main nav */
+    .wy-nav-top {
+        background: rgb(7, 43, 93)
+    }
+  </style>
+  
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. EPICS Database Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">2. Database Builder API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">3. Contributing</a></li>
+</ul>
+
+            
+          
+  <!-- Include Index in the sidebar -->
+  <!-- https://stackoverflow.com/a/37843854 -->
+  <a href="../../genindex.html">Index</a>
+  <!-- Include all versions of the docs -->
+  <!-- https://holzhaus.github.io/sphinx-multiversion/master/templates.html -->
+  
+  <p class="caption"><span class="caption-text">Versions</span></p>
+  <ul>
+    <li><a href="../../../master/index.html">master</a></li>
+    <li><a href="dbd.html">1.4.2</a></li>
+    <li><a href="../../../1.4.1/index.html">1.4.1</a></li>
+    <li><a href="../../../1.4/index.html">1.4</a></li>
+    <li><a href="../../../1.3/index.html">1.3</a></li>
+    <li><a href="../../../1.2/index.html">1.2</a></li>
+    <li><a href="../../../1.1/index.html">1.1</a></li>
+    <li><a href="../../../1.0/index.html">1.0</a></li>
+  </ul>
+  
+
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EPICS Database Builder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>epicsdbbuilder.dbd</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for epicsdbbuilder.dbd</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;Implements the set of records provided by a dbd&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">ctypes</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">mydbstatic</span>   <span class="c1"># Pick up interface to EPICS dbd files</span>
+
+<span class="kn">from</span> <span class="nn">.recordbase</span> <span class="kn">import</span> <span class="n">Record</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;InitialiseDbd&#39;</span><span class="p">,</span> <span class="s1">&#39;LoadDbdFile&#39;</span><span class="p">,</span> <span class="s1">&#39;records&#39;</span><span class="p">]</span>
+
+
+<span class="c1"># This class contains all the record types current supported by the loaded</span>
+<span class="c1"># dbd, and is published to the world as epics.records.  As records are added</span>
+<span class="c1"># (in response to calls to LoadDbdFile) they are automatically available to</span>
+<span class="c1"># all targets.</span>
+<span class="k">class</span> <span class="nc">RecordTypes</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__RecordTypes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">GetRecords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__RecordTypes</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_PublishRecordType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_use</span><span class="p">,</span> <span class="n">recordType</span><span class="p">,</span> <span class="n">validate</span><span class="p">):</span>
+        <span class="c1"># Publish this record type as a method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__RecordTypes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">recordType</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">recordType</span><span class="p">,</span>
+            <span class="n">Record</span><span class="o">.</span><span class="n">CreateSubclass</span><span class="p">(</span><span class="n">on_use</span><span class="p">,</span> <span class="n">recordType</span><span class="p">,</span> <span class="n">validate</span><span class="p">))</span>
+
+    <span class="c1"># Checks whether the given recordType names a known valid record type.</span>
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recordType</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">recordType</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__RecordTypes</span>
+
+
+<span class="c1"># Every record type loaded from a DBD is present as an attribute of this</span>
+<span class="c1"># class with the name of the record type.</span>
+<span class="c1">#</span>
+<span class="c1"># For example, to create an ai record, simply write</span>
+<span class="c1">#</span>
+<span class="c1">#   records.ai(&#39;NAME&#39;, DESC = &#39;A test ai record&#39;, EGU = &#39;V&#39;)</span>
+<span class="c1">#</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">RecordTypes</span><span class="p">()</span>
+
+
+<span class="c1"># This class uses a the static database to validate whether the associated</span>
+<span class="c1"># record type allows a given value to be written to a given field.</span>
+<span class="k">class</span> <span class="nc">ValidateDbField</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dbEntry</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbCopyEntry</span><span class="p">(</span><span class="n">dbEntry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__FieldInfo</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Computes list of valid names and creates associated arginfo</span>
+    <span class="c1"># definitions.  This is postponed quite late to try and ensure the menus</span>
+    <span class="c1"># are fully populated, in other words we don&#39;t want to fire this until</span>
+    <span class="c1"># all the dbd files have been loaded.</span>
+    <span class="k">def</span> <span class="nf">__ProcessDbd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># ordered dict of field_name -&gt; arginfo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__FieldInfo</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbFirstField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbGetFieldName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;NAME&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__FieldInfo</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbNextField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+
+    <span class="c1"># This method raises an attribute error if the given field name is</span>
+    <span class="c1"># invalid.</span>
+    <span class="k">def</span> <span class="nf">ValidFieldName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__FieldInfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__ProcessDbd</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__FieldInfo</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Invalid field name </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># This method raises an exeption if the given field name does not exist</span>
+    <span class="c1"># or if the value cannot be validly written.</span>
+    <span class="k">def</span> <span class="nf">ValidFieldValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># First check the field name is valid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ValidFieldName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Set the database cursor to the field</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbFirstField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbGetFieldName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbNextField</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Now see if we can write the value to it</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbVerify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbEntry</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s1">&#39;Can</span><span class="se">\&#39;</span><span class="s1">t write &quot;</span><span class="si">%s</span><span class="s1">&quot; to field </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+
+
+<span class="c1"># The same database pointer is used for all DBD files: this means that all</span>
+<span class="c1"># the DBD entries are accumulated into a single large database.</span>
+<span class="n">_db</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LoadDbdFile"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.LoadDbdFile">[docs]</a><span class="k">def</span> <span class="nf">LoadDbdFile</span><span class="p">(</span><span class="n">dbdfile</span><span class="p">,</span> <span class="n">on_use</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">dbdfile</span><span class="p">)</span>
+
+    <span class="c1"># Read the specified dbd file into the current database.  This allows</span>
+    <span class="c1"># us to see any new definitions.</span>
+    <span class="n">curdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">dirname</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+
+    <span class="c1"># We add &lt;epics_base&gt;/dbd to the path so that dbd includes can be resolved.</span>
+    <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
+        <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbReadDatabase</span><span class="p">(</span>
+        <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">_db</span><span class="p">),</span> <span class="n">filename</span><span class="p">,</span>
+        <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_epics_base</span><span class="p">,</span> <span class="s1">&#39;dbd&#39;</span><span class="p">)]),</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">curdir</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Error reading database </span><span class="si">%s</span><span class="s1"> (status </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> \
+        <span class="p">(</span><span class="n">dbdfile</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span>
+
+
+    <span class="c1"># Enumerate all the record types and build a record generator class</span>
+    <span class="c1"># for each one that we&#39;ve not seen before.</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbAllocEntry</span><span class="p">(</span><span class="n">_db</span><span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbFirstRecordType</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">recordType</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbGetRecordTypeName</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">recordType</span><span class="p">):</span>
+            <span class="n">validate</span> <span class="o">=</span> <span class="n">ValidateDbField</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">_PublishRecordType</span><span class="p">(</span><span class="n">on_use</span><span class="p">,</span> <span class="n">recordType</span><span class="p">,</span> <span class="n">validate</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbNextRecordType</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    <span class="n">mydbstatic</span><span class="o">.</span><span class="n">dbFreeEntry</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InitialiseDbd"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.InitialiseDbd">[docs]</a><span class="k">def</span> <span class="nf">InitialiseDbd</span><span class="p">(</span><span class="n">epics_base</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">host_arch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">_epics_base</span>
+    <span class="k">if</span> <span class="n">epics_base</span><span class="p">:</span>
+        <span class="c1"># Import from given location</span>
+        <span class="n">mydbstatic</span><span class="o">.</span><span class="n">ImportFunctions</span><span class="p">(</span><span class="n">epics_base</span><span class="p">,</span> <span class="n">host_arch</span><span class="p">)</span>
+        <span class="n">_epics_base</span> <span class="o">=</span> <span class="n">epics_base</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Import from epicscorelibs installed libs</span>
+        <span class="kn">from</span> <span class="nn">epicscorelibs</span> <span class="kn">import</span> <span class="n">path</span>
+        <span class="n">mydbstatic</span><span class="o">.</span><span class="n">ImportFunctionsFrom</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">get_lib</span><span class="p">(</span><span class="s1">&#39;dbCore&#39;</span><span class="p">))</span>
+        <span class="n">_epics_base</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">base_path</span>
+    <span class="n">LoadDbdFile</span><span class="p">(</span><span class="s1">&#39;base.dbd&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015, Michael Abbott.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

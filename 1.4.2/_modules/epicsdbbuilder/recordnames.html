@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>epicsdbbuilder.recordnames &mdash; EPICS Database Builder 1.4.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/dls-favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: rgb(7, 43, 93)" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> EPICS Database Builder
+          
+
+          
+            
+            <img src="../../_static/dls-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+  <style>
+    /* style mobile top nav to look like main nav */
+    .wy-nav-top {
+        background: rgb(7, 43, 93)
+    }
+  </style>
+  
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. EPICS Database Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">2. Database Builder API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">3. Contributing</a></li>
+</ul>
+
+            
+          
+  <!-- Include Index in the sidebar -->
+  <!-- https://stackoverflow.com/a/37843854 -->
+  <a href="../../genindex.html">Index</a>
+  <!-- Include all versions of the docs -->
+  <!-- https://holzhaus.github.io/sphinx-multiversion/master/templates.html -->
+  
+  <p class="caption"><span class="caption-text">Versions</span></p>
+  <ul>
+    <li><a href="../../../master/index.html">master</a></li>
+    <li><a href="recordnames.html">1.4.2</a></li>
+    <li><a href="../../../1.4.1/index.html">1.4.1</a></li>
+    <li><a href="../../../1.4/index.html">1.4</a></li>
+    <li><a href="../../../1.3/index.html">1.3</a></li>
+    <li><a href="../../../1.2/index.html">1.2</a></li>
+    <li><a href="../../../1.1/index.html">1.1</a></li>
+    <li><a href="../../../1.0/index.html">1.0</a></li>
+  </ul>
+  
+
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EPICS Database Builder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>epicsdbbuilder.recordnames</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for epicsdbbuilder.recordnames</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;Support for default record name configurations.&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">parameter</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;SimpleRecordNames&#39;</span><span class="p">,</span> <span class="s1">&#39;TemplateRecordNames&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SetSimpleRecordNames&#39;</span><span class="p">,</span> <span class="s1">&#39;SetTemplateRecordNames&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;RecordName&#39;</span><span class="p">,</span> <span class="s1">&#39;SetRecordNames&#39;</span><span class="p">,</span> <span class="s1">&#39;GetRecordNames&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PushPrefix&#39;</span><span class="p">,</span> <span class="s1">&#39;PopPrefix&#39;</span><span class="p">,</span> <span class="s1">&#39;SetPrefix&#39;</span><span class="p">,</span> <span class="s1">&#39;SetSeparator&#39;</span><span class="p">]</span>
+
+
+<span class="c1"># Default record name support: each record is created with precisely the name</span>
+<span class="c1"># it is given.</span>
+<div class="viewcode-block" id="SimpleRecordNames"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SimpleRecordNames">[docs]</a><span class="k">class</span> <span class="nc">SimpleRecordNames</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1"># Maximum record name length for EPICS 3.14</span>
+    <span class="n">maxLength</span> <span class="o">=</span> <span class="mi">61</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">check</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="k">if</span> <span class="n">prefix</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">separator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check</span> <span class="o">=</span> <span class="n">check</span>
+
+<div class="viewcode-block" id="SimpleRecordNames.__call__"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SimpleRecordNames.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxLength</span><span class="p">,</span> \
+            <span class="s1">&#39;Record name &quot;</span><span class="si">%s</span><span class="s1">&quot; too long&#39;</span> <span class="o">%</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="n">name</span></div>
+
+<div class="viewcode-block" id="SimpleRecordNames.PushPrefix"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SimpleRecordNames.PushPrefix">[docs]</a>    <span class="k">def</span> <span class="nf">PushPrefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SimpleRecordNames.PopPrefix"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SimpleRecordNames.PopPrefix">[docs]</a>    <span class="k">def</span> <span class="nf">PopPrefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SimpleRecordNames.SetPrefix"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SimpleRecordNames.SetPrefix">[docs]</a>    <span class="k">def</span> <span class="nf">SetPrefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">prefix</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">PopPrefix</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PushPrefix</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PopPrefix</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">SetSeparator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">separator</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">separator</span></div>
+
+
+<div class="viewcode-block" id="TemplateRecordNames"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.TemplateRecordNames">[docs]</a><span class="k">class</span> <span class="nc">TemplateRecordNames</span><span class="p">(</span><span class="n">SimpleRecordNames</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;DEVICE&#39;</span><span class="p">,</span> <span class="s1">&#39;Device name&#39;</span><span class="p">)</span>
+        <span class="n">SimpleRecordNames</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SetSimpleRecordNames"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SetSimpleRecordNames">[docs]</a><span class="k">def</span> <span class="nf">SetSimpleRecordNames</span><span class="p">(</span><span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">SetRecordNames</span><span class="p">(</span><span class="n">SimpleRecordNames</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">separator</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SetTemplateRecordNames"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SetTemplateRecordNames">[docs]</a><span class="k">def</span> <span class="nf">SetTemplateRecordNames</span><span class="p">(</span><span class="n">prefix</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span><span class="p">):</span>
+    <span class="n">SetRecordNames</span><span class="p">(</span><span class="n">TemplateRecordNames</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">separator</span><span class="p">))</span></div>
+
+
+<span class="c1"># By default record names are unmodified.</span>
+<span class="k">def</span> <span class="nf">_RecordNames</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">name</span>
+
+<div class="viewcode-block" id="SetRecordNames"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SetRecordNames">[docs]</a><span class="k">def</span> <span class="nf">SetRecordNames</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">_RecordNames</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">_RecordNames</span>
+    <span class="n">_RecordNames</span> <span class="o">=</span> <span class="n">names</span>
+    <span class="k">return</span> <span class="n">current</span></div>
+
+<div class="viewcode-block" id="GetRecordNames"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.GetRecordNames">[docs]</a><span class="k">def</span> <span class="nf">GetRecordNames</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">_RecordNames</span></div>
+
+<div class="viewcode-block" id="RecordName"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.RecordName">[docs]</a><span class="k">def</span> <span class="nf">RecordName</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_RecordNames</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PushPrefix"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.PushPrefix">[docs]</a><span class="k">def</span> <span class="nf">PushPrefix</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+    <span class="n">_RecordNames</span><span class="o">.</span><span class="n">PushPrefix</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PopPrefix"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.PopPrefix">[docs]</a><span class="k">def</span> <span class="nf">PopPrefix</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">_RecordNames</span><span class="o">.</span><span class="n">PopPrefix</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SetPrefix"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SetPrefix">[docs]</a><span class="k">def</span> <span class="nf">SetPrefix</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+    <span class="n">_RecordNames</span><span class="o">.</span><span class="n">SetPrefix</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SetSeparator"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.SetSeparator">[docs]</a><span class="k">def</span> <span class="nf">SetSeparator</span><span class="p">(</span><span class="n">separator</span><span class="p">):</span>
+    <span class="n">_RecordNames</span><span class="o">.</span><span class="n">SetSeparator</span><span class="p">(</span><span class="n">separator</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015, Michael Abbott.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
