@@ -16,7 +16,7 @@ jobs:
             publish: true
             epics: "R3.14.12.7"
             # sphinx deps don't work on 2.7, so install manually
-            pipenv: "--skip-lock pytest-cov pytest-flake8"
+            pipenv: "--skip-lock && pipenv run pip install pytest-cov pytest-flake8"
 
           # DLS RHEL7 python3 current
           - os: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           pip install pipenv twine build
-          pipenv install ${{ matrix.pipenv }} --python $(python -c 'import sys; print(sys.executable)') && pipenv graph
+          pipenv install --python $(python -c 'import sys; print(sys.executable)') ${{ matrix.pipenv }} && pipenv graph
 
       - name: Install epicscorelibs
         if: ${{ ! matrix.epics }}
