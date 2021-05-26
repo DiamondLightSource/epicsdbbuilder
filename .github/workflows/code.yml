@@ -13,6 +13,7 @@ jobs:
           # DLS RHEL7 legacy
           - os: ubuntu-latest
             python: "2.7"
+            publish: true
             epics: "R3.14.12.7"
             # sphinx deps don't work on 2.7, so install manually
             pipenv: "--skip-lock pytest-cov pytest-flake8"
@@ -26,7 +27,6 @@ jobs:
           # DLS RHEL7 python3 as used by pythonIoc
           - os: ubuntu-latest
             python: "3.7"
-            # Deploy wheel from here
             publish: true
             pipenv: "--dev --deploy"
 
