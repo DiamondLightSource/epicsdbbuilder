@@ -1,4 +1,5 @@
 import unittest
+from collections import OrderedDict
 from decimal import Decimal
 from epicsdbbuilder import ConstArray, Parameter
 
@@ -24,12 +25,13 @@ class TestConstArray(unittest.TestCase):
 
                     def __next__(self):
                         return next(self.arr)
+                    next = __next__  # Python2
                 return Iterator([1, 2, 3])
 
         self.assertValidFormatDb('[1,2,3]', [1, 2, 3])
         self.assertValidFormatDb('[1,2,3]', (1, 2, 3))
-        self.assertValidFormatDb(
-            '["1","2","3"]', {'1': 'A', '2': 'B', '3': 'C'})
+        d = OrderedDict([('1', 'A'), ('2', 'B'), ('3', 'C')])
+        self.assertValidFormatDb('["1","2","3"]', d)
         self.assertValidFormatDb('["1","2","3"]', '123')
         self.assertValidFormatDb('[1,2,3]', Iterable())
 
@@ -43,6 +45,7 @@ class TestConstArray(unittest.TestCase):
                 class Iterator:
                     def __next__(self):
                         raise StopIteration
+                    next = __next__  # Python2
                 return Iterator()
 
         self.assertInvalid(Iterable())

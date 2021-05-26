@@ -24,7 +24,7 @@ jobs:
         run: |
           env
           pip install pipenv
-          pipenv install --dev --skip-lock && pipenv graph
+          pipenv install --dev --deploy --python $(which python) && pipenv graph
 
       - name: Deploy index
         # We pin to the SHA, not the tag, for security reasons.
