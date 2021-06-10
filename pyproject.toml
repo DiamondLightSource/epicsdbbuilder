@@ -1,4 +1,4 @@
 [build-system]
 # Versions compatible with those installed in dls-python3
-requires = ["setuptools==49.3.1", "wheel==0.33.1"]
+requires = ["setuptools<45", "wheel==0.33.1"]
 build-backend = "setuptools.build_meta:__legacy__"
