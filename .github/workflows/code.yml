@@ -50,9 +50,6 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v2
-        with:
-          # require all of history to see all tagged versions' docs
-          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2
@@ -82,7 +79,6 @@ jobs:
         # https://reproducible-builds.org/
         # Set group writable and umask to do the same to match inside DLS
         run: |
-          git diff
           chmod -R g+w .
           umask 0002
           SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct) python -m build --sdist --wheel
