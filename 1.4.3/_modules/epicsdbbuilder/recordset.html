@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>epicsdbbuilder.recordset &mdash; EPICS Database Builder 1.4.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/dls-favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: rgb(7, 43, 93)" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> EPICS Database Builder
+          
+
+          
+            
+            <img src="../../_static/dls-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+  <style>
+    /* style mobile top nav to look like main nav */
+    .wy-nav-top {
+        background: rgb(7, 43, 93)
+    }
+  </style>
+  
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. EPICS Database Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">2. Database Builder API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">3. Contributing</a></li>
+</ul>
+
+            
+          
+  <!-- Include Index in the sidebar -->
+  <!-- https://stackoverflow.com/a/37843854 -->
+  <a href="../../genindex.html">Index</a>
+  <!-- Include all versions of the docs -->
+  <!-- https://holzhaus.github.io/sphinx-multiversion/master/templates.html -->
+  
+  <p class="caption"><span class="caption-text">Versions</span></p>
+  <ul>
+    <li><a href="../../../master/index.html">master</a></li>
+    <li><a href="recordset.html">1.4.3</a></li>
+    <li><a href="../../../1.4.2/index.html">1.4.2</a></li>
+    <li><a href="../../../1.4.1/index.html">1.4.1</a></li>
+    <li><a href="../../../1.4/index.html">1.4</a></li>
+    <li><a href="../../../1.3/index.html">1.3</a></li>
+    <li><a href="../../../1.2/index.html">1.2</a></li>
+    <li><a href="../../../1.1/index.html">1.1</a></li>
+    <li><a href="../../../1.0/index.html">1.0</a></li>
+  </ul>
+  
+
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EPICS Database Builder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>epicsdbbuilder.recordset</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for epicsdbbuilder.recordset</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;Collections of records.&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;WriteRecords&#39;</span><span class="p">,</span> <span class="s1">&#39;Disclaimer&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;LookupRecord&#39;</span><span class="p">,</span> <span class="s1">&#39;CountRecords&#39;</span><span class="p">,</span> <span class="s1">&#39;ResetRecords&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">RecordSet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ResetRecords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__RecordSet</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__HeaderLines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__BodyLines</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ResetRecords</span><span class="p">()</span>
+
+    <span class="c1"># Add a record to the list of records to be published.</span>
+    <span class="k">def</span> <span class="nf">PublishRecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__RecordSet</span><span class="p">,</span> <span class="s1">&#39;Record </span><span class="si">%s</span><span class="s1"> already defined&#39;</span> <span class="o">%</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__RecordSet</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
+
+    <span class="c1"># Returns the record with the given name.</span>
+    <span class="k">def</span> <span class="nf">LookupRecord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__RecordSet</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span>
+
+    <span class="c1"># Output complete set of records to the given file.</span>
+    <span class="k">def</span> <span class="nf">Print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__HeaderLines</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="n">output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__BodyLines</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="n">output</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__BodyLines</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="n">output</span><span class="p">)</span>
+        <span class="c1"># Print the records in alphabetical order: gives the reader a fighting</span>
+        <span class="c1"># chance to find their way around the generated database!</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__RecordSet</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__RecordSet</span><span class="p">[</span><span class="n">record</span><span class="p">]</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="c1"># Returns the number of published records.</span>
+    <span class="k">def</span> <span class="nf">CountRecords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__RecordSet</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">AddHeaderLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__HeaderLines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">AddBodyLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__BodyLines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+
+<span class="n">recordset</span> <span class="o">=</span> <span class="n">RecordSet</span><span class="p">()</span>
+
+<span class="n">LookupRecord</span> <span class="o">=</span> <span class="n">recordset</span><span class="o">.</span><span class="n">LookupRecord</span>
+<span class="n">CountRecords</span> <span class="o">=</span> <span class="n">recordset</span><span class="o">.</span><span class="n">CountRecords</span>
+<span class="n">ResetRecords</span> <span class="o">=</span> <span class="n">recordset</span><span class="o">.</span><span class="n">ResetRecords</span>
+
+
+
+<div class="viewcode-block" id="Disclaimer"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.Disclaimer">[docs]</a><span class="k">def</span> <span class="nf">Disclaimer</span><span class="p">(</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">normalise_source</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">from_source</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">normalise_source</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">from_source</span> <span class="o">=</span> <span class="s1">&#39; from</span><span class="se">\n</span><span class="s1">source: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">source</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%a</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> %b %Y %H:%M:%S %Z&#39;</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">This file was automatically generated on </span><span class="si">%(now)s%(from_source)s</span><span class="s1"></span>
+
+<span class="s1">*** Please do not edit this file: edit the source file instead. ***</span>
+
+<span class="s1">&#39;&#39;&#39;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="WriteRecords"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.WriteRecords">[docs]</a><span class="k">def</span> <span class="nf">WriteRecords</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">Disclaimer</span><span class="p">()</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">header</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate header with empty line&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">header</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="n">output</span><span class="p">)</span>
+        <span class="n">recordset</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015, Michael Abbott.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

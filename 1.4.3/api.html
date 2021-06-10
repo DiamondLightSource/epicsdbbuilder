@@ -1,0 +1,617 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>2. Database Builder API &mdash; EPICS Database Builder 1.4.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="_static/dls-favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Contributing" href="contributing.html" />
+    <link rel="prev" title="1. EPICS Database Builder" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: rgb(7, 43, 93)" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EPICS Database Builder
+          
+
+          
+            
+            <img src="_static/dls-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+  <style>
+    /* style mobile top nav to look like main nav */
+    .wy-nav-top {
+        background: rgb(7, 43, 93)
+    }
+  </style>
+  
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">1. EPICS Database Builder</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Database Builder API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#initialisation">2.1. Initialisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#record-output">2.2. Record Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-databases">2.3. Building Databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#record-naming">2.4. Record Naming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#high-level-api">2.4.1. High Level API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-interface">2.4.2. General Interface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#helper-functions-and-classes">2.5. Helper Functions and Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#record-class">2.6. Record Class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">3. Contributing</a></li>
+</ul>
+
+            
+          
+  <!-- Include Index in the sidebar -->
+  <!-- https://stackoverflow.com/a/37843854 -->
+  <a href="genindex.html">Index</a>
+  <!-- Include all versions of the docs -->
+  <!-- https://holzhaus.github.io/sphinx-multiversion/master/templates.html -->
+  
+  <p class="caption"><span class="caption-text">Versions</span></p>
+  <ul>
+    <li><a href="../master/api.html">master</a></li>
+    <li><a href="api.html">1.4.3</a></li>
+    <li><a href="../1.4.2/api.html">1.4.2</a></li>
+    <li><a href="../1.4.1/api.html">1.4.1</a></li>
+    <li><a href="../1.4/api.html">1.4</a></li>
+    <li><a href="../1.3/api.html">1.3</a></li>
+    <li><a href="../1.2/api.html">1.2</a></li>
+    <li><a href="../1.1/api.html">1.1</a></li>
+    <li><a href="../1.0/api.html">1.0</a></li>
+  </ul>
+  
+
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EPICS Database Builder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="section-number">2. </span>Database Builder API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-epicsdbbuilder"></span><div class="section" id="database-builder-api">
+<h1><span class="section-number">2. </span>Database Builder API<a class="headerlink" href="#database-builder-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="initialisation">
+<h2><span class="section-number">2.1. </span>Initialisation<a class="headerlink" href="#initialisation" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="epicsdbbuilder.InitialiseDbd">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">InitialiseDbd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epics_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_arch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/dbd.html#InitialiseDbd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.InitialiseDbd" title="Permalink to this definition">¶</a></dt>
+<dd><p>This must be called once before calling any other functions.  There are two
+possible mechanisms for locating EPICS base libraries and dbds.</p>
+<p>1. Using the <a class="reference external" href="https://github.com/mdavidsaver/epicscorelibs">epicscorelibs</a> library. If <code class="docutils literal notranslate"><span class="pre">epics_base</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> then the
+<code class="docutils literal notranslate"><span class="pre">epicscorelibs</span></code> package will be imported and used as the source of
+libraries and dbds.</p>
+<p>2. Locally install EPICS. If <code class="docutils literal notranslate"><span class="pre">epics_base</span></code> is provided, then it must be an
+absolute path to the directory containing EPICS base, in particular this
+directory must contain both <code class="docutils literal notranslate"><span class="pre">dbd/base.dbd</span></code> and <code class="docutils literal notranslate"><span class="pre">lib/</span></code>. This function
+will load the base EPICS dbd file. The host architecture can normally be
+computed automatically, but if this computation fails this can be specified
+by setting <code class="docutils literal notranslate"><span class="pre">host_arch</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.LoadDbdFile">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">LoadDbdFile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dbdfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_use</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/dbd.html#LoadDbdFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.LoadDbdFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>This can be called before creating records to load extra databases.  If
+<cite>on_use</cite> is not <code class="docutils literal notranslate"><span class="pre">None</span></code> it must be a callable taking one argument, and it
+will be called for each record that is created using records defined by this
+dbd.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="record-output">
+<h2><span class="section-number">2.2. </span>Record Output<a class="headerlink" href="#record-output" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="epicsdbbuilder.WriteRecords">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">WriteRecords</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordset.html#WriteRecords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.WriteRecords" title="Permalink to this definition">¶</a></dt>
+<dd><p>This should be called after creating all records.  The generated records
+will be written out to the file <cite>filename</cite>.  If <cite>header</cite> is left unspecified
+then a standard disclaimer header will be generated::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This file was automatically generated on Fri 27 Feb 2015 15:31:14 GMT.</span>
+<span class="c1">#</span>
+<span class="c1"># *** Please do not edit this file: edit the source file instead. ***</span>
+</pre></div>
+</div>
+<p>Note that the leading <code class="docutils literal notranslate"><span class="pre">#</span></code> comments are added to any header that is passed</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.Disclaimer">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">Disclaimer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalise_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordset.html#Disclaimer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.Disclaimer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generates the disclaimer above.  If a source file name is
+passed then it is included in the disclaimer.  Unless <cite>normalise_path</cite> is
+set to <code class="docutils literal notranslate"><span class="pre">False</span></code> the <cite>source</cite> argument will normalised by calling
+<code class="docutils literal notranslate"><span class="pre">os.path.abspath(source)</span></code>; this allows the caller to simply pass
+<code class="docutils literal notranslate"><span class="pre">__file__</span></code> as the source argument with the desired result.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.CountRecords">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">CountRecords</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#epicsdbbuilder.CountRecords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of records that have currently been created.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.ResetRecords">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">ResetRecords</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#epicsdbbuilder.ResetRecords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the list of records to be written.  This can be used to write
+multiple databases.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="building-databases">
+<h2><span class="section-number">2.3. </span>Building Databases<a class="headerlink" href="#building-databases" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt id="epicsdbbuilder.records">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">records</span></code><a class="headerlink" href="#epicsdbbuilder.records" title="Permalink to this definition">¶</a></dt>
+<dd><p>This instance has a method for each record type, of the form:</p>
+<dl class="py method">
+<dt id="epicsdbbuilder.records.type">
+<code class="sig-prename descclassname"><span class="pre">records.</span></code><code class="sig-name descname"><span class="pre">type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#epicsdbbuilder.records.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Here <cite>name</cite> will be used to construct the record name according to the
+record naming rules currently in force and any field can be given a
+value by assigning it in <cite>kargs</cite>.</p>
+<p>See <a class="reference internal" href="#epicsdbbuilder.recordbase.Record" title="epicsdbbuilder.recordbase.Record"><code class="xref py py-class docutils literal notranslate"><span class="pre">epicsdbbuilder.recordbase.Record</span></code></a> for more details of these
+methods.</p>
+</dd></dl>
+
+<p>Note that fields can be assigned either in the constructor or subsequently,
+and fields can be used as links:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">ai</span><span class="p">(</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="n">INP</span> <span class="o">=</span> <span class="s1">&#39;@input&#39;</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">DESC</span> <span class="o">=</span> <span class="s1">&#39;This is an ai record&#39;</span>
+<span class="n">r</span><span class="o">.</span><span class="n">FLNK</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">calc</span><span class="p">(</span><span class="s1">&#39;NP1&#39;</span><span class="p">,</span> <span class="n">CALC</span> <span class="o">=</span> <span class="s1">&#39;A+1&#39;</span><span class="p">,</span> <span class="n">INP</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">VAL</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="epicsdbbuilder.Parameter">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">Parameter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/parameter.html#Parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.Parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>When using <a class="reference internal" href="#epicsdbbuilder.TemplateRecordNames" title="epicsdbbuilder.TemplateRecordNames"><code class="xref py py-func docutils literal notranslate"><span class="pre">TemplateRecordNames()</span></code></a> this can be used to create template
+parameters with the given <cite>name</cite>.  If <cite>description</cite> is given then this will
+be printed in the header.  If a <cite>default</cite> string is given it will be used as
+the parameter default value, otherwise the parameter will be created with no
+default value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.ImportRecord">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">ImportRecord</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#ImportRecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.ImportRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>This generates a record reference without adding an entry into the generated
+database.  Use this when linking to records outside of the database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.LookupRecord">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">LookupRecord</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#epicsdbbuilder.LookupRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a reference to a record which has already been created.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="record-naming">
+<h2><span class="section-number">2.4. </span>Record Naming<a class="headerlink" href="#record-naming" title="Permalink to this headline">¶</a></h2>
+<p>Record naming works as follows.  Every time a record is created with a call the
+appropriate method of <a class="reference internal" href="#epicsdbbuilder.records" title="epicsdbbuilder.records"><code class="xref py py-data docutils literal notranslate"><span class="pre">records</span></code></a> the name argument passed to that method is
+passed through the currently configured <a class="reference internal" href="#epicsdbbuilder.RecordName" title="epicsdbbuilder.RecordName"><code class="xref py py-func docutils literal notranslate"><span class="pre">RecordName()</span></code></a> method.</p>
+<p>If none of the functions named here are called then the default naming
+convention is applied: in this case record names are used unmodified.</p>
+<p>There is a simple “high level” API layered over a slightly more general
+interface.</p>
+<div class="section" id="high-level-api">
+<h3><span class="section-number">2.4.1. </span>High Level API<a class="headerlink" href="#high-level-api" title="Permalink to this headline">¶</a></h3>
+<p>Use one of the following functions for normal configuration:</p>
+<dl class="py function">
+<dt id="epicsdbbuilder.SetSimpleRecordNames">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">SetSimpleRecordNames</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SetSimpleRecordNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SetSimpleRecordNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>In this case the given <cite>prefix</cite> and <cite>separator</cite> are added in front of any
+record name.  If no arguments are given then the effect is the same as the
+default naming convention which is to use names unchanged.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.SetTemplateRecordNames">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">SetTemplateRecordNames</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SetTemplateRecordNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SetTemplateRecordNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is useful for generating template databases.  If <cite>prefix</cite> is not
+specified then a <a class="reference internal" href="#epicsdbbuilder.Parameter" title="epicsdbbuilder.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a> instance with name <code class="docutils literal notranslate"><span class="pre">DEVICE</span></code> is created
+and prefixed together with the <cite>separator</cite> to each record name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.RecordName">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">RecordName</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#RecordName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.RecordName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the current record name conversion to compute a full record name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.SetPrefix">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">SetPrefix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SetPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SetPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The currently configured prefix can be changed.  This function will only
+work if a <a class="reference internal" href="#epicsdbbuilder.SimpleRecordNames" title="epicsdbbuilder.SimpleRecordNames"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleRecordNames</span></code></a> or similar naming mechanism is
+installed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.PushPrefix">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">PushPrefix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#PushPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.PushPrefix" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.PopPrefix">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">PopPrefix</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#PopPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.PopPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>These two functions manage a stack of record name prefixes, which will be
+separated by <cite>separator</cite> before being appended to the record name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.SetSeparator">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">SetSeparator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SetSeparator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SetSeparator" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function can be used to change the prefix separator.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="general-interface">
+<h3><span class="section-number">2.4.2. </span>General Interface<a class="headerlink" href="#general-interface" title="Permalink to this headline">¶</a></h3>
+<p>More generally any callable object can be used for record name generation.</p>
+<dl class="py function">
+<dt id="epicsdbbuilder.SetRecordNames">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">SetRecordNames</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SetRecordNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SetRecordNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>This sets up a record naming convention.  The argument passed will be called
+each time a new record is created.  This function should take a name as
+argument and return the full name to be written to the generated database.</p>
+<p>The default naming mechanism uses the record name unmodified.</p>
+<p>When this method is called the previously establishing record naming
+convention is returned.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="epicsdbbuilder.SimpleRecordNames">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">SimpleRecordNames</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SimpleRecordNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SimpleRecordNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>This implements a minimal naming convention.  If no <cite>prefix</cite> is specified
+record names are generated unchanged, otherwise the given <cite>prefix</cite> and
+<cite>separator</cite> are contatenated to the front of the passed argument.  If
+<cite>check</cite> is set the the resulting name is checked for length.  Supports the
+following methods.</p>
+<dl class="py method">
+<dt id="epicsdbbuilder.SimpleRecordNames.__call__">
+<code class="sig-name descname"><span class="pre">__call__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SimpleRecordNames.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SimpleRecordNames.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <cite>prefix</cite> + <cite>separator</cite> + <cite>name</cite>.  If <cite>prefix</cite> is currently
+<code class="docutils literal notranslate"><span class="pre">None</span></code> then an error will be generated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="epicsdbbuilder.SimpleRecordNames.SetPrefix">
+<code class="sig-name descname"><span class="pre">SetPrefix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SimpleRecordNames.SetPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SimpleRecordNames.SetPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows the prefix to be modified.  This can be called via the global
+<a class="reference internal" href="#epicsdbbuilder.SetPrefix" title="epicsdbbuilder.SetPrefix"><code class="xref py py-func docutils literal notranslate"><span class="pre">SetPrefix()</span></code></a> method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="epicsdbbuilder.SimpleRecordNames.PushPrefix">
+<code class="sig-name descname"><span class="pre">PushPrefix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SimpleRecordNames.PushPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SimpleRecordNames.PushPrefix" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.SimpleRecordNames.PopPrefix">
+<code class="sig-name descname"><span class="pre">PopPrefix</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#SimpleRecordNames.PopPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.SimpleRecordNames.PopPrefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>These two functions manage a stack of record name prefixes, which will
+be separated by <cite>separator</cite> before being appended to the record name.
+Can be called via the corresponding global functions.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="epicsdbbuilder.TemplateRecordNames">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">TemplateRecordNames</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#TemplateRecordNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.TemplateRecordNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses <a class="reference internal" href="#epicsdbbuilder.SimpleRecordNames" title="epicsdbbuilder.SimpleRecordNames"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleRecordNames</span></code></a> to automatically add a <code class="docutils literal notranslate"><span class="pre">$(DEVICE)</span></code>
+template to the prefix stack.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.GetRecordNames">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">GetRecordNames</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordnames.html#GetRecordNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.GetRecordNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current record naming convention.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="helper-functions-and-classes">
+<h2><span class="section-number">2.5. </span>Helper Functions and Classes<a class="headerlink" href="#helper-functions-and-classes" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="epicsdbbuilder.CA">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">CA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#CA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.CA" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.CP">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">CP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#CP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.CP" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.CPP">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">CPP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#CPP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.CPP" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.NP">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">NP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#NP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.NP" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.PP">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">PP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#PP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.PP" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.MS">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">MS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#MS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.MS" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.MSS">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">MSS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#MSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.MSS" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.MSI">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">MSI</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#MSI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.MSI" title="Permalink to this definition">¶</a></dt>
+<dt id="epicsdbbuilder.NMS">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">NMS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#NMS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.NMS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for record links to add the appropriate processing annotation to the
+link.</p>
+<p>Example (Python source):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">other_record</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">ai</span><span class="p">(</span><span class="s1">&#39;other&#39;</span><span class="p">)</span>
+<span class="n">my_record</span><span class="o">.</span><span class="n">INP</span> <span class="o">=</span> <span class="n">PP</span><span class="p">(</span><span class="n">MS</span><span class="p">(</span><span class="n">other_record</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Example (Generated DB):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">field</span><span class="p">(</span><span class="n">INP</span><span class="p">,</span> <span class="s2">&quot;other PP MS&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="epicsdbbuilder.ConstArray">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">ConstArray</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/const_array.html#ConstArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.ConstArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for <strong>Constant Link Values</strong> available since EPICS 3.16.1.
+Constant Link Values is an EPICS feature which allows passing
+an list of strings or a list of numbers as a constant into
+a field which contains a DB link (e.g. <cite>INP</cite>).
+See EPICS Release Notes (Section “Constant Link Values”)
+for more details and supported use.</p>
+<p>ConstArray will accept any iterable (e.g. a list) which can generate
+a non-empty list of values of the same type. Allowed types are:</p>
+<ul class="simple">
+<li><p>strings and parameters (i.e. <a class="reference internal" href="#epicsdbbuilder.Parameter" title="epicsdbbuilder.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">epicsdbbuilder.Parameter</span></code></a>)</p></li>
+<li><p>numbers (integers, floating-point, <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">decimal.Decimal</span></code></a>,
+and booleans.
+Booleans will convert to <cite>0</cite> (<cite>False</cite>) or <cite>1</cite> (<cite>True</cite>) automatically.</p></li>
+</ul>
+<p>Known limitations:</p>
+<ul class="simple">
+<li><p>No field type or record type check.
+ConstArray can be assigned to any field despite the field
+or the record type does not support Constant Link Values.
+Use it with link fields (e.g. <cite>INP</cite>) of record types <cite>stringin</cite>,
+<cite>stringout</cite>, <cite>lso</cite>, <cite>lsi</cite>, <cite>printf</cite>, <cite>waveform</cite>, <cite>subArray</cite>, and <cite>aai</cite>.
+Any other use is undefined and a warning may or may not appear
+while loading the DB
+(e.g. assigning <cite>[“1.23”]</cite> to INP of the record type <cite>ai</cite> will print
+a warning while assigning <cite>[1.23]</cite> to INP of the record type <cite>ai</cite> will treat
+it as a CA link without any warning on EPICS 7.0.3.1).
+Always refer to EPICS Release Notes (section “Constant Link Values”).</p></li>
+</ul>
+<p>Example (Python source):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">lsi</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">INP</span><span class="o">=</span><span class="n">ConstArray</span><span class="p">([</span><span class="s1">&#39;Plain String not DBLINK&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>Example (generated DB):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">field</span><span class="p">(</span><span class="n">INP</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Plain String not DBLINK&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.create_fanout">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">create_fanout</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">records</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/fanout.html#create_fanout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.create_fanout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates one or more fanout records (as necessary) to fan processing out to
+all records in <cite>records</cite>.  The first fanout record is named <cite>name</cite>, for
+others a sequence number is appended to <cite>name</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="epicsdbbuilder.create_dfanout">
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">create_dfanout</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">records</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/fanout.html#create_dfanout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.create_dfanout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates one or more dfanout records as necessary to fan a data output to a
+the list of records in <cite>records</cite>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="record-class">
+<h2><span class="section-number">2.6. </span>Record Class<a class="headerlink" href="#record-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="epicsdbbuilder.recordbase.Record">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.recordbase.</span></code><code class="sig-name descname"><span class="pre">Record</span></code><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#Record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.recordbase.Record" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of this class is created for each record type and used to
+populate <a class="reference internal" href="#epicsdbbuilder.records" title="epicsdbbuilder.records"><code class="xref py py-data docutils literal notranslate"><span class="pre">epicsdbbuilder.records</span></code></a>: for example, <code class="docutils literal notranslate"><span class="pre">records.ai</span></code> is a
+subclass of <a class="reference internal" href="#epicsdbbuilder.recordbase.Record" title="epicsdbbuilder.recordbase.Record"><code class="xref py py-class docutils literal notranslate"><span class="pre">Record</span></code></a> used to generate <code class="docutils literal notranslate"><span class="pre">ai</span></code> records.</p>
+<dl class="py method">
+<dt id="epicsdbbuilder.recordbase.Record.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#Record.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.recordbase.Record.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>The argument <cite>name</cite> is used to construct the record name.  Any field
+appropriate for this record type can be named in <cite>kargs</cite>, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">records</span><span class="o">.</span><span class="n">ai</span><span class="p">(</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="n">VAL</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">PINI</span> <span class="o">=</span> <span class="s1">&#39;YES&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="epicsdbbuilder.recordbase.Record.add_alias">
+<code class="sig-name descname"><span class="pre">add_alias</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alias</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#Record.add_alias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.recordbase.Record.add_alias" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method causes an EPICS <code class="docutils literal notranslate"><span class="pre">alias</span></code> statement to be added to the
+database giving <cite>alias</cite> as an alternative name for this record.  The
+<cite>alias</cite> argument is used unchanged.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="epicsdbbuilder.recordbase.Record.add_metadata">
+<code class="sig-name descname"><span class="pre">add_metadata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#Record.add_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.recordbase.Record.add_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>This adds metadata entries to the created record.  Metadata entries are
+lines beginning with <code class="docutils literal notranslate"><span class="pre">#%</span></code> placed in the db file immediately above the
+record definition, and can be used by processing tools.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="contributing.html" class="btn btn-neutral float-right" title="3. Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="overview.html" class="btn btn-neutral float-left" title="1. EPICS Database Builder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015, Michael Abbott.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
