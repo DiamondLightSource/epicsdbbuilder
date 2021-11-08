@@ -324,3 +324,10 @@ Record Class
         This adds metadata entries to the created record.  Metadata entries are
         lines beginning with ``#%`` placed in the db file immediately above the
         record definition, and can be used by processing tools.
+
+    ..  method:: add_info(name, value)
+
+        This method causes an EPICS ``info`` statement to be added to the
+        database. Its value can be either a string which will be double quoted
+        (e.g. for ``info(asyn:READBACK, "1")``), or a dictionary structure which
+        will be converted to JSON (e.g. for ``info(Q:group, {...})``).

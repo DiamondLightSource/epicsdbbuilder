@@ -34,7 +34,7 @@ def test_output(tmp_path):
 
     PushPrefix('ABC')
 
-    records.ai('TEST')
+    r = records.ai('TEST')
 
     assert PopPrefix() == 'ABC'
 
@@ -57,9 +57,17 @@ def test_output(tmp_path):
     # Test multiple link options
     records.ai('OPTIONS:PP:MS', INP = PP(MS(t)))
 
-    # Test const array
-    records.ai('FIELD:WITH_CONST_ARRAY', INP = ConstArray(["A", "B", "C"]))
-
+    # Test const array with QSRV infos
+    w = records.waveform(
+        'FIELD:WITH_CONST_ARRAY',
+        INP = ConstArray(["A", "B", "C"]))
+    w.add_info("asyn:READBACK", "1")
+    w.add_info("Q:group", {
+        "MYTABLE": {
+            "+id": "epics:nt/NTTable:1.0",
+            "labels": {"+type": "plain", "+channel": "VAL"}
+        }
+    })
 
     # A string constant with some evil character values
     records.stringin('STRING', VAL = '"\n\\\x01€')
