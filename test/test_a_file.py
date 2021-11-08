@@ -2,6 +2,7 @@
 
 import os
 import sys
+from collections import OrderedDict
 from epicsdbbuilder import *
 
 def test_output(tmp_path):
@@ -62,12 +63,14 @@ def test_output(tmp_path):
         'FIELD:WITH_CONST_ARRAY',
         INP = ConstArray(["A", "B", "C"]))
     w.add_info("asyn:READBACK", "1")
-    w.add_info("Q:group", {
-        "MYTABLE": {
-            "+id": "epics:nt/NTTable:1.0",
-            "labels": {"+type": "plain", "+channel": "VAL"}
-        }
-    })
+    # Ordereddict for python2.7 compat
+    td = OrderedDict([
+        ("+id", "epics:nt/NTTable:1.0"),
+        ("labels", OrderedDict([
+            ("+type", "plain"),
+            ("+channel", "VAL")
+        ]))])
+    w.add_info("Q:group", {"MYTABLE": td})
 
     # A string constant with some evil character values
     records.stringin('STRING', VAL = '"\n\\\x01€')
@@ -79,5 +82,5 @@ def test_output(tmp_path):
         # Specify encoding so it works on windows
         open_args['encoding'] = 'utf8'
     WriteRecords(fname)
-    assert open(fname).readlines()[1:] == \
-           open(expected, **open_args).readlines()[1:]
+    assert [x.rstrip() for x in open(fname).readlines()[1:]] == \
+           [x.rstrip() for x in open(expected, **open_args).readlines()[1:]]
