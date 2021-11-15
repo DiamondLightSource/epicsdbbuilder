@@ -61,8 +61,8 @@ def test_output(tmp_path):
     # Test const array with QSRV infos
     w = records.waveform(
         'FIELD:WITH_CONST_ARRAY',
-        INP = ConstArray(["A", "B", "C"]))
-    w.add_info("asyn:READBACK", "1")
+        INP = ConstArray(["A", "B", "C"])
+    )
     # Ordereddict for python2.7 compat
     td = OrderedDict([
         ("+id", "epics:nt/NTTable:1.0"),
@@ -71,6 +71,13 @@ def test_output(tmp_path):
             ("+channel", "VAL")
         ]))])
     w.add_info("Q:group", {"MYTABLE": td})
+    # And json links with readbacks
+    a = records.ai(
+        'FIELD:WITH_JSON_LINK',
+        INP = {"const": 3.14159265358979}
+    )
+    a.add_info("asyn:READBACK", 1)
+    a.add_info("autosaveFields", "PREC EGU DESC")
 
     # A string constant with some evil character values
     records.stringin('STRING', VAL = '"\n\\\x01€')

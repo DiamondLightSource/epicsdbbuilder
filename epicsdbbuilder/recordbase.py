@@ -163,14 +163,9 @@ class Record(object):
             print('    field(%s, %s%s)' % (k, padding, value), file = output)
         for alias in sorted(list(self.__aliases)):
             print('    alias("%s")' % alias, file = output)
-        for name, info in list(self.__infos):
-            if isinstance(info, str):
-                # A string value, double quote it
-                info = '"%s"' % info
-            else:
-                # A JSON structure, don't quote it
-                info = '\n    '.join(json.dumps(info, indent=4).splitlines())
-            print('    info(%s, %s)' % (name, info), file = output)
+        for name, info in self.__infos:
+            value = self.__FormatFieldForDb(name, info)
+            print('    info(%s, %s)' % (name, value), file = output)
         print('}', file = output)
 
 
@@ -222,6 +217,10 @@ class Record(object):
     def __FormatFieldForDb(self, fieldname, value):
         if hasattr(value, 'FormatDb'):
             return value.FormatDb(self, fieldname)
+        elif isinstance(value, dict):
+            # JSON values in EPICS database as per
+            # https://epics.anl.gov/base/R7-0/6-docs/links.html
+            return '\n    '.join(json.dumps(value, indent=4).splitlines())
         else:
             return quote_string(str(value))
 

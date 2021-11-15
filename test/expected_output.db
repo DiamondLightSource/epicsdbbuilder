@@ -14,7 +14,6 @@ record(bi, "$(DEVICE):BOO")
 record(waveform, "$(DEVICE):FIELD:WITH_CONST_ARRAY")
 {
     field(INP,  ["A","B","C"])
-    info(asyn:READBACK, "1")
     info(Q:group, {
         "MYTABLE": {
             "+id": "epics:nt/NTTable:1.0",
@@ -24,6 +23,15 @@ record(waveform, "$(DEVICE):FIELD:WITH_CONST_ARRAY")
             }
         }
     })
+}
+
+record(ai, "$(DEVICE):FIELD:WITH_JSON_LINK")
+{
+    field(INP,  {
+        "const": 3.14159265358979
+    })
+    info(asyn:READBACK, "1")
+    info(autosaveFields, "PREC EGU DESC")
 }
 
 record(ai, "$(DEVICE):OPTIONS:CA")
