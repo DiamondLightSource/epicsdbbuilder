@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.g7832783 documentation</title>
+  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.g3779001 documentation</title>
   
 
   
@@ -112,7 +112,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#general-interface">2.4.2. General Interface</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#helper-functions-and-classes">2.5. Helper Functions and Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#helper-functions-and-classes">2.5. Helper Functions and Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#json-links">2.5.1. JSON links</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#record-class">2.6. Record Class</a></li>
 </ul>
 </li>
@@ -478,20 +481,29 @@ link.</p>
 </div>
 </dd></dl>
 
+<div class="section" id="json-links">
+<h3><span class="section-number">2.5.1. </span>JSON links<a class="headerlink" href="#json-links" title="Permalink to this headline">¶</a></h3>
+<p>EPICS base 3.16.1 (and 7.0.1) has the ability to add JSON links:
+<a class="reference external" href="https://epics.anl.gov/base/R7-0/6-docs/links.html">https://epics.anl.gov/base/R7-0/6-docs/links.html</a></p>
+<p>You can use these by passing a dictionary structure to one of the database
+fields or to <a class="reference internal" href="#epicsdbbuilder.recordbase.Record.add_info" title="epicsdbbuilder.recordbase.Record.add_info"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_info()</span></code></a>. Note that no validation is
+done on the structure of these as <code class="docutils literal notranslate"><span class="pre">dbVerify</span></code> does not validate them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">records</span><span class="o">.</span><span class="n">ai</span><span class="p">(</span><span class="s1">&#39;other&#39;</span><span class="p">,</span> <span class="n">VAL</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;const&quot;</span><span class="p">:</span> <span class="mf">3.14159265358979</span><span class="p">})</span>
+</pre></div>
+</div>
 <dl class="py class">
 <dt id="epicsdbbuilder.ConstArray">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">ConstArray</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/const_array.html#ConstArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.ConstArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used for <strong>Constant Link Values</strong> available since EPICS 3.16.1.
 Constant Link Values is an EPICS feature which allows passing
 an list of strings or a list of numbers as a constant into
-a field which contains a DB link (e.g. <cite>INP</cite>).
-See EPICS Release Notes (Section “Constant Link Values”)
-for more details and supported use.</p>
+a field which contains a DB link (e.g. <cite>INP</cite>):
+<a class="reference external" href="https://epics.anl.gov/base/R7-0/6-docs/RELEASE_NOTES.html#constant-link-values">https://epics.anl.gov/base/R7-0/6-docs/RELEASE_NOTES.html#constant-link-values</a></p>
 <p>ConstArray will accept any iterable (e.g. a list) which can generate
 a non-empty list of values of the same type. Allowed types are:</p>
 <ul class="simple">
 <li><p>strings and parameters (i.e. <a class="reference internal" href="#epicsdbbuilder.Parameter" title="epicsdbbuilder.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">epicsdbbuilder.Parameter</span></code></a>)</p></li>
-<li><p>numbers (integers, floating-point, <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">decimal.Decimal</span></code></a>,
+<li><p>numbers (integers, floating-point, <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">decimal.Decimal</span></code></a>,
 and booleans.
 Booleans will convert to <cite>0</cite> (<cite>False</cite>) or <cite>1</cite> (<cite>True</cite>) automatically.</p></li>
 </ul>
@@ -535,6 +547,7 @@ the list of records in <cite>records</cite>.</p>
 </dd></dl>
 
 </div>
+</div>
 <div class="section" id="record-class">
 <h2><span class="section-number">2.6. </span>Record Class<a class="headerlink" href="#record-class" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -567,6 +580,15 @@ database giving <cite>alias</cite> as an alternative name for this record.  The
 <dd><p>This adds metadata entries to the created record.  Metadata entries are
 lines beginning with <code class="docutils literal notranslate"><span class="pre">#%</span></code> placed in the db file immediately above the
 record definition, and can be used by processing tools.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="epicsdbbuilder.recordbase.Record.add_info">
+<code class="sig-name descname"><span class="pre">add_info</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#Record.add_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.recordbase.Record.add_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method causes an EPICS <code class="docutils literal notranslate"><span class="pre">info</span></code> statement to be added to the
+database. Its value can be either a a dictionary structure which will be
+converted to JSON (e.g. for <code class="docutils literal notranslate"><span class="pre">info(Q:group,</span> <span class="pre">{...})</span></code>) or something else
+which will be double quoted (e.g. for <code class="docutils literal notranslate"><span class="pre">info(autosaveFields,</span> <span class="pre">&quot;VAL&quot;)</span></code>).</p>
 </dd></dl>
 
 </dd></dl>
