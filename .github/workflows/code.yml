@@ -65,8 +65,9 @@ jobs:
           echo "EPICS_BASE=`pwd`/epics-base-${{ matrix.epics }}" >> $GITHUB_ENV
 
       - name: Install Python Dependencies
+        # Pin pipenv so it works on python2.7
         run: |
-          pip install pipenv twine build
+          pip install pipenv==2020.6.2 twine build
           pipenv install --python $(python -c 'import sys; print(sys.executable)') ${{ matrix.pipenv }} && pipenv graph
 
       - name: Install epicscorelibs

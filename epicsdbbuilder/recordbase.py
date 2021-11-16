@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import string
+import json
 
 from . import recordnames
 from .recordset import recordset
@@ -114,6 +115,7 @@ class Record(object):
         self.__setattr('__fields', {})
         self.__setattr('__aliases', set())
         self.__setattr('__metadata', [])
+        self.__setattr('__infos', [])
         self.__setattr('name', recordnames.RecordName(record))
 
         # Support the special 'address' field as an alias for either INP or
@@ -137,6 +139,9 @@ class Record(object):
     def add_metadata(self, metadata):
         self.__metadata.append(metadata)
 
+    def add_info(self, name, info):
+        self.__infos.append((name, info))
+
 
     # Call to generate database description of this record.  Outputs record
     # definition in .db file format.  Hooks for meta-data can go here.
@@ -158,6 +163,9 @@ class Record(object):
             print('    field(%s, %s%s)' % (k, padding, value), file = output)
         for alias in sorted(list(self.__aliases)):
             print('    alias("%s")' % alias, file = output)
+        for name, info in self.__infos:
+            value = self.__FormatFieldForDb(name, info)
+            print('    info(%s, %s)' % (name, value), file = output)
         print('}', file = output)
 
 
@@ -209,6 +217,10 @@ class Record(object):
     def __FormatFieldForDb(self, fieldname, value):
         if hasattr(value, 'FormatDb'):
             return value.FormatDb(self, fieldname)
+        elif isinstance(value, dict):
+            # JSON values in EPICS database as per
+            # https://epics.anl.gov/base/R7-0/6-docs/links.html
+            return '\n    '.join(json.dumps(value, indent=4).splitlines())
         else:
             return quote_string(str(value))
 

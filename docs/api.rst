@@ -237,15 +237,28 @@ Helper Functions and Classes
 
         field(INP, "other PP MS")
 
+
+JSON links
+~~~~~~~~~~
+
+EPICS base 3.16.1 (and 7.0.1) has the ability to add JSON links:
+https://epics.anl.gov/base/R7-0/6-docs/links.html
+
+You can use these by passing a dictionary structure to one of the database
+fields or to :meth:`~recordbase.Record.add_info()`. Note that no validation is
+done on the structure of these as ``dbVerify`` does not validate them::
+
+    records.ai('other', VAL={"const": 3.14159265358979})
+
+
 ..  class::
     ConstArray(iterator)
 
     Used for **Constant Link Values** available since EPICS 3.16.1.
     Constant Link Values is an EPICS feature which allows passing
     an list of strings or a list of numbers as a constant into
-    a field which contains a DB link (e.g. `INP`).
-    See EPICS Release Notes (Section "Constant Link Values")
-    for more details and supported use.
+    a field which contains a DB link (e.g. `INP`):
+    https://epics.anl.gov/base/R7-0/6-docs/RELEASE_NOTES.html#constant-link-values
 
     ConstArray will accept any iterable (e.g. a list) which can generate
     a non-empty list of values of the same type. Allowed types are:
@@ -279,7 +292,6 @@ Helper Functions and Classes
     Example (generated DB)::
 
         field(INP, ["Plain String not DBLINK"])
-
 
 ..  function:: create_fanout(name, *records, **args)
 
@@ -324,3 +336,10 @@ Record Class
         This adds metadata entries to the created record.  Metadata entries are
         lines beginning with ``#%`` placed in the db file immediately above the
         record definition, and can be used by processing tools.
+
+    ..  method:: add_info(name, value)
+
+        This method causes an EPICS ``info`` statement to be added to the
+        database. Its value can be either a a dictionary structure which will be
+        converted to JSON (e.g. for ``info(Q:group, {...})``) or something else
+        which will be double quoted (e.g. for ``info(autosaveFields, "VAL")``).
