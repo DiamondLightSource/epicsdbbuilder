@@ -352,7 +352,7 @@ Advanced usage may require using other functions from the dbCore library to
 get extra introspection information about records.
 
 ..  py:currentmodule:: epicsdbbuilder.mydbstatic
-..  function:: GetDbFunction(name, restype, argtypes, errcheck=None)
+..  function:: GetDbFunction(name, restype=None, argtypes=None, errcheck=None)
 
     This can be used to get a ``dbCore`` function by ``name``. The other
     arguments are used to decribe the function in the standard ctypes way.

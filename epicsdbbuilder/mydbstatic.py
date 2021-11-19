@@ -86,12 +86,14 @@ def ImportFunctions(epics_base, host_arch):
 _libdb = None
 
 
-def GetDbFunction(name, restype, argtypes, errcheck=None):
+def GetDbFunction(name, restype=None, argtypes=None, errcheck=None):
     assert _libdb, "ImportFunctionsFrom(path) not called yet"
     function = getattr(_libdb, name)
     # Set its call args, return type, and error handler if there is one
-    function.argtypes = argtypes
-    function.restype = restype
+    if argtypes:
+        function.argtypes = argtypes
+    if restype:
+        function.restype = restype
     if errcheck:
         function.errcheck = errcheck
     return function
