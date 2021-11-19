@@ -50,7 +50,7 @@ records = RecordTypes()
 # record type allows a given value to be written to a given field.
 class ValidateDbField:
     def __init__(self, dbEntry):
-        self.dbEntry = mydbstatic.dbCopyEntry(dbEntry)
+        self.dbEntry = dbEntry.copy()
         self.__FieldInfo = None
 
     # Computes list of valid names and creates associated arginfo
@@ -58,14 +58,11 @@ class ValidateDbField:
     # are fully populated, in other words we don't want to fire this until
     # all the dbd files have been loaded.
     def __ProcessDbd(self):
-        # ordered dict of field_name -> arginfo
+        # set of field names
         self.__FieldInfo = set()
-        status = mydbstatic.dbFirstField(self.dbEntry, 0)
-        while status == 0:
-            name = mydbstatic.dbGetFieldName(self.dbEntry)
-            if name != 'NAME':
-                self.__FieldInfo.add(name)
-            status = mydbstatic.dbNextField(self.dbEntry, 0)
+        for field_name in self.dbEntry.iterate_fields():
+            if field_name != 'NAME':
+                self.__FieldInfo.add(field_name)
 
 
     # This method raises an attribute error if the given field name is
@@ -84,11 +81,9 @@ class ValidateDbField:
         value = str(value)
 
         # Set the database cursor to the field
-        status = mydbstatic.dbFirstField(self.dbEntry, 0)
-        while status == 0:
-            if mydbstatic.dbGetFieldName(self.dbEntry) == name:
+        for field_name in self.dbEntry.iterate_fields():
+            if field_name == name:
                 break
-            status = mydbstatic.dbNextField(self.dbEntry, 0)
 
         # Now see if we can write the value to it
         message = mydbstatic.dbVerify(self.dbEntry, value)
@@ -100,6 +95,35 @@ class ValidateDbField:
 # The same database pointer is used for all DBD files: this means that all
 # the DBD entries are accumulated into a single large database.
 _db = ctypes.c_void_p()
+
+
+class DBEntry:
+    def __init__(self, entry=None):
+        if entry is None:
+            assert _db, "LoadDdbFile not called yet"
+            entry = mydbstatic.dbAllocEntry(_db)
+        self._as_parameter_ = entry
+
+    def iterate_records(self):
+        status = mydbstatic.dbFirstRecordType(self)
+        while status == 0:
+            yield mydbstatic.dbGetRecordTypeName(self)
+            status = mydbstatic.dbNextRecordType(self)
+
+    def iterate_fields(self, dct_only=0):
+        status = mydbstatic.dbFirstField(self, dct_only)
+        while status == 0:
+            yield mydbstatic.dbGetFieldName(self)
+            status = mydbstatic.dbNextField(self, dct_only)
+
+    def copy(self):
+        entry = mydbstatic.dbCopyEntry(self)
+        return DBEntry(entry)
+
+    def free(self):
+        mydbstatic.dbFreeEntry(self._as_parameter_)
+        self._as_parameter_ = None
+
 
 def LoadDbdFile(dbdfile, on_use = None):
     dirname, filename = os.path.split(dbdfile)
@@ -122,18 +146,14 @@ def LoadDbdFile(dbdfile, on_use = None):
     assert status == 0, 'Error reading database %s (status %d)' % \
         (dbdfile, status)
 
-
     # Enumerate all the record types and build a record generator class
     # for each one that we've not seen before.
-    entry = mydbstatic.dbAllocEntry(_db)
-    status = mydbstatic.dbFirstRecordType(entry)
-    while status == 0:
-        recordType = mydbstatic.dbGetRecordTypeName(entry)
-        if not hasattr(records, recordType):
+    entry = DBEntry()
+    for record_type in entry.iterate_records():
+        if not hasattr(records, record_type):
             validate = ValidateDbField(entry)
-            records._PublishRecordType(on_use, recordType, validate)
-        status = mydbstatic.dbNextRecordType(entry)
-    mydbstatic.dbFreeEntry(entry)
+            records._PublishRecordType(on_use, record_type, validate)
+    entry.free()
 
 
 def InitialiseDbd(epics_base = None, host_arch = None):
