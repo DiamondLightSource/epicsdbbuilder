@@ -86,7 +86,7 @@ def ImportFunctions(epics_base, host_arch):
 _libdb = None
 
 
-def GetFunction(name):
+def GetDbFunction(name):
     assert _libdb, "ImportFunctionsFrom(path) not called yet"
     return getattr(_libdb, name)
 
@@ -108,7 +108,7 @@ def ImportFunctionsFrom(path):
     # support legacy API
     for name, restype, errcheck, argtypes in _FunctionList:
         try:
-            function = GetFunction(name)
+            function = GetDbFunction(name)
         except AttributeError:
             # Check for global fallback function
             if name not in globals():

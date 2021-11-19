@@ -50,7 +50,8 @@ records = RecordTypes()
 # record type allows a given value to be written to a given field.
 class ValidateDbField:
     def __init__(self, dbEntry):
-        self.dbEntry = dbEntry.copy()
+        # Copy the existing entry so it stays on the right record
+        self.dbEntry = DBEntry(dbEntry)
         self.__FieldInfo = None
 
     # Computes list of valid names and creates associated arginfo
@@ -97,32 +98,40 @@ class ValidateDbField:
 _db = ctypes.c_void_p()
 
 
-class DBEntry:
+class DBEntry(object):
+    """Create a dbEntry instance within the current DBD.
+
+    This is a stateful pointer that can be moved to different
+    record types and fields within them with the iterate methods.
+
+    If entry is specified on init and is a DBEntry instance, it
+    will be copied so that its position is maintained.
+    """
     def __init__(self, entry=None):
+        assert _db, "LoadDdbFile not called yet"
         if entry is None:
-            assert _db, "LoadDdbFile not called yet"
-            entry = mydbstatic.dbAllocEntry(_db)
-        self._as_parameter_ = entry
+            # No entry, so alloc a new one
+            self._as_parameter_ = mydbstatic.dbAllocEntry(_db)
+        else:
+            # Existing entry, copy it so it stays on the same record
+            self._as_parameter_ = mydbstatic.dbCopyEntry(entry)
 
     def iterate_records(self):
+        """Iterate through the record types, yielding their names"""
         status = mydbstatic.dbFirstRecordType(self)
         while status == 0:
             yield mydbstatic.dbGetRecordTypeName(self)
             status = mydbstatic.dbNextRecordType(self)
 
     def iterate_fields(self, dct_only=0):
+        """Iterate through a record's fields, yielding their names"""
         status = mydbstatic.dbFirstField(self, dct_only)
         while status == 0:
             yield mydbstatic.dbGetFieldName(self)
             status = mydbstatic.dbNextField(self, dct_only)
 
-    def copy(self):
-        entry = mydbstatic.dbCopyEntry(self)
-        return DBEntry(entry)
-
-    def free(self):
+    def __del__(self):
         mydbstatic.dbFreeEntry(self._as_parameter_)
-        self._as_parameter_ = None
 
 
 def LoadDbdFile(dbdfile, on_use = None):
@@ -153,7 +162,6 @@ def LoadDbdFile(dbdfile, on_use = None):
         if not hasattr(records, record_type):
             validate = ValidateDbField(entry)
             records._PublishRecordType(on_use, record_type, validate)
-    entry.free()
 
 
 def InitialiseDbd(epics_base = None, host_arch = None):
