@@ -352,11 +352,10 @@ Advanced usage may require using other functions from the dbCore library to
 get extra introspection information about records.
 
 ..  py:currentmodule:: epicsdbbuilder.mydbstatic
-..  function:: GetDbFunction(name)
+..  function:: GetDbFunction(name, restype, argtypes, errcheck=None)
 
-    This can be used to get other ``dbCore`` functions for advanced usage.  Note
-    that before use their argtypes will need to be declared in the standard
-    `ctypes` way.
+    This can be used to get a ``dbCore`` function by ``name``. The other
+    arguments are used to decribe the function in the standard ctypes way.
 
 The other introspection functions will need a pointer to the current record and
 field within the currently loaded DBD. This can be done with the `DBEntry`
