@@ -45,6 +45,8 @@ extensions = [
     'sphinx.ext.viewcode',
     # Add multiple versions of documentation on CI
     'sphinx_multiversion',
+    # Add autodoc directives
+    'sphinx.ext.autodoc',
 ]
 
 viewcode_import = True

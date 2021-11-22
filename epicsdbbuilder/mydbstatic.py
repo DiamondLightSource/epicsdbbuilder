@@ -83,6 +83,20 @@ def ImportFunctions(epics_base, host_arch):
             epics_base, library_location, host_arch,
             library_name_format.format('dbStaticHost')))
 
+_libdb = None
+
+
+def GetDbFunction(name, restype=None, argtypes=None, errcheck=None):
+    assert _libdb, "ImportFunctionsFrom(path) not called yet"
+    function = getattr(_libdb, name)
+    # Set its call args, return type, and error handler if there is one
+    if argtypes:
+        function.argtypes = argtypes
+    if restype:
+        function.restype = restype
+    if errcheck:
+        function.errcheck = errcheck
+    return function
 
 def ImportFunctionsFrom(path):
     # Load the dbd static library using ctypes PyDLL convention instead of CDLL
@@ -95,19 +109,16 @@ def ImportFunctionsFrom(path):
     # The ctypes documentation is not particularly helpful, saying in particular
     # "this is only useful to call Python C api functions directly", which
     # doesn't seem to be correct.
-    libdb = PyDLL(path)
+    global _libdb
+    _libdb = PyDLL(path)
     # Actually populate the functions in globals, split from ImportFunctions to
     # support legacy API
     for name, restype, errcheck, argtypes in _FunctionList:
         try:
-            function = getattr(libdb, name)
+            function = GetDbFunction(name, restype, argtypes, errcheck)
         except AttributeError:
             # Check for global fallback function
             if name not in globals():
                 raise
         else:
-            function.restype = restype
-            function.argtypes = argtypes
-            if errcheck:
-                function.errcheck = errcheck
             globals()[name] = function
