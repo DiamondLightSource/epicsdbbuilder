@@ -29,7 +29,7 @@ class RecordSet(object):
         return self.__RecordSet[full_name]
 
     # Output complete set of records to the given file.
-    def Print(self, output):
+    def Print(self, output, alphabetical):
         for line in self.__HeaderLines:
             print(line, file = output)
         if self.__BodyLines:
@@ -38,8 +38,9 @@ class RecordSet(object):
                 print(line, file = output)
         # Print the records in alphabetical order: gives the reader a fighting
         # chance to find their way around the generated database!
-        for record in sorted(self.__RecordSet.keys()):
-            self.__RecordSet[record].Print(output)
+        sort = sorted if alphabetical else list
+        for record in sort(self.__RecordSet):
+            self.__RecordSet[record].Print(output, alphabetical)
 
     # Returns the number of published records.
     def CountRecords(self):
@@ -78,7 +79,7 @@ This file was automatically generated on %(now)s%(from_source)s
     return message
 
 
-def WriteRecords(filename, header = None):
+def WriteRecords(filename, header=None, alphabetical=True):
     if header is None:
         header = Disclaimer()
     header = header.split('\n')
@@ -86,4 +87,4 @@ def WriteRecords(filename, header = None):
     with open(filename, 'w') as output:
         for line in header[:-1]:
             print('#', line, file = output)
-        recordset.Print(output)
+        recordset.Print(output, alphabetical)
