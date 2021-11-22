@@ -343,3 +343,24 @@ Record Class
         database. Its value can be either a a dictionary structure which will be
         converted to JSON (e.g. for ``info(Q:group, {...})``) or something else
         which will be double quoted (e.g. for ``info(autosaveFields, "VAL")``).
+
+
+Using other dbCore functions
+----------------------------
+
+Advanced usage may require using other functions from the dbCore library to 
+get extra introspection information about records.
+
+..  py:currentmodule:: epicsdbbuilder.mydbstatic
+..  function:: GetDbFunction(name, restype=None, argtypes=None, errcheck=None)
+
+    This can be used to get a ``dbCore`` function by ``name``. The other
+    arguments are used to decribe the function in the standard ctypes way.
+
+The other introspection functions will need a pointer to the current record and
+field within the currently loaded DBD. This can be done with the `DBEntry`
+utility class
+
+..  py:currentmodule:: epicsdbbuilder.dbd
+..  autoclass:: DBEntry
+    :members:
