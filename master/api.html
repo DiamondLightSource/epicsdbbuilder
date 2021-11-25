@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.geeffff4 documentation</title>
+  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.g1827879 documentation</title>
   
 
   
@@ -576,11 +576,19 @@ database giving <cite>alias</cite> as an alternative name for this record.  The
 </dd></dl>
 
 <dl class="py method">
+<dt id="epicsdbbuilder.recordbase.Record.add_comment">
+<code class="sig-name descname"><span class="pre">add_comment</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#Record.add_comment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.recordbase.Record.add_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This adds a comment line above the created record. <code class="docutils literal notranslate"><span class="pre">'#</span> <span class="pre">'</span></code> is prepended
+to the comment string. Comments are emitted in the order that they are
+added.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="epicsdbbuilder.recordbase.Record.add_metadata">
 <code class="sig-name descname"><span class="pre">add_metadata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordbase.html#Record.add_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.recordbase.Record.add_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>This adds metadata entries to the created record.  Metadata entries are
-lines beginning with <code class="docutils literal notranslate"><span class="pre">#%</span></code> placed in the db file immediately above the
-record definition, and can be used by processing tools.</p>
+<dd><p>This adds a metadata entry to the created record. Metadata entries are
+like comments, and will be emitted in the same order, but have <code class="docutils literal notranslate"><span class="pre">'#%</span> <span class="pre">'</span></code>
+prepended to them. They can be used by processing tools.</p>
 </dd></dl>
 
 <dl class="py method">
