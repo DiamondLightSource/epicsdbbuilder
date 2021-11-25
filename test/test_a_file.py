@@ -36,6 +36,9 @@ def test_output(tmp_path):
     PushPrefix('ABC')
 
     r = records.ai('TEST')
+    r.add_comment("comment 1")
+    r.add_metadata("metadata")
+    r.add_comment("comment 2")
 
     assert PopPrefix() == 'ABC'
 
