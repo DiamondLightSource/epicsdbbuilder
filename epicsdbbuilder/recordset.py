@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+from collections import OrderedDict
 import os
 import time
 
@@ -12,7 +13,7 @@ __all__ = [
 
 class RecordSet(object):
     def ResetRecords(self):
-        self.__RecordSet = {}
+        self.__RecordSet = OrderedDict()
         self.__HeaderLines = []
         self.__BodyLines = []
 

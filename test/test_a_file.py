@@ -86,11 +86,19 @@ def test_output(tmp_path):
     records.stringin('STRING', VAL = '"\n\\\x01€')
 
     fname = str(tmp_path / 'test_output.db')
-    expected = os.path.join(os.path.dirname(__file__), 'expected_output.db')
-    open_args = {}
+    expected_open_args = {}
     if sys.version_info > (3, ):
         # Specify encoding so it works on windows
-        open_args['encoding'] = 'utf8'
+        expected_open_args['encoding'] = 'utf8'
+
+    def lines(fname, **open_args):
+        return [x.rstrip() for x in open(fname, **open_args).readlines()[1:]]
+
+    WriteRecords(fname, alphabetical=False)
+    expected = os.path.join(os.path.dirname(__file__), 'expected_output.db')
+    assert lines(fname) == lines(expected, **expected_open_args)
+
     WriteRecords(fname)
-    assert [x.rstrip() for x in open(fname).readlines()[1:]] == \
-           [x.rstrip() for x in open(expected, **open_args).readlines()[1:]]
+    expected = os.path.join(
+        os.path.dirname(__file__), 'expected_output_alphabetical.db')
+    assert lines(fname) == lines(expected, **expected_open_args)

@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import string
 import json
+from collections import OrderedDict
 
 from . import recordnames
 from .recordset import recordset
@@ -112,8 +113,8 @@ class Record(object):
 
         # These assignment have to be directly into the dictionary to
         # bypass the tricksy use of __setattr__.
-        self.__setattr('__fields', {})
-        self.__setattr('__aliases', {})
+        self.__setattr('__fields', OrderedDict())
+        self.__setattr('__aliases', OrderedDict())
         self.__setattr('__comments', [])
         self.__setattr('__infos', [])
         self.__setattr('name', recordnames.RecordName(record))
@@ -145,9 +146,13 @@ class Record(object):
         self.__infos.append((name, info))
 
     def __dbd_order(self, fields):
+        field_set = set(fields)
         for field_name in self._validate.dbEntry.iterate_fields():
-            if field_name in fields:
+            if field_name in field_set:
                 yield field_name
+                field_set.remove(field_name)
+        assert not field_set, "DBD for %s doesn't contain %s" % (
+            self._type, sorted(field_set))
 
     # Call to generate database description of this record.  Outputs record
     # definition in .db file format.  Hooks for meta-data can go here.
@@ -161,7 +166,7 @@ class Record(object):
         # to the eye and has the useful side effect of bypassing a bug
         # where DTYPE needs to be specified before INP or OUT fields.
         sort = sorted if alphabetical else self.__dbd_order
-        for k in sort(self.__fields):
+        for k in sort(self.__fields.keys()):
             value = self.__fields[k]
             if getattr(value, 'ValidateLater', False):
                 self.__ValidateField(k, value)
@@ -169,7 +174,7 @@ class Record(object):
             padding = ''.ljust(4-len(k))  # To align field values
             print('    field(%s, %s%s)' % (k, padding, value), file = output)
         sort = sorted if alphabetical else list
-        for alias in sort(self.__aliases):
+        for alias in sort(self.__aliases.keys()):
             print('    alias("%s")' % alias, file = output)
         for name, info in self.__infos:
             value = self.__FormatFieldForDb(name, info)
