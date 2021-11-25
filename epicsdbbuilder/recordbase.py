@@ -114,7 +114,7 @@ class Record(object):
         # bypass the tricksy use of __setattr__.
         self.__setattr('__fields', {})
         self.__setattr('__aliases', set())
-        self.__setattr('__metadata', [])
+        self.__setattr('__comments', [])
         self.__setattr('__infos', [])
         self.__setattr('name', recordnames.RecordName(record))
 
@@ -136,8 +136,11 @@ class Record(object):
     def add_alias(self, alias):
         self.__aliases.add(alias)
 
+    def add_comment(self, comment):
+        self.__comments.append('# ' + comment)
+
     def add_metadata(self, metadata):
-        self.__metadata.append(metadata)
+        self.__comments.append('#% ' + metadata)
 
     def add_info(self, name, info):
         self.__infos.append((name, info))
@@ -147,8 +150,8 @@ class Record(object):
     # definition in .db file format.  Hooks for meta-data can go here.
     def Print(self, output):
         print(file = output)
-        for metadata in self.__metadata:
-            print('#%', metadata, file = output)
+        for comment in self.__comments:
+            print(comment, file=output)
         print('record(%s, "%s")' % (self._type, self.name), file = output)
         print('{', file = output)
         # Print the fields in alphabetical order.  This is more convenient

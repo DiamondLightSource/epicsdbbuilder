@@ -91,6 +91,9 @@ record(longin, "XX-YY-ZZ-01:A")
     field(DESC, "blah")
 }
 
+# comment 1
+#% metadata
+# comment 2
 record(ai, "XX-YY-ZZ-01:ABC:TEST")
 {
 }

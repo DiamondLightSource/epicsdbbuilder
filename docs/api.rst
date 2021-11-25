@@ -331,11 +331,17 @@ Record Class
         database giving `alias` as an alternative name for this record.  The
         `alias` argument is used unchanged.
 
+    ..  method:: add_comment(comment)
+
+        This adds a comment line above the created record. ``'# '`` is prepended
+        to the comment string. Comments are emitted in the order that they are
+        added.
+
     ..  method:: add_metadata(metadata)
 
-        This adds metadata entries to the created record.  Metadata entries are
-        lines beginning with ``#%`` placed in the db file immediately above the
-        record definition, and can be used by processing tools.
+        This adds a metadata entry to the created record. Metadata entries are
+        like comments, and will be emitted in the same order, but have ``'#% '``
+        prepended to them. They can be used by processing tools.
 
     ..  method:: add_info(name, value)
 
