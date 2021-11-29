@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.g1827879 documentation</title>
+  <title>2. Database Builder API &mdash; EPICS Database Builder 0.0+untagged.g30d3f48 documentation</title>
   
 
   
@@ -242,7 +242,7 @@ dbd.</p>
 <h2><span class="section-number">2.2. </span>Record Output<a class="headerlink" href="#record-output" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="epicsdbbuilder.WriteRecords">
-<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">WriteRecords</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordset.html#WriteRecords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.WriteRecords" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">epicsdbbuilder.</span></code><code class="sig-name descname"><span class="pre">WriteRecords</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphabetical</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/epicsdbbuilder/recordset.html#WriteRecords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#epicsdbbuilder.WriteRecords" title="Permalink to this definition">¶</a></dt>
 <dd><p>This should be called after creating all records.  The generated records
 will be written out to the file <cite>filename</cite>.  If <cite>header</cite> is left unspecified
 then a standard disclaimer header will be generated::</p>
@@ -252,6 +252,9 @@ then a standard disclaimer header will be generated::</p>
 </pre></div>
 </div>
 <p>Note that the leading <code class="docutils literal notranslate"><span class="pre">#</span></code> comments are added to any header that is passed</p>
+<p>If <cite>alphabetical</cite> then records, their fields and aliases will be sorted
+alphabetically, otherwise the records and aliases will be in insertion
+order and fields in DBD order.</p>
 </dd></dl>
 
 <dl class="py function">
