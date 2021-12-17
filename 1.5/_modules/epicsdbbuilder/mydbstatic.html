@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>epicsdbbuilder.mydbstatic &mdash; EPICS Database Builder 1.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/dls-favicon.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: rgb(7, 43, 93)" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> EPICS Database Builder
+          
+
+          
+            
+            <img src="../../_static/dls-logo.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+  <style>
+    /* style mobile top nav to look like main nav */
+    .wy-nav-top {
+        background: rgb(7, 43, 93)
+    }
+  </style>
+  
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">1. EPICS Database Builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">2. Database Builder API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">3. Contributing</a></li>
+</ul>
+
+            
+          
+  <!-- Include Index in the sidebar -->
+  <!-- https://stackoverflow.com/a/37843854 -->
+  <a href="../../genindex.html">Index</a>
+  <!-- Include all versions of the docs -->
+  <!-- https://holzhaus.github.io/sphinx-multiversion/master/templates.html -->
+  
+  <p class="caption"><span class="caption-text">Versions</span></p>
+  <ul>
+    <li><a href="../../../master/index.html">master</a></li>
+    <li><a href="mydbstatic.html">1.5</a></li>
+    <li><a href="../../../1.4.3/index.html">1.4.3</a></li>
+    <li><a href="../../../1.4.2/index.html">1.4.2</a></li>
+    <li><a href="../../../1.4.1/index.html">1.4.1</a></li>
+    <li><a href="../../../1.4/index.html">1.4</a></li>
+    <li><a href="../../../1.3/index.html">1.3</a></li>
+    <li><a href="../../../1.2/index.html">1.2</a></li>
+    <li><a href="../../../1.1/index.html">1.1</a></li>
+    <li><a href="../../../1.0/index.html">1.0</a></li>
+  </ul>
+  
+
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">EPICS Database Builder</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>epicsdbbuilder.mydbstatic</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for epicsdbbuilder.mydbstatic</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">platform</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+    <span class="n">auto_encode</span> <span class="o">=</span> <span class="n">c_char_p</span>
+    <span class="k">def</span> <span class="nf">auto_decode</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">result</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">class</span> <span class="nc">auto_encode</span><span class="p">(</span><span class="n">c_char_p</span><span class="p">):</span>
+        <span class="nd">@classmethod</span>
+        <span class="k">def</span> <span class="nf">from_param</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">auto_decode</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+
+<span class="n">_FunctionList</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s1">&#39;dbReadDatabase&#39;</span><span class="p">,</span>      <span class="n">c_int</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">auto_encode</span><span class="p">,</span> <span class="n">auto_encode</span><span class="p">,</span> <span class="n">auto_encode</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbAllocEntry&#39;</span><span class="p">,</span>        <span class="n">c_void_p</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbFirstRecordType&#39;</span><span class="p">,</span>   <span class="n">c_int</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbGetRecordTypeName&#39;</span><span class="p">,</span> <span class="n">c_char_p</span><span class="p">,</span> <span class="n">auto_decode</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbNextRecordType&#39;</span><span class="p">,</span>    <span class="n">c_int</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbFreeEntry&#39;</span><span class="p">,</span>         <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbCopyEntry&#39;</span><span class="p">,</span>         <span class="n">c_void_p</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbFirstField&#39;</span><span class="p">,</span>        <span class="n">c_int</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbGetFieldName&#39;</span><span class="p">,</span>      <span class="n">c_char_p</span><span class="p">,</span> <span class="n">auto_decode</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbNextField&#39;</span><span class="p">,</span>         <span class="n">c_int</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,)),</span>
+    <span class="p">(</span><span class="s1">&#39;dbVerify&#39;</span><span class="p">,</span>            <span class="n">c_char_p</span><span class="p">,</span> <span class="n">auto_decode</span><span class="p">,</span> <span class="p">(</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">auto_encode</span><span class="p">)),</span>
+<span class="p">)</span>
+
+
+<span class="c1"># Fallback implementation for dbVerify.  Turns out not to be present in EPICS</span>
+<span class="c1"># 3.16, which is rather annoying.  In this case we just allow all writes to</span>
+<span class="c1"># succeed.</span>
+<span class="k">def</span> <span class="nf">dbVerify</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="c1"># This function is called late to complete the process of importing all the</span>
+<span class="c1"># exports from this module.  This is done late so that paths.EPICS_BASE can be</span>
+<span class="c1"># configured late.</span>
+<span class="k">def</span> <span class="nf">ImportFunctions</span><span class="p">(</span><span class="n">epics_base</span><span class="p">,</span> <span class="n">host_arch</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">host_arch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Mapping from host architecture to EPICS host architecture name can be</span>
+        <span class="c1"># done with a little careful guesswork.  As EPICS architecture names are</span>
+        <span class="c1"># a little arbitrary this isn&#39;t guaranteed to work.</span>
+        <span class="n">system_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="p">(</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span>   <span class="s1">&#39;32bit&#39;</span><span class="p">):</span>   <span class="s1">&#39;linux-x86&#39;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span>   <span class="s1">&#39;64bit&#39;</span><span class="p">):</span>   <span class="s1">&#39;linux-x86_64&#39;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s1">&#39;Darwin&#39;</span><span class="p">,</span>  <span class="s1">&#39;32bit&#39;</span><span class="p">):</span>   <span class="s1">&#39;darwin-x86&#39;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s1">&#39;Darwin&#39;</span><span class="p">,</span>  <span class="s1">&#39;64bit&#39;</span><span class="p">):</span>   <span class="s1">&#39;darwin-x86&#39;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s1">&#39;Windows&#39;</span><span class="p">,</span> <span class="s1">&#39;32bit&#39;</span><span class="p">):</span>   <span class="s1">&#39;win32-x86&#39;</span><span class="p">,</span>
+            <span class="p">(</span><span class="s1">&#39;Windows&#39;</span><span class="p">,</span> <span class="s1">&#39;64bit&#39;</span><span class="p">):</span>   <span class="s1">&#39;windows-x64&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">bits</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">host_arch</span> <span class="o">=</span> <span class="n">system_map</span><span class="p">[(</span><span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">(),</span> <span class="n">bits</span><span class="p">)]</span>
+
+    <span class="c1"># So we can work with both EPICS 3.14 and 3.15, look for libdbCore.so first</span>
+    <span class="c1"># before falling back to the older libdbStaticHost.so</span>
+    <span class="c1"># On Windows, use dbCore.dll or dbStaticHost.dll instead</span>
+    <span class="n">library_name_format</span> <span class="o">=</span> <span class="s1">&#39;lib</span><span class="si">{}</span><span class="s1">.so&#39;</span>
+    <span class="n">library_location</span> <span class="o">=</span> <span class="s1">&#39;lib&#39;</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
+        <span class="n">library_name_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.dll&#39;</span>
+        <span class="n">library_location</span> <span class="o">=</span> <span class="s1">&#39;bin&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ImportFunctionsFrom</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">epics_base</span><span class="p">,</span> <span class="n">library_location</span><span class="p">,</span> <span class="n">host_arch</span><span class="p">,</span>
+            <span class="n">library_name_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;dbCore&#39;</span><span class="p">)))</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="n">ImportFunctionsFrom</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">epics_base</span><span class="p">,</span> <span class="n">library_location</span><span class="p">,</span> <span class="n">host_arch</span><span class="p">,</span>
+            <span class="n">library_name_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;dbStaticHost&#39;</span><span class="p">)))</span>
+
+<span class="n">_libdb</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="GetDbFunction"><a class="viewcode-back" href="../../api.html#epicsdbbuilder.mydbstatic.GetDbFunction">[docs]</a><span class="k">def</span> <span class="nf">GetDbFunction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">restype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">argtypes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errcheck</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">_libdb</span><span class="p">,</span> <span class="s2">&quot;ImportFunctionsFrom(path) not called yet&quot;</span>
+    <span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_libdb</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="c1"># Set its call args, return type, and error handler if there is one</span>
+    <span class="k">if</span> <span class="n">argtypes</span><span class="p">:</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="n">argtypes</span>
+    <span class="k">if</span> <span class="n">restype</span><span class="p">:</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">restype</span>
+    <span class="k">if</span> <span class="n">errcheck</span><span class="p">:</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">errcheck</span> <span class="o">=</span> <span class="n">errcheck</span>
+    <span class="k">return</span> <span class="n">function</span></div>
+
+<span class="k">def</span> <span class="nf">ImportFunctionsFrom</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="c1"># Load the dbd static library using ctypes PyDLL convention instead of CDLL</span>
+    <span class="c1">#</span>
+    <span class="c1"># The difference is that this way we hold onto the Python GIL.  Mostly this</span>
+    <span class="c1"># makes no difference, as these are very quick function calls, but it turns</span>
+    <span class="c1"># out that if there is another Python thread running then contention for the</span>
+    <span class="c1"># GIL can wreck performance here.</span>
+    <span class="c1">#</span>
+    <span class="c1"># The ctypes documentation is not particularly helpful, saying in particular</span>
+    <span class="c1"># &quot;this is only useful to call Python C api functions directly&quot;, which</span>
+    <span class="c1"># doesn&#39;t seem to be correct.</span>
+    <span class="k">global</span> <span class="n">_libdb</span>
+    <span class="n">_libdb</span> <span class="o">=</span> <span class="n">PyDLL</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="c1"># Actually populate the functions in globals, split from ImportFunctions to</span>
+    <span class="c1"># support legacy API</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">restype</span><span class="p">,</span> <span class="n">errcheck</span><span class="p">,</span> <span class="n">argtypes</span> <span class="ow">in</span> <span class="n">_FunctionList</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">GetDbFunction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">restype</span><span class="p">,</span> <span class="n">argtypes</span><span class="p">,</span> <span class="n">errcheck</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c1"># Check for global fallback function</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+                <span class="k">raise</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">globals</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">function</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015, Michael Abbott.
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
