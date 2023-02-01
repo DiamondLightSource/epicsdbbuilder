@@ -74,6 +74,7 @@ def test_output(tmp_path):
             ("+channel", "VAL")
         ]))])
     w.add_info("Q:group", {"MYTABLE": td})
+    w.add_info("Q:group", {"MYTABLE2": td}, "V4")
     # And json links with readbacks
     a = records.ai(
         'FIELD:WITH_JSON_LINK',

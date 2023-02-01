@@ -142,8 +142,8 @@ class Record(object):
     def add_metadata(self, metadata):
         self.__comments.append('#% ' + metadata)
 
-    def add_info(self, name, info):
-        self.__infos.append((name, info))
+    def add_info(self, name, info, feature_flag=""):
+        self.__infos.append((name, info, feature_flag))
 
     def __dbd_order(self, fields):
         field_set = set(fields)
@@ -176,9 +176,17 @@ class Record(object):
         sort = sorted if alphabetical else list
         for alias in sort(self.__aliases.keys()):
             print('    alias("%s")' % alias, file = output)
-        for name, info in self.__infos:
-            value = self.__FormatFieldForDb(name, info)
-            print('    info(%s, %s)' % (name, value), file = output)
+        for name, info, feature_flag in self.__infos:
+            feature_flag_macro = (
+                "$(%s=#)" % feature_flag if feature_flag else ""
+            )
+            value = self.__FormatFieldForDb(
+                name, info, line_prefix=feature_flag_macro
+            )
+            print(
+                '%s    info(%s, %s)' % (feature_flag_macro, name, value),
+                file = output
+            )
         print('}', file = output)
 
 
@@ -227,13 +235,15 @@ class Record(object):
             self._validate.ValidFieldValue(fieldname, str(value))
 
     # Field formatting
-    def __FormatFieldForDb(self, fieldname, value):
+    def __FormatFieldForDb(self, fieldname, value, line_prefix=""):
         if hasattr(value, 'FormatDb'):
             return value.FormatDb(self, fieldname)
         elif isinstance(value, dict):
             # JSON values in EPICS database as per
             # https://epics.anl.gov/base/R7-0/6-docs/links.html
-            return '\n    '.join(json.dumps(value, indent=4).splitlines())
+            return '\n{}    '.format(line_prefix).join(
+                json.dumps(value, indent=4).splitlines()
+            )
         else:
             return quote_string(str(value))
 
