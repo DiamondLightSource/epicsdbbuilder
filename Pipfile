@@ -12,7 +12,11 @@ atomicwrites = "*"
 
 # Test and docs deps
 pytest-cov = "*"
-pytest-flake8 = "*"
+# remove this dependency once flake8 has dropped "importlib-metadata <=4.3"
+# https://github.com/PyCQA/flake8/pull/1438
+flake8 = "<=3.9.2"
+importlib-metadata = "<5"
+pytest-flake8 = "<=1.1.0"
 sphinx-rtd-theme = "*"
 
 [packages]
