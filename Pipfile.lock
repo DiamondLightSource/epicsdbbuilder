@@ -317,7 +317,7 @@
         },
         "sphinx-multiversion": {
             "editable": true,
-            "git": "https://github.com/dls-controls/sphinx-multiversion.git",
+            "git": "https://github.com/epics-python/sphinx-multiversion.git",
             "ref": "3e72beb7f8f0a76b53722fb2eb3daeed3d2a3d31"
         },
         "sphinx-rtd-theme": {
