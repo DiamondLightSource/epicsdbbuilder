@@ -9,8 +9,8 @@ dbd entries are checked to reduce the number of errors in the database.
 
 ============== ==============================================================
 PyPI           ``pip install epicsdbbuilder``
-Source code    https://github.com/dls-controls/epicsdbbuilder
-Documentation  https://dls-controls.github.io/epicsdbbuilder
+Source code    https://github.com/DiamondLightSource/epicsdbbuilder
+Documentation  https://DiamondLightSource.github.io/epicsdbbuilder
 ============== ==============================================================
 
 A simple example of the use of this library is the following:
@@ -27,16 +27,16 @@ A simple example of the use of this library is the following:
 
     WriteRecords('output.db')
 
-.. |code_ci| image:: https://github.com/dls-controls/epicsdbbuilder/workflows/Code%20CI/badge.svg?branch=master
-    :target: https://github.com/dls-controls/epicsdbbuilder/actions?query=workflow%3A%22Code+CI%22
+.. |code_ci| image:: https://github.com/DiamondLightSource/epicsdbbuilder/workflows/Code%20CI/badge.svg?branch=master
+    :target: https://github.com/DiamondLightSource/epicsdbbuilder/actions?query=workflow%3A%22Code+CI%22
     :alt: Code CI
 
-.. |docs_ci| image:: https://github.com/dls-controls/epicsdbbuilder/workflows/Docs%20CI/badge.svg?branch=master
-    :target: https://github.com/dls-controls/epicsdbbuilder/actions?query=workflow%3A%22Docs+CI%22
+.. |docs_ci| image:: https://github.com/DiamondLightSource/epicsdbbuilder/workflows/Docs%20CI/badge.svg?branch=master
+    :target: https://github.com/DiamondLightSource/epicsdbbuilder/actions?query=workflow%3A%22Docs+CI%22
     :alt: Docs CI
 
-.. |coverage| image:: https://codecov.io/gh/dls-controls/epicsdbbuilder/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/dls-controls/epicsdbbuilder
+.. |coverage| image:: https://codecov.io/gh/DiamondLightSource/epicsdbbuilder/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/DiamondLightSource/epicsdbbuilder
     :alt: Test Coverage
 
 .. |pypi_version| image:: https://img.shields.io/pypi/v/epicsdbbuilder.svg
@@ -51,6 +51,6 @@ A simple example of the use of this library is the following:
     Anything below this line is used when viewing README.rst and will be replaced
     when included in index.rst
 
-See https://dls-controls.github.io/epicsdbbuilder for more detailed documentation.
+See https://DiamondLightSource.github.io/epicsdbbuilder for more detailed documentation.
 
 
