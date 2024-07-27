@@ -1,0 +1,12 @@
+Source: epicsdbbuilder
+Maintainer: Michael Abbott <Michael.Abbott@diamond.ac.uk>
+Section: python
+Priority: optional
+Build-Depends: debhelper (>= 12), dh-python, python3-all (>= 3.8)
+Homepage: https://github.com/DiamondLightSource/epicsdbbuilder
+X-Python3-Version: >= 3.8
+
+Package: python3-epicsdbbuilder
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: EPICS Database Builder.
