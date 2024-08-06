@@ -10,14 +10,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # DLS RHEL7 legacy
-          - os: ubuntu-latest
-            python: "2.7"
-            publish: true
-            epics: "R3.14.12.7"
-            # sphinx deps don't work on 2.7, so install manually
-            pipenv: "--skip-lock && pipenv run pip install pytest-cov pytest-flake8"
-
           # DLS RHEL7 python3 current
           - os: ubuntu-latest
             python: "3.7"
@@ -61,8 +53,11 @@ jobs:
         run: |
           wget -nv https://github.com/epics-base/epics-base/archive/${{ matrix.epics }}.tar.gz
           tar -zxf ${{ matrix.epics }}.tar.gz
-          make -sj -C epics-base-${{ matrix.epics }}
-          echo "EPICS_BASE=`pwd`/epics-base-${{ matrix.epics }}" >> $GITHUB_ENV
+          cp .github/workflows/epics-base-${{ matrix.epics }}.patch epics-base-${{ matrix.epics }}
+          cd epics-base-${{ matrix.epics }}
+          patch -p1 < epics-base-${{ matrix.epics }}.patch
+          make -sj
+          echo "EPICS_BASE=`pwd`" >> $GITHUB_ENV
 
       - name: Install Python Dependencies
         # Pin pipenv so it works on python2.7
@@ -103,7 +98,7 @@ jobs:
         run: twine upload dist/*
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           name: ${{ matrix.os }}/${{ matrix.python }}/${{ matrix.epics }}
           files: cov.xml

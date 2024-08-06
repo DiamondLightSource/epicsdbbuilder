@@ -45,7 +45,7 @@ Record Output
 
     Note that the leading ``#`` comments are added to any header that is passed
 
-    If `alphabetical` then records, their fields and aliases will be sorted 
+    If `alphabetical` then records, their fields and aliases will be sorted
     alphabetically, otherwise the records and aliases will be in insertion
     order and fields in DBD order.
 
@@ -347,18 +347,23 @@ Record Class
         like comments, and will be emitted in the same order, but have ``'#% '``
         prepended to them. They can be used by processing tools.
 
-    ..  method:: add_info(name, value)
+    ..  method:: add_info(name, value, feature_flag="")
 
         This method causes an EPICS ``info`` statement to be added to the
         database. Its value can be either a a dictionary structure which will be
         converted to JSON (e.g. for ``info(Q:group, {...})``) or something else
         which will be double quoted (e.g. for ``info(autosaveFields, "VAL")``).
+        If `feature_flag` is provided, the info field will be escaped with a
+        macro of the form `$(<feature_flag>=#)`, such that the template can be
+        expanded with the feature flag macro set to an empty string to enable the
+        feature, while if it is not set at all it will default to being commented
+        out.
 
 
 Using other dbCore functions
 ----------------------------
 
-Advanced usage may require using other functions from the dbCore library to 
+Advanced usage may require using other functions from the dbCore library to
 get extra introspection information about records.
 
 ..  py:currentmodule:: epicsdbbuilder.mydbstatic
