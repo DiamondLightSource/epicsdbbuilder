@@ -64,6 +64,8 @@ def ImportFunctions(epics_base, host_arch):
         }
         bits = platform.architecture()[0]
         host_arch = system_map[(platform.system(), bits)]
+        if platform.system() == 'Darwin' and platform.processor() == 'arm':
+            host_arch = 'darwin-aarch64'
 
     # So we can work with both EPICS 3.14 and 3.15, look for libdbCore.so first
     # before falling back to the older libdbStaticHost.so
@@ -73,6 +75,9 @@ def ImportFunctions(epics_base, host_arch):
     if platform.system() == 'Windows':
         library_name_format = '{}.dll'
         library_location = 'bin'
+    elif platform.system() == 'Darwin':
+        library_name_format = '{}.dylib'
+        library_location = 'lib'
 
     try:
         ImportFunctionsFrom(os.path.join(
