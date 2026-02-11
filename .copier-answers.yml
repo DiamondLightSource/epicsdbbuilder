@@ -1,15 +1,20 @@
 # Changes here will be overwritten by Copier
-_commit: 1.0.0
+_commit: 5.0.2
 _src_path: https://github.com/DiamondLightSource/python-copier-template.git
 author_email: Michael.Abbott@diamond.ac.uk
 author_name: Michael Abbott
+component_lifecycle: production
 component_owner: group:default/accelerator-controls
+component_type: library
 description: A Python module designed to make it easy to build complex EPICS databases
     by writing a Python script
 distribution_name: epicsdbbuilder
 docker: true
-docs_type: README
+docker_debug: false
+docs_type: sphinx
 git_platform: github.com
 github_org: DiamondLightSource
 package_name: epicsdbbuilder
+pypi: true
 repo_name: epicsdbbuilder
+type_checker: mypy

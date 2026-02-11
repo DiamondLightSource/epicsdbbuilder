@@ -5,6 +5,6 @@ metadata:
   title: epicsdbbuilder
   description: A Python module designed to make it easy to build complex EPICS databases by writing a Python script
 spec:
-  type: documentation
-  lifecycle: experimental
+  type: library
+  lifecycle: production
   owner: group:default/accelerator-controls

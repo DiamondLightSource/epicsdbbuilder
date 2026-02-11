@@ -1,22 +1,20 @@
-# EPICS Database Building Framework
+"""Top level API.
+
+.. data:: __version__
+    :type: str
+
+    Version number as calculated by https://github.com/pypa/setuptools_scm
+"""
 
 # All these have an __all__ so rely on that
-import sys
+from epicsdbbuilder.const_array import *  # noqa: F403
+from epicsdbbuilder.dbd import *  # noqa: F403
+from epicsdbbuilder.fanout import *  # noqa: F403
+from epicsdbbuilder.parameter import *  # noqa: F403
+from epicsdbbuilder.recordbase import *  # noqa: F403
+from epicsdbbuilder.recordnames import *  # noqa: F403
+from epicsdbbuilder.recordset import *  # noqa: F403
 
-from epicsdbbuilder.const_array import *
-from epicsdbbuilder.dbd import *
-from epicsdbbuilder.fanout import *
-from epicsdbbuilder.parameter import *
-from epicsdbbuilder.recordbase import *
-from epicsdbbuilder.recordnames import *
-from epicsdbbuilder.recordset import *
-
-if sys.version_info < (3, 8):
-    from importlib_metadata import version  # noqa
-else:
-    from importlib.metadata import version  # noqa
-
-__version__ = version("epicsdbbuilder")
-del version
+from ._version import __version__
 
 __all__ = ["__version__"]
