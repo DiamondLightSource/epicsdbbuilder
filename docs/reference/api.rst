@@ -11,9 +11,9 @@ Initialisation
     This must be called once before calling any other functions.  There are two
     possible mechanisms for locating EPICS base libraries and dbds.
 
-    1. Using the epicscorelibs_ library. If ``epics_base`` is ``None`` then the
-    ``epicscorelibs`` package will be imported and used as the source of
-    libraries and dbds.
+    1. Using the `epicscorelibs <https://github.com/epics-base/epicscorelibs>`_
+    library. If ``epics_base`` is ``None`` then the ``epicscorelibs`` package
+    will be imported and used as the source of libraries and dbds.
 
     2. Locally install EPICS. If ``epics_base`` is provided, then it must be an
     absolute path to the directory containing EPICS base, in particular this
@@ -25,7 +25,7 @@ Initialisation
 ..  function:: LoadDbdFile(dbdfile, on_use=None)
 
     This can be called before creating records to load extra databases.  If
-    `on_use` is not ``None`` it must be a callable taking one argument, and it
+    ``on_use`` is not ``None`` it must be a callable taking one argument, and it
     will be called for each record that is created using records defined by this
     dbd.
 
@@ -36,7 +36,7 @@ Record Output
 ..  function:: WriteRecords(filename, header=None, alphabetical=True)
 
     This should be called after creating all records.  The generated records
-    will be written out to the file `filename`.  If `header` is left unspecified
+    will be written out to the file ``filename``.  If ``header`` is left unspecified
     then a standard disclaimer header will be generated:::
 
         # This file was automatically generated on Fri 27 Feb 2015 15:31:14 GMT.
@@ -45,15 +45,15 @@ Record Output
 
     Note that the leading ``#`` comments are added to any header that is passed
 
-    If `alphabetical` then records, their fields and aliases will be sorted 
+    If ``alphabetical`` then records, their fields and aliases will be sorted
     alphabetically, otherwise the records and aliases will be in insertion
     order and fields in DBD order.
 
 ..  function:: Disclaimer(source=None, normalise_path=True)
 
     This function generates the disclaimer above.  If a source file name is
-    passed then it is included in the disclaimer.  Unless `normalise_path` is
-    set to ``False`` the `source` argument will normalised by calling
+    passed then it is included in the disclaimer.  Unless ```normalise_path``` is
+    set to ``False`` the ``source`` argument will normalised by calling
     ``os.path.abspath(source)``; this allows the caller to simply pass
     ``__file__`` as the source argument with the desired result.
 
@@ -78,9 +78,9 @@ Building Databases
 
         .. x** (vim fix)
 
-        Here `name` will be used to construct the record name according to the
+        Here ``name`` will be used to construct the record name according to the
         record naming rules currently in force and any field can be given a
-        value by assigning it in `kargs`.
+        value by assigning it in ``kargs``.
 
         See :class:`epicsdbbuilder.recordbase.Record` for more details of these
         methods.
@@ -95,8 +95,8 @@ Building Databases
 ..  class:: Parameter(name, description='', default=None)
 
     When using :func:`TemplateRecordNames` this can be used to create template
-    parameters with the given `name`.  If `description` is given then this will
-    be printed in the header.  If a `default` string is given it will be used as
+    parameters with the given ``name``.  If ``description`` is given then this will
+    be printed in the header.  If a ``default`` string is given it will be used as
     the parameter default value, otherwise the parameter will be created with no
     default value.
 
@@ -130,15 +130,15 @@ Use one of the following functions for normal configuration:
 
 ..  function:: SetSimpleRecordNames(prefix='', separator=':')
 
-    In this case the given `prefix` and `separator` are added in front of any
+    In this case the given ``prefix`` and ``separator`` are added in front of any
     record name.  If no arguments are given then the effect is the same as the
     default naming convention which is to use names unchanged.
 
 ..  function:: SetTemplateRecordNames(prefix=None, separator=':')
 
-    This is useful for generating template databases.  If `prefix` is not
+    This is useful for generating template databases.  If ``prefix`` is not
     specified then a :class:`Parameter` instance with name ``DEVICE`` is created
-    and prefixed together with the `separator` to each record name.
+    and prefixed together with the ``separator`` to each record name.
 
 ..  function:: RecordName(name)
 
@@ -155,7 +155,7 @@ Use one of the following functions for normal configuration:
     PopPrefix()
 
     These two functions manage a stack of record name prefixes, which will be
-    separated by `separator` before being appended to the record name.
+    separated by ``separator`` before being appended to the record name.
 
 ..  function:: SetSeparator(separator)
 
@@ -180,15 +180,15 @@ More generally any callable object can be used for record name generation.
 
 ..  class:: SimpleRecordNames(prefix='', separator=':', check=True)
 
-    This implements a minimal naming convention.  If no `prefix` is specified
-    record names are generated unchanged, otherwise the given `prefix` and
-    `separator` are contatenated to the front of the passed argument.  If
-    `check` is set the the resulting name is checked for length.  Supports the
+    This implements a minimal naming convention.  If no ``prefix`` is specified
+    record names are generated unchanged, otherwise the given ``prefix`` and
+    ``separator`` are contatenated to the front of the passed argument.  If
+    ``check`` is set the the resulting name is checked for length.  Supports the
     following methods.
 
     ..  method:: __call__(name)
 
-        Returns `prefix` + `separator` + `name`.  If `prefix` is currently
+        Returns ``prefix`` + ``separator`` + ``name``.  If ``prefix`` is currently
         ``None`` then an error will be generated.
 
     ..  method:: SetPrefix(prefix)
@@ -201,7 +201,7 @@ More generally any callable object can be used for record name generation.
         PopPrefix()
 
         These two functions manage a stack of record name prefixes, which will
-        be separated by `separator` before being appended to the record name.
+        be separated by ``separator`` before being appended to the record name.
         Can be called via the corresponding global functions.
 
 
@@ -261,7 +261,7 @@ done on the structure of these as ``dbVerify`` does not validate them::
     Used for **Constant Link Values** available since EPICS 3.16.1.
     Constant Link Values is an EPICS feature which allows passing
     an list of strings or a list of numbers as a constant into
-    a field which contains a DB link (e.g. `INP`):
+    a field which contains a DB link (e.g. ``INP``):
     https://epics.anl.gov/base/R7-0/6-docs/RELEASE_NOTES.html#constant-link-values
 
     ConstArray will accept any iterable (e.g. a list) which can generate
@@ -271,7 +271,7 @@ done on the structure of these as ``dbVerify`` does not validate them::
 
     * numbers (integers, floating-point, :py:class:`decimal.Decimal`,
       and booleans.
-      Booleans will convert to `0` (`False`) or `1` (`True`) automatically.
+      Booleans will convert to ``0`` (`False`) or ``1`` (`True`) automatically.
 
 
     Known limitations:
@@ -279,12 +279,13 @@ done on the structure of these as ``dbVerify`` does not validate them::
     * No field type or record type check.
       ConstArray can be assigned to any field despite the field
       or the record type does not support Constant Link Values.
-      Use it with link fields (e.g. `INP`) of record types `stringin`,
-      `stringout`, `lso`, `lsi`, `printf`, `waveform`, `subArray`, and `aai`.
+      Use it with link fields (e.g. ``INP``) of record types ``stringin``,
+      ``stringout``, ``lso``, ``lsi``, ``printf``, ``waveform``, ``subArray``,
+      and ``aai``.
       Any other use is undefined and a warning may or may not appear
       while loading the DB
-      (e.g. assigning `["1.23"]` to INP of the record type `ai` will print
-      a warning while assigning `[1.23]` to INP of the record type `ai` will treat
+      (e.g. assigning ``["1.23"]`` to INP of the record type ``ai`` will print
+      a warning while assigning ``[1.23]`` to INP of the record type ``ai`` will treat
       it as a CA link without any warning on EPICS 7.0.3.1).
       Always refer to EPICS Release Notes (section "Constant Link Values").
 
@@ -300,13 +301,13 @@ done on the structure of these as ``dbVerify`` does not validate them::
 ..  function:: create_fanout(name, *records, **args)
 
     Creates one or more fanout records (as necessary) to fan processing out to
-    all records in `records`.  The first fanout record is named `name`, for
-    others a sequence number is appended to `name`.
+    all records in ``records``.  The first fanout record is named ``name``, for
+    others a sequence number is appended to ``name``.
 
 ..  function:: create_dfanout(name, *records, **args)
 
     Creates one or more dfanout records as necessary to fan a data output to a
-    the list of records in `records`.
+    the list of records in ``records``.
 
 
 
@@ -324,16 +325,16 @@ Record Class
 
         .. x** (vim fix)
 
-        The argument `name` is used to construct the record name.  Any field
-        appropriate for this record type can be named in `kargs`, for example::
+        The argument ``name`` is used to construct the record name.  Any field
+        appropriate for this record type can be named in ``kargs``, for example::
 
             records.ai('NAME', VAL = 42, PINI = 'YES')
 
     ..  method:: add_alias(alias)
 
         This method causes an EPICS ``alias`` statement to be added to the
-        database giving `alias` as an alternative name for this record.  The
-        `alias` argument is used unchanged.
+        database giving ``alias`` as an alternative name for this record.  The
+        ``alias`` argument is used unchanged.
 
     ..  method:: add_comment(comment)
 
@@ -358,7 +359,7 @@ Record Class
 Using other dbCore functions
 ----------------------------
 
-Advanced usage may require using other functions from the dbCore library to 
+Advanced usage may require using other functions from the dbCore library to
 get extra introspection information about records.
 
 ..  py:currentmodule:: epicsdbbuilder.mydbstatic

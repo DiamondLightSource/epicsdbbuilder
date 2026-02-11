@@ -32,7 +32,7 @@ else:
 
 extensions = [
     # Use this for generating API docs
-    "sphinx.ext.autodoc",
+    # "sphinx.ext.autodoc", Disabled so we can create our own API file
     # and making summary tables at the top of API docs
     "sphinx.ext.autosummary",
     # This can parse google style docstrings
