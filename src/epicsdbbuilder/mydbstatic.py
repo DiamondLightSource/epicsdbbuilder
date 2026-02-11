@@ -1,14 +1,15 @@
 import os
+import platform
 import sys
 from ctypes import *
 
-import platform
-
 if sys.version_info < (3,):
     auto_encode = c_char_p
+
     def auto_decode(result, func, args):
         return result
 else:
+
     class auto_encode(c_char_p):
         @classmethod
         def from_param(cls, value):
@@ -16,6 +17,7 @@ else:
                 return value
             else:
                 return value.encode()
+
     def auto_decode(result, func, args):
         if result is None:
             return result
@@ -24,18 +26,17 @@ else:
 
 
 _FunctionList = (
-    ('dbReadDatabase',      c_int, None,
-        (c_void_p, auto_encode, auto_encode, auto_encode)),
-    ('dbAllocEntry',        c_void_p, None, (c_void_p,)),
-    ('dbFirstRecordType',   c_int, None, (c_void_p,)),
-    ('dbGetRecordTypeName', c_char_p, auto_decode, (c_void_p,)),
-    ('dbNextRecordType',    c_int, None, (c_void_p,)),
-    ('dbFreeEntry',         None, None, (c_void_p,)),
-    ('dbCopyEntry',         c_void_p, None, (c_void_p,)),
-    ('dbFirstField',        c_int, None, (c_void_p,)),
-    ('dbGetFieldName',      c_char_p, auto_decode, (c_void_p,)),
-    ('dbNextField',         c_int, None, (c_void_p,)),
-    ('dbVerify',            c_char_p, auto_decode, (c_void_p, auto_encode)),
+    ("dbReadDatabase", c_int, None, (c_void_p, auto_encode, auto_encode, auto_encode)),
+    ("dbAllocEntry", c_void_p, None, (c_void_p,)),
+    ("dbFirstRecordType", c_int, None, (c_void_p,)),
+    ("dbGetRecordTypeName", c_char_p, auto_decode, (c_void_p,)),
+    ("dbNextRecordType", c_int, None, (c_void_p,)),
+    ("dbFreeEntry", None, None, (c_void_p,)),
+    ("dbCopyEntry", c_void_p, None, (c_void_p,)),
+    ("dbFirstField", c_int, None, (c_void_p,)),
+    ("dbGetFieldName", c_char_p, auto_decode, (c_void_p,)),
+    ("dbNextField", c_int, None, (c_void_p,)),
+    ("dbVerify", c_char_p, auto_decode, (c_void_p, auto_encode)),
 )
 
 
@@ -55,12 +56,12 @@ def ImportFunctions(epics_base, host_arch):
         # done with a little careful guesswork.  As EPICS architecture names are
         # a little arbitrary this isn't guaranteed to work.
         system_map = {
-            ('Linux',   '32bit'):   'linux-x86',
-            ('Linux',   '64bit'):   'linux-x86_64',
-            ('Darwin',  '32bit'):   'darwin-x86',
-            ('Darwin',  '64bit'):   'darwin-x86',
-            ('Windows', '32bit'):   'win32-x86',
-            ('Windows', '64bit'):   'windows-x64',
+            ("Linux", "32bit"): "linux-x86",
+            ("Linux", "64bit"): "linux-x86_64",
+            ("Darwin", "32bit"): "darwin-x86",
+            ("Darwin", "64bit"): "darwin-x86",
+            ("Windows", "32bit"): "win32-x86",
+            ("Windows", "64bit"): "windows-x64",
         }
         bits = platform.architecture()[0]
         host_arch = system_map[(platform.system(), bits)]
@@ -68,20 +69,31 @@ def ImportFunctions(epics_base, host_arch):
     # So we can work with both EPICS 3.14 and 3.15, look for libdbCore.so first
     # before falling back to the older libdbStaticHost.so
     # On Windows, use dbCore.dll or dbStaticHost.dll instead
-    library_name_format = 'lib{}.so'
-    library_location = 'lib'
-    if platform.system() == 'Windows':
-        library_name_format = '{}.dll'
-        library_location = 'bin'
+    library_name_format = "lib{}.so"
+    library_location = "lib"
+    if platform.system() == "Windows":
+        library_name_format = "{}.dll"
+        library_location = "bin"
 
     try:
-        ImportFunctionsFrom(os.path.join(
-            epics_base, library_location, host_arch,
-            library_name_format.format('dbCore')))
+        ImportFunctionsFrom(
+            os.path.join(
+                epics_base,
+                library_location,
+                host_arch,
+                library_name_format.format("dbCore"),
+            )
+        )
     except OSError:
-        ImportFunctionsFrom(os.path.join(
-            epics_base, library_location, host_arch,
-            library_name_format.format('dbStaticHost')))
+        ImportFunctionsFrom(
+            os.path.join(
+                epics_base,
+                library_location,
+                host_arch,
+                library_name_format.format("dbStaticHost"),
+            )
+        )
+
 
 _libdb = None
 
@@ -97,6 +109,7 @@ def GetDbFunction(name, restype=None, argtypes=None, errcheck=None):
     if errcheck:
         function.errcheck = errcheck
     return function
+
 
 def ImportFunctionsFrom(path):
     # Load the dbd static library using ctypes PyDLL convention instead of CDLL

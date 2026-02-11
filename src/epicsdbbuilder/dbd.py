@@ -1,23 +1,21 @@
-'''Implements the set of records provided by a dbd'''
+"""Implements the set of records provided by a dbd"""
 
+import ctypes
 import os
 import os.path
-import ctypes
 import platform
 
-from . import mydbstatic   # Pick up interface to EPICS dbd files
-
+from . import mydbstatic  # Pick up interface to EPICS dbd files
 from .recordbase import Record
 
-
-__all__ = ['InitialiseDbd', 'LoadDbdFile', 'records']
+__all__ = ["InitialiseDbd", "LoadDbdFile", "records"]
 
 
 # This class contains all the record types current supported by the loaded
 # dbd, and is published to the world as epics.records.  As records are added
 # (in response to calls to LoadDbdFile) they are automatically available to
 # all targets.
-class RecordTypes(object):
+class RecordTypes:
     def __init__(self):
         self.__RecordTypes = set()
 
@@ -27,9 +25,7 @@ class RecordTypes(object):
     def _PublishRecordType(self, on_use, recordType, validate):
         # Publish this record type as a method
         self.__RecordTypes.add(recordType)
-        setattr(
-            self, recordType,
-            Record.CreateSubclass(on_use, recordType, validate))
+        setattr(self, recordType, Record.CreateSubclass(on_use, recordType, validate))
 
     # Checks whether the given recordType names a known valid record type.
     def __contains__(self, recordType):
@@ -62,9 +58,8 @@ class ValidateDbField:
         # set of field names
         self.__FieldInfo = set()
         for field_name in self.dbEntry.iterate_fields():
-            if field_name != 'NAME':
+            if field_name != "NAME":
                 self.__FieldInfo.add(field_name)
-
 
     # This method raises an attribute error if the given field name is
     # invalid.
@@ -72,7 +67,7 @@ class ValidateDbField:
         if self.__FieldInfo is None:
             self.__ProcessDbd()
         if name not in self.__FieldInfo:
-            raise AttributeError('Invalid field name %s' % name)
+            raise AttributeError("Invalid field name %s" % name)
 
     # This method raises an exeption if the given field name does not exist
     # or if the value cannot be validly written.
@@ -88,9 +83,11 @@ class ValidateDbField:
 
         # Now see if we can write the value to it
         message = mydbstatic.dbVerify(self.dbEntry, value)
-        assert message is None, \
-            'Can\'t write "%s" to field %s: %s' % (value, name, message)
-
+        assert message is None, 'Can\'t write "%s" to field %s: %s' % (
+            value,
+            name,
+            message,
+        )
 
 
 # The same database pointer is used for all DBD files: this means that all
@@ -98,7 +95,7 @@ class ValidateDbField:
 _db = ctypes.c_void_p()
 
 
-class DBEntry(object):
+class DBEntry:
     """Create a dbEntry instance within the current DBD.
 
     This is a stateful pointer that can be moved to different
@@ -107,6 +104,7 @@ class DBEntry(object):
     If entry is specified on init and is a DBEntry instance, it
     will be copied so that its position is maintained.
     """
+
     def __init__(self, entry=None):
         assert _db, "LoadDdbFile not called yet"
         if entry is None:
@@ -134,7 +132,7 @@ class DBEntry(object):
         mydbstatic.dbFreeEntry(self._as_parameter_)
 
 
-def LoadDbdFile(dbdfile, on_use = None):
+def LoadDbdFile(dbdfile, on_use=None):
     dirname, filename = os.path.split(dbdfile)
 
     # Read the specified dbd file into the current database.  This allows
@@ -144,16 +142,18 @@ def LoadDbdFile(dbdfile, on_use = None):
         os.chdir(dirname)
 
     # We add <epics_base>/dbd to the path so that dbd includes can be resolved.
-    separator = ':'
-    if platform.system() == 'Windows':
-        separator = ';'
+    separator = ":"
+    if platform.system() == "Windows":
+        separator = ";"
 
     status = mydbstatic.dbReadDatabase(
-        ctypes.byref(_db), filename,
-        separator.join(['.', os.path.join(_epics_base, 'dbd')]), None)
+        ctypes.byref(_db),
+        filename,
+        separator.join([".", os.path.join(_epics_base, "dbd")]),
+        None,
+    )
     os.chdir(curdir)
-    assert status == 0, 'Error reading database %s (status %d)' % \
-        (dbdfile, status)
+    assert status == 0, "Error reading database %s (status %d)" % (dbdfile, status)
 
     # Enumerate all the record types and build a record generator class
     # for each one that we've not seen before.
@@ -164,7 +164,7 @@ def LoadDbdFile(dbdfile, on_use = None):
             records._PublishRecordType(on_use, record_type, validate)
 
 
-def InitialiseDbd(epics_base = None, host_arch = None):
+def InitialiseDbd(epics_base=None, host_arch=None):
     global _epics_base
     if epics_base:
         # Import from given location
@@ -173,6 +173,7 @@ def InitialiseDbd(epics_base = None, host_arch = None):
     else:
         # Import from epicscorelibs installed libs
         from epicscorelibs import path
-        mydbstatic.ImportFunctionsFrom(path.get_lib('dbCore'))
+
+        mydbstatic.ImportFunctionsFrom(path.get_lib("dbCore"))
         _epics_base = path.base_path
-    LoadDbdFile('base.dbd')
+    LoadDbdFile("base.dbd")

@@ -1,46 +1,40 @@
-'''Support for generating epics records.'''
+"""Support for generating epics records."""
 
-from __future__ import print_function
-
-import string
 import json
+import string
 from collections import OrderedDict
 
 from . import recordnames
 from .recordset import recordset
 
-
-__all__ = [
-    'PP', 'CA', 'CP', 'CPP', 'NP',
-    'MS', 'MSS', 'MSI', 'NMS',
-    'ImportRecord']
-
+__all__ = ["PP", "CA", "CP", "CPP", "NP", "MS", "MSS", "MSI", "NMS", "ImportRecord"]
 
 
 # Quotes a single character if necessary
 def quote_char(ch):
-    if ord(ch) < ord(' '):
-        return '\\x%02x' % ord(ch)
+    if ord(ch) < ord(" "):
+        return "\\x%02x" % ord(ch)
     elif ch in '"\\':
-        return '\\' + ch
+        return "\\" + ch
     else:
         return ch
 
+
 # Converts a string into a safely quoted string with quotation marks
 def quote_string(value):
-    return '"' + ''.join(map(quote_char, value)) + '"'
+    return '"' + "".join(map(quote_char, value)) + '"'
 
 
 # ---------------------------------------------------------------------------
 #
 #   Record class
 
+
 # Base class for all record types.
 #
 # All record types known to the IOC builder (loaded from DBD files in EPICS
 # support modules) are subclasses of this class.
-class Record(object):
-
+class Record:
     # Creates a subclass of the record with the given record type and
     # validator bound to the subclass.  The device used to load the record is
     # remembered so that it can subsequently be instantiated if necessary.
@@ -52,21 +46,21 @@ class Record(object):
             _validate = validate
             _type = recordType
             _on_use = on_use
+
         BuildRecord.__name__ = recordType
 
         # Perform any class extension required for this particular record type.
         from . import bits
-        return bits.ExtendClass(BuildRecord)
 
+        return bits.ExtendClass(BuildRecord)
 
     def __setattr(self, name, value):
         # Because we have hooked into __setattr__, we need to dance a little
         # to write names into our dictionary.
-        if name[:2] == '__':
-            self.__dict__['_Record' + name] = value
+        if name[:2] == "__":
+            self.__dict__["_Record" + name] = value
         else:
             self.__dict__[name] = value
-
 
     # Record constructor.  Needs to be told the type of record that this will
     # be, a field validation object (which will be used to check field names
@@ -113,19 +107,18 @@ class Record(object):
 
         # These assignment have to be directly into the dictionary to
         # bypass the tricksy use of __setattr__.
-        self.__setattr('__fields', OrderedDict())
-        self.__setattr('__aliases', OrderedDict())
-        self.__setattr('__comments', [])
-        self.__setattr('__infos', [])
-        self.__setattr('name', recordnames.RecordName(record))
+        self.__setattr("__fields", OrderedDict())
+        self.__setattr("__aliases", OrderedDict())
+        self.__setattr("__comments", [])
+        self.__setattr("__infos", [])
+        self.__setattr("name", recordnames.RecordName(record))
 
         # Support the special 'address' field as an alias for either INP or
         # OUT, depending on which of those exists.  We only set up this field
         # if exactly one of INP or OUT is present as a valid field.
-        address = [
-            field for field in ['INP', 'OUT'] if self.ValidFieldName(field)]
+        address = [field for field in ["INP", "OUT"] if self.ValidFieldName(field)]
         if len(address) == 1:
-            self.__setattr('__address', address[0])
+            self.__setattr("__address", address[0])
 
         # Make sure all the fields are properly processed and validated.
         for name, value in fields.items():
@@ -137,10 +130,10 @@ class Record(object):
         self.__aliases[alias] = self
 
     def add_comment(self, comment):
-        self.__comments.append('# ' + comment)
+        self.__comments.append("# " + comment)
 
     def add_metadata(self, metadata):
-        self.__comments.append('#% ' + metadata)
+        self.__comments.append("#% " + metadata)
 
     def add_info(self, name, info):
         self.__infos.append((name, info))
@@ -152,35 +145,36 @@ class Record(object):
                 yield field_name
                 field_set.remove(field_name)
         assert not field_set, "DBD for %s doesn't contain %s" % (
-            self._type, sorted(field_set))
+            self._type,
+            sorted(field_set),
+        )
 
     # Call to generate database description of this record.  Outputs record
     # definition in .db file format.  Hooks for meta-data can go here.
     def Print(self, output, alphabetical=True):
-        print(file = output)
+        print(file=output)
         for comment in self.__comments:
             print(comment, file=output)
-        print('record(%s, "%s")' % (self._type, self.name), file = output)
-        print('{', file = output)
+        print('record(%s, "%s")' % (self._type, self.name), file=output)
+        print("{", file=output)
         # Print the fields in alphabetical order.  This is more convenient
         # to the eye and has the useful side effect of bypassing a bug
         # where DTYPE needs to be specified before INP or OUT fields.
         sort = sorted if alphabetical else self.__dbd_order
         for k in sort(self.__fields.keys()):
             value = self.__fields[k]
-            if getattr(value, 'ValidateLater', False):
+            if getattr(value, "ValidateLater", False):
                 self.__ValidateField(k, value)
             value = self.__FormatFieldForDb(k, value)
-            padding = ''.ljust(4-len(k))  # To align field values
-            print('    field(%s, %s%s)' % (k, padding, value), file = output)
+            padding = "".ljust(4 - len(k))  # To align field values
+            print("    field(%s, %s%s)" % (k, padding, value), file=output)
         sort = sorted if alphabetical else list
         for alias in sort(self.__aliases.keys()):
-            print('    alias("%s")' % alias, file = output)
+            print('    alias("%s")' % alias, file=output)
         for name, info in self.__infos:
             value = self.__FormatFieldForDb(name, info)
-            print('    info(%s, %s)' % (name, value), file = output)
-        print('}', file = output)
-
+            print("    info(%s, %s)" % (name, value), file=output)
+        print("}", file=output)
 
     # The string for a record is just its name.
     def __str__(self):
@@ -195,10 +189,9 @@ class Record(object):
     def __call__(self, *specifiers):
         return _Link(self, None, *specifiers)
 
-
     # Assigning to a record attribute updates a field.
     def __setattr__(self, fieldname, value):
-        if fieldname == 'address':
+        if fieldname == "address":
             fieldname = self.__address
         if value is None:
             # Treat assigning None to a field the same as deleting that field.
@@ -212,7 +205,7 @@ class Record(object):
             # always possible...
             if callable(value):
                 value = value()
-            if not getattr(value, 'ValidateLater', False):
+            if not getattr(value, "ValidateLater", False):
                 self.__ValidateField(fieldname, value)
             self.__fields[fieldname] = value
 
@@ -221,33 +214,31 @@ class Record(object):
         # If the field can validate itself then ask it to, otherwise use our
         # own validation routine.  This is really just a hook for parameters
         # so that they can do their own validation.
-        if hasattr(value, 'Validate'):
+        if hasattr(value, "Validate"):
             value.Validate(self, fieldname)
         else:
             self._validate.ValidFieldValue(fieldname, str(value))
 
     # Field formatting
     def __FormatFieldForDb(self, fieldname, value):
-        if hasattr(value, 'FormatDb'):
+        if hasattr(value, "FormatDb"):
             return value.FormatDb(self, fieldname)
         elif isinstance(value, dict):
             # JSON values in EPICS database as per
             # https://epics.anl.gov/base/R7-0/6-docs/links.html
-            return '\n    '.join(json.dumps(value, indent=4).splitlines())
+            return "\n    ".join(json.dumps(value, indent=4).splitlines())
         else:
             return quote_string(str(value))
 
-
     # Allow individual fields to be deleted from the record.
     def __delattr__(self, fieldname):
-        if fieldname == 'address':
+        if fieldname == "address":
             fieldname = self.__address
         del self.__fields[fieldname]
 
-
     # Reading a record attribute returns a link to the field.
     def __getattr__(self, fieldname):
-        if fieldname == 'address':
+        if fieldname == "address":
             fieldname = self.__address
         self._validate.ValidFieldName(fieldname)
         return _Link(self, fieldname)
@@ -276,7 +267,6 @@ class Record(object):
         return (ImportRecord, (self.name, self._type))
 
 
-
 # Records can be imported by name.  An imported record has no specification
 # of its type, and so no validation can be done: all that can be done to an
 # imported record is to link to it.
@@ -297,7 +287,7 @@ class ImportRecord:
         # Brain-dead minimal validation: just check for all uppercase!
         ValidChars = set(string.ascii_uppercase + string.digits)
         if not set(fieldname) <= ValidChars:
-            raise AttributeError('Invalid field name %s' % fieldname)
+            raise AttributeError("Invalid field name %s" % fieldname)
         return _Link(self, fieldname)
 
     def add_alias(self, name):
@@ -316,9 +306,9 @@ class _Link:
     def __str__(self):
         result = self.record.name
         if self.field:
-            result = '%s.%s' % (result, self.field)
+            result = "%s.%s" % (result, self.field)
         for specifier in self.specifiers:
-            result = '%s %s' % (result, specifier)
+            result = "%s %s" % (result, specifier)
         return result
 
     def __call__(self, *specifiers):
@@ -330,6 +320,7 @@ class _Link:
 
 
 # Some helper routines for building links
+
 
 def PP(record):
     """ "Process Passive": any record update through a PP output link will be
@@ -343,7 +334,8 @@ def PP(record):
     ----------------------
     `field(INP, "other PP")`
     """
-    return record('PP')
+    return record("PP")
+
 
 def CA(record):
     """ "Channel Access": a CA (input or output) link will be treated as
@@ -357,7 +349,7 @@ def CA(record):
     ----------------------
     `field(INP, "other CA")`
     """
-    return record('CA')
+    return record("CA")
 
 
 def CP(record):
@@ -372,7 +364,8 @@ def CP(record):
     ----------------------
     `field(INP, "other CP")`
     """
-    return record('CP')
+    return record("CP")
+
 
 def CPP(record):
     """ "Channel Process if Passive": a CP input link will be treated as
@@ -388,7 +381,7 @@ def CPP(record):
     ----------------------
     `field(INP, "other CPP")`
     """
-    return record('CPP')
+    return record("CPP")
 
 
 def MS(record):
@@ -404,7 +397,7 @@ def MS(record):
     ----------------------
     `field(INP, "other MS")`
     """
-    return record('MS')
+    return record("MS")
 
 
 def MSS(record):
@@ -419,7 +412,7 @@ def MSS(record):
     ----------------------
     `field(INP, "other MSS")`
     """
-    return record('MSS')
+    return record("MSS")
 
 
 def MSI(record):
@@ -435,7 +428,7 @@ def MSI(record):
     ----------------------
     `field(INP, "other MSI")`
     """
-    return record('MSI')
+    return record("MSI")
 
 
 def NMS(record):
@@ -450,7 +443,7 @@ def NMS(record):
     ----------------------
     `field(INP, "other NMS")`
     """
-    return record('NMS')
+    return record("NMS")
 
 
 def NP(record):
@@ -465,4 +458,4 @@ def NP(record):
     ----------------------
     `field(INP, "other NPP")`
     """
-    return record('NPP')
+    return record("NPP")
