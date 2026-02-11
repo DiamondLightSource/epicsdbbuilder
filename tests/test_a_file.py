@@ -1,10 +1,33 @@
 # vim: set fileencoding=UTF-8:
 
 import os
-import sys
 from collections import OrderedDict
 
-from epicsdbbuilder import *
+from epicsdbbuilder import (
+    CA,
+    CP,
+    CPP,
+    MS,
+    MSI,
+    MSS,
+    NMS,
+    NP,
+    PP,
+    ConstArray,
+    ImportRecord,
+    InitialiseDbd,
+    Parameter,
+    PopPrefix,
+    PushPrefix,
+    RecordName,
+    ResetRecords,
+    SetRecordNames,
+    SimpleRecordNames,
+    TemplateRecordNames,
+    WriteRecords,
+    create_fanout,
+    records,
+)
 
 
 def test_output(tmp_path):
@@ -19,9 +42,9 @@ def test_output(tmp_path):
 
     SetRecordNames(dls_names)
 
-    P = Parameter("P", "A parameter")
-    assert repr(P) == "Parameter(P)"
-    Q = Parameter("Q", "A number")
+    p = Parameter("P", "A parameter")
+    assert repr(p) == "Parameter(P)"
+    q = Parameter("Q", "A number")
 
     r = ImportRecord("SR-DI-DCCT-01:SIGNAL")
 
@@ -46,7 +69,7 @@ def test_output(tmp_path):
 
     SetRecordNames(tmpl_names)
 
-    t = records.ai("TEST", INP="@%s" % P, VAL=Q, SCAN="1 second")
+    t = records.ai("TEST", INP=f"@{p}", VAL=q, SCAN="1 second")
     records.bi("BOO", INP=s)
 
     # Test link options
@@ -81,12 +104,13 @@ def test_output(tmp_path):
 
     fname = str(tmp_path / "test_output.db")
     expected_open_args = {}
-    if sys.version_info > (3,):
-        # Specify encoding so it works on windows
-        expected_open_args["encoding"] = "utf8"
+
+    # Specify encoding so it works on windows
+    expected_open_args["encoding"] = "utf8"
 
     def lines(fname, **open_args):
-        return [x.rstrip() for x in open(fname, **open_args).readlines()[1:]]
+        with open(fname, **open_args) as file:
+            return [x.rstrip() for x in file.readlines()[1:]]
 
     WriteRecords(fname, alphabetical=False)
     expected = os.path.join(os.path.dirname(__file__), "expected_output.db")
