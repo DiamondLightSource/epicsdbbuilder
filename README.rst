@@ -10,12 +10,13 @@ dbd entries are checked to reduce the number of errors in the database.
 ============== ==============================================================
 PyPI           ``pip install epicsdbbuilder``
 Source code    https://github.com/DiamondLightSource/epicsdbbuilder
-Documentation  https://DiamondLightSource.github.io/epicsdbbuilder
+
+Releases       https://github.com/DiamondLightSource/epicsdbbuilder/releases
 ============== ==============================================================
 
 A simple example of the use of this library is the following:
 
-.. code:: python
+.. code-block:: python
 
     from epicsdbbuilder import *
     InitialiseDbd('/dls_sw/epics/R3.14.12.3/base/')
@@ -27,15 +28,15 @@ A simple example of the use of this library is the following:
 
     WriteRecords('output.db')
 
-.. |code_ci| image:: https://github.com/DiamondLightSource/epicsdbbuilder/workflows/Code%20CI/badge.svg?branch=master
-    :target: https://github.com/DiamondLightSource/epicsdbbuilder/actions?query=workflow%3A%22Code+CI%22
+.. |code_ci| image:: https://github.com/DiamondLightSource/epicsdbbuilder/actions/workflows/code.yml/badge.svg?branch=main
+    :target: https://github.com/DiamondLightSource/epicsdbbuilder/actions/workflows/code.yml
     :alt: Code CI
 
-.. |docs_ci| image:: https://github.com/DiamondLightSource/epicsdbbuilder/workflows/Docs%20CI/badge.svg?branch=master
-    :target: https://github.com/DiamondLightSource/epicsdbbuilder/actions?query=workflow%3A%22Docs+CI%22
+.. |docs_ci| image:: https://github.com/DiamondLightSource/epicsdbbuilder/actions/workflows/docs.yml/badge.svg?branch=main
+    :target: https://github.com/DiamondLightSource/epicsdbbuilder/actions/workflows/docs.yml
     :alt: Docs CI
 
-.. |coverage| image:: https://codecov.io/gh/DiamondLightSource/epicsdbbuilder/branch/master/graph/badge.svg
+.. |coverage| image:: https://codecov.io/gh/DiamondLightSource/epicsdbbuilder/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/DiamondLightSource/epicsdbbuilder
     :alt: Test Coverage
 
@@ -46,11 +47,3 @@ A simple example of the use of this library is the following:
 .. |license| image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
     :alt: Apache License
-
-..
-    Anything below this line is used when viewing README.rst and will be replaced
-    when included in index.rst
-
-See https://DiamondLightSource.github.io/epicsdbbuilder for more detailed documentation.
-
-
