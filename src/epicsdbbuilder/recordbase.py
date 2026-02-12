@@ -13,7 +13,7 @@ __all__ = ["PP", "CA", "CP", "CPP", "NP", "MS", "MSS", "MSI", "NMS", "ImportReco
 # Quotes a single character if necessary
 def quote_char(ch):
     if ord(ch) < ord(" "):
-        return "\\x%02x" % ord(ch)
+        return f"\\x{ord(ch):02x}"
     elif ch in '"\\':
         return "\\" + ch
     else:
@@ -39,15 +39,15 @@ class Record:
     # validator bound to the subclass.  The device used to load the record is
     # remembered so that it can subsequently be instantiated if necessary.
     @classmethod
-    def CreateSubclass(cls, on_use, recordType, validate):
+    def CreateSubclass(cls, on_use, record_type, validate):
         # Each record we publish is a class so that individual record
         # classes can be subclassed when convenient.
         class BuildRecord(Record):
             _validate = validate
-            _type = recordType
+            _type = record_type
             _on_use = on_use
 
-        BuildRecord.__name__ = recordType
+        BuildRecord.__name__ = record_type
 
         # Perform any class extension required for this particular record type.
         from . import bits
@@ -144,9 +144,8 @@ class Record:
             if field_name in field_set:
                 yield field_name
                 field_set.remove(field_name)
-        assert not field_set, "DBD for %s doesn't contain %s" % (
-            self._type,
-            sorted(field_set),
+        assert not field_set, (
+            f"DBD for {self._type} doesn't contain {sorted(field_set)}"
         )
 
     # Call to generate database description of this record.  Outputs record
@@ -155,7 +154,7 @@ class Record:
         print(file=output)
         for comment in self.__comments:
             print(comment, file=output)
-        print('record(%s, "%s")' % (self._type, self.name), file=output)
+        print(f'record({self._type}, "{self.name}")', file=output)
         print("{", file=output)
         # Print the fields in alphabetical order.  This is more convenient
         # to the eye and has the useful side effect of bypassing a bug
@@ -167,13 +166,13 @@ class Record:
                 self.__ValidateField(k, value)
             value = self.__FormatFieldForDb(k, value)
             padding = "".ljust(4 - len(k))  # To align field values
-            print("    field(%s, %s%s)" % (k, padding, value), file=output)
+            print(f"    field({k}, {padding}{value})", file=output)
         sort = sorted if alphabetical else list
         for alias in sort(self.__aliases.keys()):
-            print('    alias("%s")' % alias, file=output)
+            print(f'    alias("{alias}")', file=output)
         for name, info in self.__infos:
             value = self.__FormatFieldForDb(name, info)
-            print("    info(%s, %s)" % (name, value), file=output)
+            print(f"    info({name}, {value})", file=output)
         print("}", file=output)
 
     # The string for a record is just its name.
@@ -183,7 +182,7 @@ class Record:
     # The representation string for a record identifies its type and name,
     # but we can't do much more.
     def __repr__(self):
-        return '<record %s "%s">' % (self._type, self.name)
+        return f'<record {self._type} "{self.name}">'
 
     # Calling the record generates a self link with a list of specifiers.
     def __call__(self, *specifiers):
@@ -278,20 +277,20 @@ class ImportRecord:
         return self.name
 
     def __repr__(self):
-        return '<external record "%s">' % self.name
+        return f'<external record "{self.name}">'
 
     def __call__(self, *specifiers):
         return _Link(self, None, *specifiers)
 
     def __getattr__(self, fieldname):
         # Brain-dead minimal validation: just check for all uppercase!
-        ValidChars = set(string.ascii_uppercase + string.digits)
-        if not set(fieldname) <= ValidChars:
-            raise AttributeError("Invalid field name %s" % fieldname)
+        valid_chars = set(string.ascii_uppercase + string.digits)
+        if not set(fieldname) <= valid_chars:
+            raise AttributeError(f"Invalid field name {fieldname}")
         return _Link(self, fieldname)
 
     def add_alias(self, name):
-        recordset.AddBodyLine('alias("%s", "%s")' % (self.name, name))
+        recordset.AddBodyLine(f'alias("{self.name}", "{name}")')
 
 
 # A link is a class to encapsulate a process variable link.  It remembers
@@ -306,9 +305,9 @@ class _Link:
     def __str__(self):
         result = self.record.name
         if self.field:
-            result = "%s.%s" % (result, self.field)
+            result = f"{result}.{self.field}"
         for specifier in self.specifiers:
-            result = "%s %s" % (result, specifier)
+            result = f"{result} {specifier}"
         return result
 
     def __call__(self, *specifiers):
@@ -316,7 +315,7 @@ class _Link:
 
     # Returns the value currently assigned to this field.
     def Value(self):
-        return self.record._FieldValue(self.field)
+        return self.record._FieldValue(self.field)  # noqa: SLF001
 
 
 # Some helper routines for building links

@@ -21,7 +21,7 @@ __all__ = [
 # it is given.
 class SimpleRecordNames:
     # Maximum record name length for EPICS 3.14
-    maxLength = 61
+    max_length = 61
 
     def __init__(self, prefix="", separator=":", check=True):
         self.prefix = [prefix] if prefix else []
@@ -30,8 +30,8 @@ class SimpleRecordNames:
 
     def __call__(self, name):
         name = self.separator.join(map(str, self.prefix + [name]))
-        assert not self.check or 0 < len(name) <= self.maxLength, (
-            'Record name "%s" too long' % name
+        assert not self.check or 0 < len(name) <= self.max_length, (
+            f'Record name "{name}" too long'
         )
         return name
 

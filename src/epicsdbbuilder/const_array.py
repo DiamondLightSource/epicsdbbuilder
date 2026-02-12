@@ -42,19 +42,19 @@ class ConstArray:
         for index, value in enumerate(value_list):
             assert isinstance(value, valid_types), (
                 "ConstArray: expects a string or parameter as element"
-                " but an element at the index %s is %s." % (index, type(value))
+                f" but an element at the index {index} is {type(value)}."
             )
 
             if isinstance(value, (Parameter, str)):
                 assert not numbers, (
                     "ConstArray: cannot mix strings with an"
-                    " element at index %s which is %s." % (index, type(value))
+                    f" element at index {index} which is {type(value)}."
                 )
                 strings = True
             else:
                 assert not strings, (
                     "ConstArray: cannot mix numbers with an"
-                    " element at index %s which is %s." % (index, type(value))
+                    f" element at index {index} which is {type(value)}."
                 )
                 numbers = True
 
@@ -62,7 +62,7 @@ class ConstArray:
 
     def _format_constant(self, value):
         if isinstance(value, Parameter):
-            return '"%s"' % value
+            return f'"{value}"'
         elif isinstance(value, str):
             return quote_string(value)
         elif isinstance(value, bool):
@@ -85,4 +85,4 @@ class ConstArray:
         return "[{}]".format(",".join(formatted))
 
     def __repr__(self):
-        return "<ConstArray %r>" % self.__value
+        return f"<ConstArray {self.__value!r}>"

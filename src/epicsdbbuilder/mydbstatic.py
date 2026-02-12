@@ -1,28 +1,22 @@
 import os
 import platform
-import sys
-from ctypes import *
+from ctypes import PyDLL, c_char_p, c_int, c_void_p
 
-if sys.version_info < (3,):
-    auto_encode = c_char_p
 
-    def auto_decode(result, func, args):
-        return result
-else:
-
-    class auto_encode(c_char_p):
-        @classmethod
-        def from_param(cls, value):
-            if value is None:
-                return value
-            else:
-                return value.encode()
-
-    def auto_decode(result, func, args):
-        if result is None:
-            return result
+class auto_encode(c_char_p):
+    @classmethod
+    def from_param(cls, value):
+        if value is None:
+            return value
         else:
-            return result.decode()
+            return value.encode()
+
+
+def auto_decode(result, func, args):
+    if result is None:
+        return result
+    else:
+        return result.decode()
 
 
 _FunctionList = (

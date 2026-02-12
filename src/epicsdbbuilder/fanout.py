@@ -37,7 +37,7 @@ def _fanout_helper(
         chopped[-2:] = [chopped[-2] + chopped[-1]]
 
     # Convert the chopped list into a list of fanout records.
-    recordList = []
+    record_list = []
     args = firstargs
     for i, links in enumerate(chopped):
         # The first record gets the standard name and a different set of
@@ -51,15 +51,15 @@ def _fanout_helper(
         # Link the new fanout record to the given list of links
         for i, link in enumerate(links):
             setattr(record, field_name(i), link)
-        recordList.append(record)
+        record_list.append(record)
 
     # Chain the fanout records together using the last field in each record:
     # we've taken care to reserve this field when we split the link list!
     next_name = field_name(fanout_size - 1)
-    for prev, next in zip(recordList[:-1], recordList[1:]):
+    for prev, next in zip(record_list[:-1], record_list[1:], strict=True):
         setattr(prev, next_name, fixup_link(next))
 
-    return recordList
+    return record_list
 
 
 def create_fanout(name, *record_list, **args):
@@ -76,7 +76,7 @@ def create_fanout(name, *record_list, **args):
         del nextargs["PINI"]
 
     def fieldname(i):
-        return "LNK%d" % (i + 1)
+        return f"LNK{i + 1}"
 
     def identity(x):
         return x
@@ -92,14 +92,14 @@ def create_dfanout(name, *record_list, **args):
     # supervisory mode as they are simply mirroring the first record.
     firstargs = args
     nextargs = args.copy()
-    nextargs.update(dict(SCAN="Passive", OMSL="supervisory"))
+    nextargs.update({"SCAN": "Passive", "OMSL": "supervisory"})
     if "DOL" in nextargs:
         del nextargs["DOL"]
     if "PINI" in nextargs:
         del nextargs["PINI"]
 
     def fieldname(i):
-        return "OUT%c" % (ord("A") + i)
+        return f"OUT{(ord('A') + i)}"
 
     record_list = _fanout_helper(
         name, record_list, 8, records.dfanout, fieldname, PP, firstargs, nextargs

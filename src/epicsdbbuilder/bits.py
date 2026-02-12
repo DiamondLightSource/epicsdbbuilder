@@ -4,7 +4,7 @@ from .dbd import records
 # with bit and register methods so they behave a little like hardware.
 
 
-def Extend_mbbiDirect(mbbiDirect):
+def Extend_mbbiDirect(mbbiDirect):  # noqa: N803 Keep the EPICS format of the record name
     class mbbiDirect(mbbiDirect):
         def bit(self, offset):
             return _Bits(self, BIT_INPUT, records.bi, offset, 1)
@@ -15,7 +15,7 @@ def Extend_mbbiDirect(mbbiDirect):
     return mbbiDirect
 
 
-def Extend_mbboDirect(mbboDirect):
+def Extend_mbboDirect(mbboDirect):  # noqa: N803 Keep the EPICS format of the record name
     class mbboDirect(mbboDirect):
         def bit(self, offset):
             return _Bits(self, BIT_OUTPUT, records.bo, offset, 1)
@@ -27,16 +27,16 @@ def Extend_mbboDirect(mbboDirect):
 
 
 # List of classes which we can extend.
-ClassExtensions = dict(mbbiDirect=Extend_mbbiDirect, mbboDirect=Extend_mbboDirect)
+ClassExtensions = {"mbbiDirect": Extend_mbbiDirect, "mbboDirect": Extend_mbboDirect}
 
 
-def ExtendClass(recordClass):
+def ExtendClass(record_class):
     try:
-        extension = ClassExtensions[recordClass.__name__]
+        extension = ClassExtensions[record_class.__name__]
     except KeyError:
-        return recordClass
+        return record_class
     else:
-        return extension(recordClass)
+        return extension(record_class)
 
 
 # ---------------------------------------------------------------------------

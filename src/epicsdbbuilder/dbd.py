@@ -22,14 +22,14 @@ class RecordTypes:
     def GetRecords(self):
         return sorted(self.__RecordTypes)
 
-    def _PublishRecordType(self, on_use, recordType, validate):
+    def _PublishRecordType(self, on_use, record_type, validate):
         # Publish this record type as a method
-        self.__RecordTypes.add(recordType)
-        setattr(self, recordType, Record.CreateSubclass(on_use, recordType, validate))
+        self.__RecordTypes.add(record_type)
+        setattr(self, record_type, Record.CreateSubclass(on_use, record_type, validate))
 
     # Checks whether the given recordType names a known valid record type.
-    def __contains__(self, recordType):
-        return recordType in self.__RecordTypes
+    def __contains__(self, record_type):
+        return record_type in self.__RecordTypes
 
 
 # Every record type loaded from a DBD is present as an attribute of this
@@ -45,9 +45,9 @@ records = RecordTypes()
 # This class uses a the static database to validate whether the associated
 # record type allows a given value to be written to a given field.
 class ValidateDbField:
-    def __init__(self, dbEntry):
+    def __init__(self, db_entry):
         # Copy the existing entry so it stays on the right record
-        self.dbEntry = DBEntry(dbEntry)
+        self.dbEntry = DBEntry(db_entry)
         self.__FieldInfo = None
 
     # Computes list of valid names and creates associated arginfo
@@ -67,7 +67,7 @@ class ValidateDbField:
         if self.__FieldInfo is None:
             self.__ProcessDbd()
         if name not in self.__FieldInfo:
-            raise AttributeError("Invalid field name %s" % name)
+            raise AttributeError(f"Invalid field name {name}")
 
     # This method raises an exeption if the given field name does not exist
     # or if the value cannot be validly written.
@@ -83,11 +83,7 @@ class ValidateDbField:
 
         # Now see if we can write the value to it
         message = mydbstatic.dbVerify(self.dbEntry, value)
-        assert message is None, 'Can\'t write "%s" to field %s: %s' % (
-            value,
-            name,
-            message,
-        )
+        assert message is None, f"Can't write '{value}' to field {name}: {message}"
 
 
 # The same database pointer is used for all DBD files: this means that all
@@ -153,7 +149,7 @@ def LoadDbdFile(dbdfile, on_use=None):
         None,
     )
     os.chdir(curdir)
-    assert status == 0, "Error reading database %s (status %d)" % (dbdfile, status)
+    assert status == 0, f"Error reading database {dbdfile} (status {status})"
 
     # Enumerate all the record types and build a record generator class
     # for each one that we've not seen before.
@@ -161,7 +157,7 @@ def LoadDbdFile(dbdfile, on_use=None):
     for record_type in entry.iterate_records():
         if not hasattr(records, record_type):
             validate = ValidateDbField(entry)
-            records._PublishRecordType(on_use, record_type, validate)
+            records._PublishRecordType(on_use, record_type, validate)  # noqa: SLF001
 
 
 def InitialiseDbd(epics_base=None, host_arch=None):
