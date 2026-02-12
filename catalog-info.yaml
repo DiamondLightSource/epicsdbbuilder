@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: epicsdbbuilder
+  title: epicsdbbuilder
+  description: A Python module designed to make it easy to build complex EPICS databases by writing a Python script
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/accelerator-controls
