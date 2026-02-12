@@ -15,6 +15,4 @@ from epicsdbbuilder.recordbase import *  # noqa: F403
 from epicsdbbuilder.recordnames import *  # noqa: F403
 from epicsdbbuilder.recordset import *  # noqa: F403
 
-from ._version import __version__
-
-__all__ = ["__version__"]
+from ._version import __version__ as __version__

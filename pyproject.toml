@@ -36,9 +36,6 @@ dev = [
     "types-mock",
 ]
 
-[project.scripts]
-epicsdbbuilder = "epicsdbbuilder.__main__:main"
-
 [project.urls]
 GitHub = "https://github.com/DiamondLightSource/epicsdbbuilder"
 
