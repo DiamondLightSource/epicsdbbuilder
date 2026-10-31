@@ -10,8 +10,9 @@ by writing a Python script.  While writing record templates the corresponding
 dbd entries are checked to reduce the number of errors in the database.
 
 
-Source          | <https://github.com/DiamondLightSource/epicsdbbuilder>
+What            | Where
 :---:           | :---:
+Source          | <https://github.com/DiamondLightSource/epicsdbbuilder>
 PyPI            | `pip install epicsdbbuilder`
 Docker          | `docker run ghcr.io/diamondlightsource/epicsdbbuilder:latest`
 Documentation   | <https://diamondlightsource.github.io/epicsdbbuilder>
