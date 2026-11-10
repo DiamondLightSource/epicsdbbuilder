@@ -15,4 +15,8 @@ from epicsdbbuilder.recordbase import *  # noqa: F403
 from epicsdbbuilder.recordnames import *  # noqa: F403
 from epicsdbbuilder.recordset import *  # noqa: F403
 
-from ._version import __version__ as __version__
+try:
+    from ._version import __version__ as __version__
+except ModuleNotFoundError:
+    # Allow epicsdbbuilder to run locally without being built
+    __version__ = "Unknown version"
